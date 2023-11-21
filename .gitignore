@@ -1,0 +1,36 @@
+# History files
+.Rhistory
+
+# Session Data files
+*.RData
+
+# Temp Data files
+*.RDataTmp
+
+# User-specific files
+.Ruserdata
+
+# RStudio files
+.Rproj.user/
+
+# knitr and R markdown default cache directories
+*_cache/
+/cache/
+
+# Temporary files created by R markdown
+*.utf8.md
+*.knit.md
+
+# R Environment Variables
+.Renviron
+
+# Work in progress 
+progress/*
+Pass.R
+
+# Rate and presim files (created with script 0)
+rates/*
+presim*
+
+# DAG replication attempt
+kin_count_sweden
