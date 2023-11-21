@@ -28,7 +28,7 @@
 progress/*
 Pass.R
 
-# Rate and presim files (created with script 0)
+# Rate and presim files
 rates/*
 presim*
 
