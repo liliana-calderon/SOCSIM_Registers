@@ -32,5 +32,9 @@ Pass.R
 rates/*
 presim*
 
+# Output Data
+Output/*
+
 # DAG replication attempt
 kin_count_sweden
+
