@@ -23,9 +23,9 @@ windowsFonts(Times = windowsFont("Times New Roman"))
 
 #setwd("../")
 
-load("Output/reference_table_SweBorn")
-load("Output/N_Cohort")
-load("Output/temp")
+load("Output/reference_table_SweBorn.RData")
+load("Output/N_Cohort.RData")
+load("Output/temp.RData")
 
 ```
 
@@ -795,4 +795,3 @@ PlotT <- ggplot() +
 
 PlotT
 ```
-### There might be a problem with population size as all the counts are underestimated for recent periods
