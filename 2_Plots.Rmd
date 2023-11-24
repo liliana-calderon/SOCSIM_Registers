@@ -12,8 +12,8 @@ output:
 #   pdf_document: default
 ---
 
-```{r setup, include=FALSE, warning= FALSE, message=FALSE}
-knitr::opts_chunk$set(echo = FALSE)
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = FALSE,  warning= FALSE, message=FALSE)
 ```
 
 ```{r}
@@ -32,31 +32,6 @@ load("Output/reference_table_SweBorn.RData")
 load("Output/N_Cohort.RData")
 load("Output/temp.RData")
 
-```
-
-#### Fig. 0: Population size (N) over birth cohorts
-
-```{r}
-A1 <- ggplot(data = filter(gather(N_Cohort, key = "Population", value = "N", -IDbirthYear), IDbirthYear >= 1915)) +
-  geom_line(mapping = aes(x = IDbirthYear, y = N, color = Population), lwd = 1) +
-  geom_area(data=data.frame(x = c(1910,2020), y = c(-50,-1000)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
-  coord_cartesian(clip = "off")+
-  labs(x = "Birth cohort \n (Age in 2018)", y = "Cohort size (N)", color = "") +
-  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017)) +
-  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
-  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_test() +
-  scale_color_manual(values = c("#CC2900", "#fc8d59", "#31a354", "#3182bd"),
-                     limits = c("N_ever", "N_sweborn", "N_17", "N_sweparent"),
-                     labels = c("  \nEver observed in registers  \n", 
-                                "Ever observed in registers,  \nborn in Sweden", 
-                                "**Analytical population**  \nEver observed in registers,  \nborn in Sweden,  \nalive in 2018", 
-                                "Ever observed in registers,  \nborn in Sweden,  \nalive in 2018,  \nwith two Swedish born parents")) + 
-  theme(text = element_text(family = "Times", size = 12),
-        legend.position = "bottom",
-        legend.text = element_markdown())
-
-A1
 ```
 
 #### Fig. 1: Average number of living and dead grandchildren and proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort
@@ -792,4 +767,29 @@ S <- ggplot() +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
 S
+```
+
+#### Extra Fig: Population size (N) over birth cohorts
+
+```{r}
+A1 <- ggplot(data = filter(gather(N_Cohort, key = "Population", value = "N", -IDbirthYear), IDbirthYear >= 1915)) +
+  geom_line(mapping = aes(x = IDbirthYear, y = N, color = Population), lwd = 1) +
+  geom_area(data=data.frame(x = c(1910,2020), y = c(-50,-1000)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
+  coord_cartesian(clip = "off")+
+  labs(x = "Birth cohort \n (Age in 2018)", y = "Cohort size (N)", color = "") +
+  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017)) +
+  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_test() +
+  scale_color_manual(values = c("#CC2900", "#fc8d59", "#31a354", "#3182bd"),
+                     limits = c("N_ever", "N_sweborn", "N_17", "N_sweparent"),
+                     labels = c("  \nEver observed in registers  \n", 
+                                "Ever observed in registers,  \nborn in Sweden", 
+                                "**Analytical population**  \nEver observed in registers,  \nborn in Sweden,  \nalive in 2018", 
+                                "Ever observed in registers,  \nborn in Sweden,  \nalive in 2018,  \nwith two Swedish born parents")) + 
+  theme(text = element_text(family = "Times", size = 12),
+        legend.position = "bottom",
+        legend.text = element_markdown())
+
+A1
 ```
