@@ -3,6 +3,38 @@ Attempting to replicate Martin’s plot with updated SOCSIM data
 …
 2023-11-24
 
+    ## -- Attaching packages --------------------------------------- tidyverse 1.3.2 --
+    ## v ggplot2 3.4.0     v purrr   1.0.1
+    ## v tibble  3.2.1     v dplyr   1.1.2
+    ## v tidyr   1.3.0     v stringr 1.5.0
+    ## v readr   2.1.4     v forcats 1.0.0
+    ## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
+    ## x dplyr::filter() masks stats::filter()
+    ## x dplyr::lag()    masks stats::lag()
+    ## 
+    ## Attache Paket: 'data.table'
+    ## 
+    ## 
+    ## Die folgenden Objekte sind maskiert von 'package:dplyr':
+    ## 
+    ##     between, first, last
+    ## 
+    ## 
+    ## Das folgende Objekt ist maskiert 'package:purrr':
+    ## 
+    ##     transpose
+    ## 
+    ## 
+    ## Registering fonts with R
+    ## 
+    ## 
+    ## Attache Paket: 'cowplot'
+    ## 
+    ## 
+    ## Das folgende Objekt ist maskiert 'package:ggthemes':
+    ## 
+    ##     theme_map
+
 #### Fig. 0: Population size (N) over birth cohorts
 
     ## Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.

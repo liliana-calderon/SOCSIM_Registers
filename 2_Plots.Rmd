@@ -12,11 +12,11 @@ output:
 #   pdf_document: default
 ---
 
-```{r setup, include=FALSE}
+```{r setup, include=FALSE, warning= FALSE, message=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r, warning= FALSE, message=FALSE}
+```{r}
 library(tidyverse)
 library(data.table)
 library(RColorBrewer)
@@ -118,8 +118,7 @@ Q <- ggplot() +
   geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
   scale_fill_manual(values = c("#225ea8", "#7fcdbb"), limits = c("FALSE", "TRUE"), labels = c("Deceased grandchildren", "Living grandchildren")) +
-  #labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
-  labs(x = "Birth cohort \n (Age in 2018)", y = "Proportion", fill = "")+
+  labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
   #scale_x_continuous(breaks = c(seq(1920,2010, by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
