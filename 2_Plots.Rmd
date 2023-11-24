@@ -272,7 +272,6 @@ O <- ggplot() +
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of nieces/nephews", fill = "") +
-  #labs(x = "Birth cohort", y = "Average number of nieces/nephews", fill = "") +
   scale_fill_manual(values = c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494","white", "#ffffcc"),
                     limits = c(levels(sibchild_table$Type)[2:5], "", "not living"),
                     labels = c("Half brother's side","Full brother's side","Half sister's side","Full sister's side", "", "Deceased kin")) +
@@ -338,7 +337,6 @@ I_alt <- ggplot() +
   scale_fill_manual(values = c("#225ea8", "#41b6c4", "#a1dab4","#ffffcc"), 
                     limits = c("full", "half.father", "half.mother","not living"), 
                     labels = c("Full siblings", "Half siblings on father's side", "Half siblings on mother's side","Deceased siblings")) +
-  #labs(x = "Birth cohort", y = "Average number of siblings", fill = "") +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of siblings", fill = "") +
   #scale_x_continuous(breaks = c(seq(1930,2010, by = 10), 2017)) + 
   #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
