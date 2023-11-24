@@ -3,17 +3,20 @@ title: "Attempting to replicate Martin's plot with updated SOCSIM data"
 author: '...'
 date: "`r Sys.Date()`"
 output:
-  html_document: default
-  pdf_document: default
+  github_document:
+    pandoc_args: --webtex
+    toc: true
+    toc_depth: 1
+# output:
+#   html_document: default
+#   pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-## Preamble
-
-```{r}
+```{r, warning= FALSE, message=FALSE}
 library(tidyverse)
 library(data.table)
 library(RColorBrewer)
