@@ -1,12 +1,14 @@
 ---
 title: "Attempting to replicate Martin's plot with updated SOCSIM data"
-output: html_document
-author: "..."
+author: '...'
 date: "`r Sys.Date()`"
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ## Preamble
@@ -29,10 +31,9 @@ load("Output/temp.RData")
 
 ```
 
-#### Plot A1 + A2: Population size (N) over birth cohorts
+#### Fig. 0: Population size (N) over birth cohorts
 
 ```{r}
-#  I haven't seen this plot 
 A1 <- ggplot(data = filter(gather(N_Cohort, key = "Population", value = "N", -IDbirthYear), IDbirthYear >= 1915)) +
   geom_line(mapping = aes(x = IDbirthYear, y = N, color = Population), lwd = 1) +
   geom_area(data=data.frame(x = c(1910,2020), y = c(-50,-1000)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
@@ -55,8 +56,7 @@ A1 <- ggplot(data = filter(gather(N_Cohort, key = "Population", value = "N", -ID
 A1
 ```
 
-#### Plot Q: Mean grandchildren per cohort
-
+#### Fig. 1: Average number of living and dead grandchildren and proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort
 
 ```{r}
 grandchild_table <- reference_table_SweBorn %>% 
@@ -133,6 +133,8 @@ Q <- ggplot() +
         strip.background = element_rect(color = "black", fill = "white")) +
   guides(fill = guide_legend(reverse = TRUE))
 
+Q
+
 Q_alt <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 2017)) +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_grandchildren), color = "grey30", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -159,11 +161,11 @@ Q_alt <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 20
         #strip.placement = "outside",
         strip.background = element_rect(color = "black", fill = "white"))
 
-plot_grid(Q, Q_alt, align = "hv")
+Q_alt
+# plot_grid(Q, Q_alt, align = "hv")
 ```
 
-#### Plot N: No. of children over cohort
-#### Plot L: Mean children with n child bearing partners per cohort
+#### Fig. 2: Average number of living and dead children and proportional distribution of the number of living children, in 2017 by sex and birth cohort
 
 ```{r}
 children_dist_Table <-  
@@ -207,33 +209,6 @@ child_table <- rbind(child_table[, .(mean_children = .N / N_17, Type = "not livi
 
 child_table <- child_table %>% mutate(Type = factor(Type, levels = c("not living", ">2", "2", "1")))
 
-N <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
-  geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_children), color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
-  #labs(x = "Birth cohort", y = "Proportion", fill = "")+
-  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
-  #scale_x_continuous(breaks = c(seq(1920,2010, by = 10), 2017))+
-  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
-  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        axis.line = element_line(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "Times", size = 12),
-        legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
-
 L_alt <- ggplot() +
   geom_area(data = child_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = child_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
@@ -263,12 +238,41 @@ L_alt <- ggplot() +
         strip.placement = "outside",
         strip.background = element_rect(color = "black", fill = "white"))
 
-L_N <- plot_grid(L_alt, N, align = "hv")
+L_alt
 
-L_N
+N <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
+  geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_children), color = "grey30", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
+  #labs(x = "Birth cohort", y = "Proportion", fill = "")+
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
+  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  #scale_x_continuous(breaks = c(seq(1920,2010, by = 10), 2017))+
+  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
+  theme_bw() +
+  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        axis.line = element_line(),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12),
+        legend.key = element_blank(),
+        strip.placement = "outside",
+        strip.background = element_rect(color = "black", fill = "white"))
+
+N
+
+# L_N <- plot_grid(L_alt, N, align = "hv")
 ```
 
-#### Plot O: Mean sibling children per cohort
+#### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother
 
 ```{r}
 sibchild_table <- reference_table_SweBorn %>% 
@@ -312,8 +316,7 @@ O <- ggplot() +
 O
 ```
 
-#### Plot I: Mean siblings per cohort
-#### Plot K: No. of siblings over cohort
+#### Fig. 4: Average number of siblings by birth cohort and whether full or half-sibling and Proportional distribution of the number of siblings (half- or full) by birth cohort
 
 ```{r}
 sibling_table <- reference_table_SweBorn %>% 
@@ -348,30 +351,6 @@ sibling_dist_Table_living <- rbind(sibling_dist_Table[is.na(refID),.(n_siblings 
   .[,.(freq =sum(freq)) ,keyby = .(IDbirthYear,  N_17, n_siblings)]%>%
   .[,.(n_siblings = n_siblings, freq = freq, N_17 = sum(freq), prop = freq /sum(freq)),keyby = .(IDbirthYear)]
 
-K_alt <- ggplot(data = sibling_dist_Table_living) +
-  geom_area(data = data.frame(IDbirthYear = seq(1930, 2017, by =1), new = 1), mapping = aes(x = IDbirthYear, y = new), fill = "#c7e9b4", color = "grey30", lwd = 0.7)  +
-  geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_siblings), color = "grey30", lwd = 0.7) +  
-  geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  #labs(x = "Birth cohort", y = "Proportion", fill = "")+
-  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
-  #scale_x_continuous(breaks = c(seq(1930,2010, by = 10),2017))+
-  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
-  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "Times", size = 12))+
-  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
-
 
 I_alt <- ggplot() +
   geom_area(data = sibling_table[refTypeIIII == "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "grey30", lwd = 0.5) +
@@ -397,15 +376,38 @@ I_alt <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
+I_alt
 
 
-I_K <- plot_grid(I_alt, K_alt)
+K_alt <- ggplot(data = sibling_dist_Table_living) +
+  geom_area(data = data.frame(IDbirthYear = seq(1930, 2017, by =1), new = 1), mapping = aes(x = IDbirthYear, y = new), fill = "#c7e9b4", color = "grey30", lwd = 0.7)  +
+  geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_siblings), color = "grey30", lwd = 0.7) +  
+  geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
+  #labs(x = "Birth cohort", y = "Proportion", fill = "")+
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
+  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  #scale_x_continuous(breaks = c(seq(1930,2010, by = 10),2017))+
+  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12))+
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
-I_K
+K_alt
+# I_K <- plot_grid(I_alt, K_alt)
 ```
 
-#### Plot G1 + G2: Mean Cousins per cohort
-#### Plot H1
+#### Fig. 5: Average number of cousins by birth cohort and by type of aunt or uncle and Proportional distribution of the number of cousins by birth cohort
 
 ```{r}
 cousin_table <- reference_table_SweBorn %>% 
@@ -487,6 +489,8 @@ G1_alt <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
 
+G1_alt
+
 H_alt <- ggplot(data = cousin_dist_Table_living) +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_cousins), color = "grey30", lwd = 0.7) +  
   geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -510,14 +514,15 @@ H_alt <- ggplot(data = cousin_dist_Table_living) +
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12))
 
-G1_H <- plot_grid(G1_alt, H_alt, align = "hv")
+H_alt
+#G1_H <- plot_grid(G1_alt, H_alt, align = "hv")
 
-G1_H
 ```
 
-#### Plot D1 + D2: Mean parents per cohort
+#### Fig. 6. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017 and Average number of parent siblings by birth cohort 1950–2017
 
 ```{r}
+
 parent_table <- 
   reference_table_SweBorn %>% 
   filter(refGroup == "parent" & !is.na(refID) & IDbirthYear >= 1930 & IDbirthYear <= 2017) %>%
@@ -565,11 +570,8 @@ D1 <-
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 D1
-```
 
-#### Plot E1 + E2: Mean parent siblings per cohort
 
-```{r}
 parsib_table <- reference_table_SweBorn %>% 
   filter(refGroup == "parsib" & !is.na(refID) & IDbirthYear >= 1950 & IDbirthYear <= 2017) %>%
   mutate(isAlive = refIDdeathYear > 2017,
@@ -595,7 +597,6 @@ parsib_table <- reference_table_SweBorn %>%
 parsib_tableAlt3  <- rbind(parsib_table[, .(mean_kin = .N / N_17, Type4 = "not living"),keyby = .(IDbirthYear)],
                            parsib_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type4)]) %>%
   distinct()
-
 
 E1 <- ggplot() +
   geom_area(data = parsib_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "grey30", lwd = 0.5) +
@@ -626,11 +627,11 @@ E1 <- ggplot() +
   #guides(fill = guide_legend(override.aes = list(color = 0)))
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-
-plot_grid(D1, E1, align = "hv")
+E1
+# plot_grid(D1, E1, align = "hv")
 ```
 
-#### Plot B1: Mean grandparents per cohort 
+#### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort
 
 ```{r}
 grandparent_table <- 
@@ -674,59 +675,11 @@ B1 <-
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-
-plot_grid(D1, B1, align = "hv")
+B1
+# plot_grid(D1, B1, align = "hv")
 ```
 
-#### Plot S: Mean total kin per cohort 
-
-```{r}
-totalkin_table <- reference_table_SweBorn %>% 
-  filter(!is.na(refID) & IDbirthYear >= 1915 & IDbirthYear <= 2017) %>%
-  mutate(isAlive = refIDdeathYear > 2017,
-         Type = as.factor(refGroup)) %>%
-  setDT() %>% 
-  left_join(., select(N_Cohort, IDbirthYear, N_17), by = c("IDbirthYear"))
-
-
-totalkin_table  <- rbind(totalkin_table[, .(mean_kin = .N / N_17, Type = "not living"),keyby = .(IDbirthYear)],
-                         totalkin_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]) %>%
-  distinct()%>%
-  mutate(Type = factor(Type, levels = c("not living", "grandchild","child","sibchild","sibling","cousin","parent","parsib","grandparent")))
-
-
-totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
-                                                   mean_kin = 0,
-                                                   Type = c("sibchild", "sibling")))
-
-S <- ggplot() +
-  geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  #geom_area(data=data.frame(x = c(1931,1932), y = c(0,3)), aes(x=x,y=y), fill = "#225ea8") + 
-  geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  #geom_area(data=data.frame(x = c(1915,1932), y = c(25,25)), aes(x=x,y=y), fill = "white", alpha = 0.1) + 
-  #labs(x = "Birth cohort", y = "Average number of kin", fill = "") +
-  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of kin", fill = "") +
-  scale_fill_manual(values =c("#081d58","#253494","#225ea8","#1d91c0","#41b6c4","#7fcdbb","#c7e9b4","#edf8b1","white","#ffffd9"),
-                    limits = c(levels(totalkin_table$Type)[2:9], "", "not living"),
-                    labels = c("Grandchilden", "Childen", "Nieces/nephews", "Siblings", "Cousins", "Parents", "Aunts/Uncles", "Grandparents", "", "Dead kin")) +
-  #scale_x_continuous(breaks = c(seq(1920,2010, by = 10), 2017)) + 
-  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
-  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
-        legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "Times", size = 12)) +
-  guides(fill = guide_legend(override.aes = list(color = 0)))
-
-S
-```
-
-#### Plot T + W: Violin plots (number of total kin)
+#### Fig. 8: Distribution of the total number of kin and average number of all types of kin by birth cohort 1915–2017
 
 ```{r}
 violinTable_kin <- reference_table_SweBorn %>%
@@ -792,6 +745,49 @@ PlotT <- ggplot() +
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) 
 
-
 PlotT
+
+totalkin_table <- reference_table_SweBorn %>% 
+  filter(!is.na(refID) & IDbirthYear >= 1915 & IDbirthYear <= 2017) %>%
+  mutate(isAlive = refIDdeathYear > 2017,
+         Type = as.factor(refGroup)) %>%
+  setDT() %>% 
+  left_join(., select(N_Cohort, IDbirthYear, N_17), by = c("IDbirthYear"))
+
+
+totalkin_table  <- rbind(totalkin_table[, .(mean_kin = .N / N_17, Type = "not living"),keyby = .(IDbirthYear)],
+                         totalkin_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]) %>%
+  distinct()%>%
+  mutate(Type = factor(Type, levels = c("not living", "grandchild","child","sibchild","sibling","cousin","parent","parsib","grandparent")))
+
+
+totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
+                                                   mean_kin = 0,
+                                                   Type = c("sibchild", "sibling")))
+
+S <- ggplot() +
+  geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
+  #geom_area(data=data.frame(x = c(1931,1932), y = c(0,3)), aes(x=x,y=y), fill = "#225ea8") + 
+  geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
+  #geom_area(data=data.frame(x = c(1915,1932), y = c(25,25)), aes(x=x,y=y), fill = "white", alpha = 0.1) + 
+  #labs(x = "Birth cohort", y = "Average number of kin", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of kin", fill = "") +
+  scale_fill_manual(values =c("#081d58","#253494","#225ea8","#1d91c0","#41b6c4","#7fcdbb","#c7e9b4","#edf8b1","white","#ffffd9"),
+                    limits = c(levels(totalkin_table$Type)[2:9], "", "not living"),
+                    labels = c("Grandchilden", "Childen", "Nieces/nephews", "Siblings", "Cousins", "Parents", "Aunts/Uncles", "Grandparents", "", "Dead kin")) +
+  #scale_x_continuous(breaks = c(seq(1920,2010, by = 10), 2017)) + 
+  #scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), sec.axis = sec_axis(~ 2018 - ., name = "Cohort age in 2018", breaks = c(seq(100,10, length.out = 10),1))) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "right",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0)))
+
+S
 ```
