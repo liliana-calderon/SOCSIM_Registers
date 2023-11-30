@@ -19,7 +19,7 @@ load("Output/N_Cohort.RData")
 load("Output/temp.RData")
 ```
 
-#### Fig. 1: Average number of living and dead grandchildren and proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort
+#### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort
 
 ``` r
 grandchild_table <- reference_table_SweBorn %>% 
@@ -29,7 +29,6 @@ grandchild_table <- reference_table_SweBorn %>%
   left_join(., temp, by = c("IDbirthYear", "Kon"))
 
 grandchild_table <- distinct(grandchild_table[, .(mean_grandchildren = .N / N_17),keyby = .(IDbirthYear, Kon, isAlive)])
-
 
 grandchildren_dist_Table <-  reference_table_SweBorn %>%
   filter(refGroup == "grandchild" & IDbirthYear >= 1915 & IDbirthYear <= 2017) %>%
@@ -70,7 +69,7 @@ grandchildren_dist_Table <- rbind(grandchildren_dist_Table[is.na(refID),.(n_gran
   .[,.(n_grandchildren = n_grandchildren, freq = freq, N_17 = sum(freq), prop = freq /sum(freq)),keyby = .(IDbirthYear, Kon)]
 
 
-Q <- ggplot() +
+Fig1b <- ggplot() +
   geom_area(data = grandchild_table, mapping = aes(x = IDbirthYear, y = mean_grandchildren, fill = isAlive), color = "grey30") +
   geom_area(data=data.frame(x = c(2017-73,2017), y = c(4,4)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
@@ -91,13 +90,15 @@ Q <- ggplot() +
         strip.background = element_rect(color = "black", fill = "white")) +
   guides(fill = guide_legend(reverse = TRUE))
 
-Q
+Fig1b
 ```
 
 ![](2_Plots_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
 
+#### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort
+
 ``` r
-Q_alt <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 2017)) +
+Fig1a <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 2017)) +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_grandchildren), color = "grey30", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
@@ -120,16 +121,12 @@ Q_alt <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 20
         legend.key = element_blank(),
         strip.background = element_rect(color = "black", fill = "white"))
 
-Q_alt
+Fig1a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-2-2.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
 
-``` r
-# plot_grid(Q, Q_alt, align = "hv")
-```
-
-#### Fig. 2: Average number of living and dead children and proportional distribution of the number of living children, in 2017 by sex and birth cohort
+#### Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort
 
 ``` r
 children_dist_Table <-  
@@ -173,7 +170,7 @@ child_table <- rbind(child_table[, .(mean_children = .N / N_17, Type = "not livi
 
 child_table <- child_table %>% mutate(Type = factor(Type, levels = c("not living", ">2", "2", "1")))
 
-L_alt <- ggplot() +
+Fig2b <- ggplot() +
   geom_area(data = child_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = child_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -197,13 +194,15 @@ L_alt <- ggplot() +
         strip.placement = "outside",
         strip.background = element_rect(color = "black", fill = "white"))
 
-L_alt
+Fig2b
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+
+#### Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort
 
 ``` r
-N <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
+Fig2a <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_children), color = "grey30", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
@@ -227,14 +226,10 @@ N <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
         strip.placement = "outside",
         strip.background = element_rect(color = "black", fill = "white"))
 
-N
+Fig2a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
-
-``` r
-# L_N <- plot_grid(L_alt, N, align = "hv")
-```
+![](2_Plots_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
 
 #### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother
 
@@ -252,7 +247,7 @@ sibchild_table  <- rbind(sibchild_table[, .(mean_kin = .N / N_17, Type = "not li
                          sibchild_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]) %>%
   distinct()
 
-O <- ggplot() +
+Fig3 <- ggplot() +
   geom_area(data = filter(sibchild_table[Type == "not living"], IDbirthYear <= 2017), mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = filter(sibchild_table[Type != "not living"], IDbirthYear <= 2017), mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
@@ -274,12 +269,12 @@ O <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
-O
+Fig3
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
 
-#### Fig. 4: Average number of siblings by birth cohort and whether full or half-sibling and Proportional distribution of the number of siblings (half- or full) by birth cohort
+#### Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort
 
 ``` r
 sibling_table <- reference_table_SweBorn %>% 
@@ -291,7 +286,6 @@ sibling_table <- reference_table_SweBorn %>%
 sibling_table <- rbind(sibling_table[, .(mean_siblings = .N / N_17, refTypeIIII = "not living"),keyby = .(IDbirthYear)],
                        sibling_table[isAlive == TRUE, .(mean_siblings = .N / N_17),keyby = .(IDbirthYear, refTypeIIII)]) %>%
   distinct()
-
 
 sibling_dist_Table <-  reference_table_SweBorn %>%
   filter(refGroup == "sibling" & IDbirthYear >= 1930 & IDbirthYear <= 2017) %>%
@@ -315,7 +309,7 @@ sibling_dist_Table_living <- rbind(sibling_dist_Table[is.na(refID),.(n_siblings 
   .[,.(n_siblings = n_siblings, freq = freq, N_17 = sum(freq), prop = freq /sum(freq)),keyby = .(IDbirthYear)]
 
 
-I_alt <- ggplot() +
+Fig4a <- ggplot() +
   geom_area(data = sibling_table[refTypeIIII == "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "grey30", lwd = 0.5) +
   geom_area(data = sibling_table[refTypeIIII != "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
@@ -336,13 +330,15 @@ I_alt <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
-I_alt
+Fig4a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+
+#### Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort
 
 ``` r
-K_alt <- ggplot(data = sibling_dist_Table_living) +
+Fig4b <- ggplot(data = sibling_dist_Table_living) +
   geom_area(data = data.frame(IDbirthYear = seq(1930, 2017, by =1), new = 1), mapping = aes(x = IDbirthYear, y = new), fill = "#c7e9b4", color = "grey30", lwd = 0.7)  +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_siblings), color = "grey30", lwd = 0.7) +  
   geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
@@ -363,16 +359,12 @@ K_alt <- ggplot(data = sibling_dist_Table_living) +
         text = element_text(family = "Times", size = 12))+
   guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
-K_alt
+Fig4b
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-5-2.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
 
-``` r
-# I_K <- plot_grid(I_alt, K_alt)
-```
-
-#### Fig. 5: Average number of cousins by birth cohort and by type of aunt or uncle and Proportional distribution of the number of cousins by birth cohort
+#### Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle
 
 ``` r
 cousin_table <- reference_table_SweBorn %>% 
@@ -430,7 +422,7 @@ cousin_dist_Table_living <- rbind(cousin_dist_Table[is.na(refID),.(n_cousins = 0
   .[,.(n_cousins = n_cousins, freq = freq, N_17 = sum(freq), prop = freq /sum(freq)),keyby = .(IDbirthYear)]
 
 
-G1_alt <- ggplot() +
+Fig5b <- ggplot() +
   geom_area(data = cousin_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
   geom_area(data = cousin_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -451,13 +443,15 @@ G1_alt <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
 
-G1_alt
+Fig5b
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+
+#### Fig. 5a: Proportional distribution of the number of cousins by birth cohort
 
 ``` r
-H_alt <- ggplot(data = cousin_dist_Table_living) +
+Fig5a <- ggplot(data = cousin_dist_Table_living) +
   geom_area(mapping = aes(x = IDbirthYear, y = prop, fill = n_cousins), color = "grey30", lwd = 0.7) +  
   geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -477,16 +471,12 @@ H_alt <- ggplot(data = cousin_dist_Table_living) +
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12))
 
-H_alt
+Fig5a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-6-2.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
 
-``` r
-#G1_H <- plot_grid(G1_alt, H_alt, align = "hv")
-```
-
-#### Fig. 6. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017 and Average number of parent siblings by birth cohort 1950–2017
+#### Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017
 
 ``` r
 parent_table <- 
@@ -501,8 +491,6 @@ parent_table <-
   setDT() %>% 
   left_join(., select(N_Cohort, IDbirthYear, N_17), by = c("IDbirthYear"))
 
-# Q: Why are some Type = "not living")??
-
 parent_table  <- 
   rbind(
     parent_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]
@@ -511,7 +499,7 @@ parent_table  <-
   distinct() %>% 
   mutate(new = 2)
 
-D1 <-
+Fig6a <-
   ggplot() +
   geom_area(data = parent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
@@ -532,10 +520,12 @@ D1 <-
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-D1
+Fig6a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+
+#### Fig. 6b. Average number of parent siblings by birth cohort 1950–2017
 
 ``` r
 parsib_table <- reference_table_SweBorn %>% 
@@ -564,7 +554,7 @@ parsib_tableAlt3  <- rbind(parsib_table[, .(mean_kin = .N / N_17, Type4 = "not l
                            parsib_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type4)]) %>%
   distinct()
 
-E1 <- ggplot() +
+Fig6b <- ggplot() +
   geom_area(data = parsib_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "grey30", lwd = 0.5) +
   geom_area(data = parsib_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
@@ -585,14 +575,10 @@ E1 <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-E1
+Fig6b
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-7-2.png)<!-- -->
-
-``` r
-# plot_grid(D1, E1, align = "hv")
-```
+![](2_Plots_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
 
 #### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort
 
@@ -612,9 +598,8 @@ grandparent_table  <-
     , grandparent_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]
     ) %>%
   distinct() 
-  # mutate(new = 4)
 
-B1 <-
+Fig7 <-
   ggplot() +
   geom_area(data = grandparent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = grandparent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
@@ -636,16 +621,12 @@ B1 <-
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-B1
+Fig7
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
 
-``` r
-# plot_grid(D1, B1, align = "hv")
-```
-
-#### Fig. 8: Distribution of the total number of kin and average number of all types of kin by birth cohort 1915–2017
+#### Fig. 8: Distribution of the total number of kin by birth cohort 1915–2017
 
 ``` r
 violinTable_kin <- reference_table_SweBorn %>%
@@ -685,7 +666,7 @@ boxplotTable_kin <- violinTable_kin[,.(n = n, q=cumsum(freq/N_17)),keyby = .(IDb
 annotate_living <-left_join(select(boxplotTable_kin_living, IDbirthYear, qmiddle), violinTable_kin_living, by = c("IDbirthYear"="IDbirthYear", "qmiddle"="n" ))
 
 
-PlotT <- ggplot() +
+Fig8a <- ggplot() +
   geom_violin(data  = violinTable_kin_living,  mapping = aes(x = IDbirthYear, y = n, weight = freq, fill = as.factor(IDbirthYear)),
               scale = "area", bw = 1) +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
@@ -705,11 +686,12 @@ PlotT <- ggplot() +
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) 
-
-PlotT
+Fig8a
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+
+#### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017
 
 ``` r
 totalkin_table <- reference_table_SweBorn %>% 
@@ -730,7 +712,7 @@ totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
                                                    mean_kin = 0,
                                                    Type = c("sibchild", "sibling")))
 
-S <- ggplot() +
+Fig8b <- ggplot() +
   geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of kin", fill = "") +
@@ -749,10 +731,10 @@ S <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
-S
+Fig8b
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-9-2.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
 
 #### Extra Fig: Population size (N) over birth cohorts
 
@@ -777,4 +759,4 @@ A1 <- ggplot(data = filter(gather(N_Cohort, key = "Population", value = "N", -ID
 A1
 ```
 
-![](2_Plots_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+![](2_Plots_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
