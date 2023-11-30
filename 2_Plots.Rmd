@@ -2,14 +2,14 @@
 title: "Attempting to replicate the Swedish Kinship Universe plots with updated SOCSIM data"
 author: '...'
 date: "`r Sys.Date()`"
-# output:
-#   github_document:
-#     pandoc_args: --webtex
-#     toc: true
-#     toc_depth: 1
 output:
-  html_document: default
-  pdf_document: default
+  github_document:
+    pandoc_args: --webtex
+    toc: true
+    toc_depth: 1
+# output:
+#   html_document: default
+#   pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
