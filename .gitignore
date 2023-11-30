@@ -38,3 +38,5 @@ Output/*
 # DAG replication attempt
 kin_count_sweden
 
+# HTML files
+*.html
