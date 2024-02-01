@@ -2,7 +2,7 @@ Attempting to replicate the Swedish Kinship Universe plots with SOCSIM
 data and Excel files
 ================
 …
-2023-12-15
+2024-02-01
 
 ``` r
 library(tidyverse)
@@ -138,7 +138,7 @@ Fig1b_SKU <- ggplot() +
 plot_grid(Fig1b_SKU, Fig1b_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -202,7 +202,7 @@ Fig1a_SKU <- ggplot(data = SKU %>%
 plot_grid(Fig1a_SKU, Fig1a_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-4-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -257,7 +257,7 @@ Fig2b_socsim <- ggplot() +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1,scales = "free_x") +
-  scale_fill_manual(values = c("#7fcdbb","#41b6c4", "#225ea8","#ffffcc"), 
+  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFFFCC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of children", fill = " ") +
@@ -284,10 +284,10 @@ Fig2b_SKU <- ggplot() +
               mutate(type = factor(type, levels = c("registered deceased", ">2", "2", "1"))) %>% 
               filter(Fig == "Fig2b" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
   geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1,scales = "free_x") +
-  scale_fill_manual(values = c("#7fcdbb","#41b6c4", "#225ea8", "#ffffcc"), 
+  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFFFCC"), 
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of children", fill = " ") +
@@ -308,7 +308,7 @@ Fig2b_SKU <- ggplot() +
 plot_grid(Fig2b_SKU, Fig2b_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-5-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -319,7 +319,7 @@ Fig2a_socsim <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 
   geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
-  scale_fill_manual(values = c("#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"),
+  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFFFCC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -349,7 +349,7 @@ Fig2a_SKU <- ggplot(data = SKU %>%
   geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
-  scale_fill_manual(values = c("#253494", "#2c7fb8", "#41b6c4", "#a1dab4", "#ffffcc"),
+  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFFFCC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -372,7 +372,7 @@ Fig2a_SKU <- ggplot(data = SKU %>%
 plot_grid(Fig2a_SKU, Fig2a_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-6-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -391,15 +391,23 @@ sibchild_table  <- rbind(sibchild_table[, .(mean_kin = .N / N_17, Type = "not li
   distinct()
 
 Fig3_socsim <- ggplot() +
-  geom_area(data = filter(sibchild_table[Type == "not living"], IDbirthYear <= 2017), mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data = filter(sibchild_table[Type != "not living"], IDbirthYear <= 2017), mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
+  geom_area(data = sibchild_table %>% 
+              filter(Type == "not living" & IDbirthYear <= 2017),
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
+  geom_area(data = sibchild_table %>% 
+              filter(Type != "not living" & IDbirthYear <= 2017),
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of nieces/nephews", fill = "") +
-  scale_fill_manual(values = c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494","white", "#ffffcc"),
-                    limits = c(levels(sibchild_table$Type)[2:5], "", "not living"),
-                    labels = c("Half brother's side","Full brother's side","Half sister's side","Full sister's side", "", "Deceased kin")) +
+  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+                    limits = c(levels=c("not living", 
+                                        "half brother side", "full brother side",
+                                        "half sister side", "full sister side")),
+                    labels = c("Deceased nieces and nephews", 
+                               "Half brother's side","Full brother's side",
+                               "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
@@ -412,10 +420,49 @@ Fig3_socsim <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
-Fig3_socsim
+Fig3_SKU <- ggplot() +
+    geom_area(data = SKU %>%
+              mutate(type = factor(type,
+                                   levels = c("registered deceased",
+                                              "half brother side", "full brother side",
+                                              "half sister side", "full sister side"))) %>% 
+              filter(Fig == "Fig3" & type == "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
+            color = "grey30", lwd = 0.5) +
+    geom_area(data = SKU %>%
+              mutate(type = factor(type,
+                                   levels = c("registered deceased",
+                                              "half brother side", "full brother side",
+                                              "half sister side", "full sister side"))) %>% 
+              filter(Fig == "Fig3" & type != "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
+            color = "grey30", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of nieces/nephews", fill = "") +
+  scale_fill_manual(values = c( "#FFFFCC","#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+                    limits = c("registered deceased",
+                               "half brother side", "full brother side",
+                               "half sister side", "full sister side"),
+                    labels = c("Deceased nieces and nephews", "Half brother's side", "Full brother's side", 
+                               "Half sister's side","Full sister's side")) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "right",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0)))
+
+plot_grid(Fig3_SKU, Fig3_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-7-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -458,9 +505,10 @@ Fig4a_socsim <- ggplot() +
   geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#225ea8", "#41b6c4", "#a1dab4","#ffffcc"), 
-                    limits = c("full", "half.father", "half.mother","not living"), 
-                    labels = c("Full siblings", "Half siblings on father's side", "Half siblings on mother's side","Deceased siblings")) +
+  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFFFCC"), 
+                    limits = c("half.mother", "half.father", "full", "not living"), 
+                    labels = c("Half siblings on mother's side", "Half siblings on father's side", 
+                               "Full siblings", "Deceased siblings")) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of siblings", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
@@ -473,17 +521,81 @@ Fig4a_socsim <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
-Fig4a_socsim
+
+Fig4a_SKU <- ggplot() +
+  geom_area(data = SKU %>%
+              filter(Fig == "Fig4a") %>%
+              mutate(type = factor(type,
+                                   levels = c("not living",
+                                              "full", 
+                                              "half.father", 
+                                              "half.mother"))) %>% 
+              filter(Fig == "Fig4a" & type == "not living"), 
+              mapping = aes(x = IDbirthYear, y = mean_siblings, fill = type), 
+              color = "grey30", lwd = 0.5) +
+  geom_area(data = SKU %>%
+              filter(Fig == "Fig4a") %>%
+              mutate(type = factor(type,
+                                   levels = c("not living",
+                                              "full",
+                                              "half.father",
+                                              "half.mother"))) %>% 
+            filter(Fig == "Fig4a" & type != "not living"), 
+            mapping = aes(x = IDbirthYear, y = mean_siblings, fill = type), 
+            color = "grey30", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
+  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFFFCC"), 
+                    limits = c("half.mother", "half.father", "full", "not living"), 
+                    labels = c("Half siblings on mother's side", "Half siblings on father's side", 
+                               "Full siblings", "Deceased siblings")) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of siblings", fill = "") +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
+
+plot_grid(Fig4a_SKU, Fig4a_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-8-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
 ``` r
 Fig4b_socsim <- ggplot(data = sibling_dist_Table_living) +
-  geom_area(data = data.frame(IDbirthYear = seq(1930, 2017, by =1), new = 1), mapping = aes(x = IDbirthYear, y = new), fill = "#c7e9b4", color = "grey30", lwd = 0.7)  +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), color = "grey30", lwd = 0.7) +  
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), color = "grey30", lwd = 0.7) +    geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
+  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12))+
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
+
+Fig4b_SKU <- ggplot(data = SKU %>% 
+                      filter(Fig == "Fig4b") %>%  
+                      mutate(n_siblings = factor(n_siblings, 
+                                                 levels = c("6 or more siblings", "5 siblings", "4 siblings",
+                                                            "3 siblings", "2 siblings", "1 sibling", "No siblings")))) +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), 
+            color = "grey30", lwd = 0.7) +  
   geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
@@ -502,10 +614,10 @@ Fig4b_socsim <- ggplot(data = sibling_dist_Table_living) +
         text = element_text(family = "Times", size = 12))+
   guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
-Fig4b_socsim
+plot_grid(Fig4b_SKU, Fig4b_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-9-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -550,7 +662,9 @@ cousin_dist_Table <-  reference_table_SweBorn %>%
 
 cousin_dist_Table_living <- rbind(cousin_dist_Table[is.na(refID),.(n_cousins = 0),keyby = .(ID, IDbirthYear, N_17)][,.(freq = .N),keyby = .(IDbirthYear, N_17, n_cousins)],
                                   cousin_dist_Table[isAlive == TRUE & !is.na(refID),.(n_cousins = .N),keyby = .(ID, IDbirthYear, N_17)][,.(freq = .N),keyby = .(IDbirthYear, N_17, n_cousins)]) %>%
-  mutate(n_cousins = ifelse(n_cousins > 5 & n_cousins < 11,"6-10",ifelse(n_cousins > 10,">10",as.character(n_cousins))),
+  mutate(n_cousins = ifelse(n_cousins > 5 & n_cousins < 11,"6-10",
+                            ifelse(n_cousins > 10,">10",
+                                   as.character(n_cousins))),
          n_cousins = factor(n_cousins, levels = c(">10","6-10","5","4","3","2","1","0")),
          n_cousins = fct_recode(n_cousins,
                                 "No cousins" = "0",
@@ -566,14 +680,18 @@ cousin_dist_Table_living <- rbind(cousin_dist_Table[is.na(refID),.(n_cousins = 0
 
 
 Fig5b_socsim <- ggplot() +
-  geom_area(data = cousin_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
-  geom_area(data = cousin_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
+  geom_area(data = cousin_tableAlt3[Type4 == "not living"], 
+            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
+  geom_area(data = cousin_tableAlt3[Type4 != "not living"], 
+            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#253494", "#2c7fb8", "#41b6c4", "#a1dab4","#ffffcc"), 
-                    limits = c(levels(as.factor(cousin_tableAlt3$Type4))[1:4],"not living"),
-                    labels = c("Paternal uncle's side","Paternal aunt's side", "Maternal uncle's side","Maternal aunt's side","Deceased cousins")) +
+  scale_fill_manual(values = c("#FFFFCC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
+                    limits = c("not living", "father.brother", "father.sister",
+                                "mother.brother", "mother.sister"),
+                    labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
+                               "Maternal uncle's side","Maternal aunt's side")) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of cousins", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
@@ -584,12 +702,52 @@ Fig5b_socsim <- ggplot() +
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
 
-Fig5b_socsim
+
+Fig5b_SKU <- ggplot() +
+  geom_area(data = SKU %>%
+            filter(Fig == "Fig5b") %>%
+            mutate(type = factor(type,
+                                 levels = c("registered deceased",
+                                            "father.brother", "father.sister",
+                                            "mother.brother", "mother.sister"))) %>% 
+            filter(Fig == "Fig5b" & type == "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y =  mean_cousins, fill = type), 
+            color = "grey30", lwd = 0.5) +
+  geom_area(data = SKU %>%
+            filter(Fig == "Fig5b") %>%
+            mutate(type = factor(type,
+                                 levels = c("registered deceased",
+                                            "father.brother", "father.sister",
+                                            "mother.brother", "mother.sister"))) %>% 
+            filter(Fig == "Fig5b" & type != "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y =  mean_cousins, fill = type), 
+            color = "grey30", lwd = 0.5)+
+  geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
+  scale_fill_manual(values = c("#FFFFCC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
+                    limits = c("registered deceased", "father.brother", "father.sister",
+                                "mother.brother", "mother.sister"),
+                    labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
+                               "Maternal uncle's side","Maternal aunt's side")) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of cousins", fill = "") +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
+
+plot_grid(Fig5b_SKU, Fig5b_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 5a: Proportional distribution of the number of cousins by birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -614,10 +772,36 @@ Fig5a_socsim <- ggplot(data = cousin_dist_Table_living) +
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12))
 
-Fig5a_socsim
+
+Fig5a_SKU <- ggplot(data = SKU %>% 
+                    filter(Fig == "Fig5a") %>% 
+                      mutate(n_cousins = factor(n_cousins, 
+                                                 levels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                                                            "4 cousins", "3 cousins", "2 cousins", "1 cousin", 
+                                                            "No cousins")))) +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_cousins), color = "grey30", lwd = 0.7) +  
+  geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Proportion", fill = "")+
+  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  scale_y_continuous(breaks = seq(0,1, by = 0.2))+
+  theme_bw() +
+  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12))
+
+plot_grid(Fig5a_SKU, Fig5a_socsim, align = "hv")
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -647,7 +831,7 @@ Fig6a_socsim <- ggplot() +
   geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_vline(xintercept = c(1940), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of parents", fill = "") +
-  scale_fill_manual(values = c("#2c7fb8", "#a1dab4","#ffffcc"),
+  scale_fill_manual(values = c("#2C7FB8", "#A1DAB4","#FFFFCC"),
                     limits = c(levels(parent_table$Type)),
                     labels = c("Fathers", "Mothers", "Registered deceased parents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -665,7 +849,7 @@ Fig6a_socsim <- ggplot() +
 Fig6a_socsim
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 6b. Average number of parent siblings by birth cohort 1950–2017. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -702,7 +886,7 @@ Fig6b_socsim <- ggplot() +
   geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(1977), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of aunts/uncles", fill = "") +
-  scale_fill_manual(values = c("#a1dab4", "#41b6c4", "#2c7fb8", "#253494", "#ffffcc"),
+  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#2C7FB8", "#253494", "#FFFFCC"),
                     limits = c(levels(as.factor(parsib_tableAlt3$Type4))[1:4], "not living"),
                     labels = c("Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt","Deceased parental siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -720,7 +904,7 @@ Fig6b_socsim <- ggplot() +
 Fig6b_socsim
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-13-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort. Swedish Kinship Universe (left) vs SOCSIM (right)
 
@@ -745,7 +929,7 @@ Fig7_socsim <- ggplot() +
   geom_area(data = grandparent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = grandparent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#a1dab4","#41b6c4","#2c7fb8","#253494", "#ffffcc")
+  scale_fill_manual(values = c("#A1DAB4","#41B6C4","#2C7FB8","#253494", "#FFFFCC")
                     , limits = c(levels(as.factor(grandparent_table$Type))[1:4],  "not living")
                     , labels = c("Paternal grandfather", "Maternal grandfather", "Paternal grandmother", "Maternal grandfather", "Registered deceased grandparents")
                     ) +
@@ -765,7 +949,7 @@ Fig7_socsim <- ggplot() +
 Fig7_socsim
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-14-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 8a: Distribution of the total number of kin by birth cohort 1915–2017
 
@@ -812,7 +996,7 @@ Fig8a_socsim <- ggplot() +
               scale = "area", bw = 1) +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
                width = 1.5, show.legend = FALSE, color = "maroon")+
-  scale_fill_manual(values = c("white", "#ffffd9", "#edf8b1", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#253494", "#081d58"))+ 
+  scale_fill_manual(values = c("white", "#FFFFD9", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
   labs(x = "Birth cohort \n(Age in 2018)", y = "Total number of living kin") +
   scale_y_continuous(breaks = seq(0,80, by = 10), limits = c(0,70)) + 
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
@@ -830,7 +1014,7 @@ Fig8a_socsim <- ggplot() +
 Fig8a_socsim
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-15-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
 
 #### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017
 
@@ -857,7 +1041,7 @@ Fig8b_socsim <- ggplot() +
   geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of kin", fill = "") +
-  scale_fill_manual(values =c("#081d58","#253494","#225ea8","#1d91c0","#41b6c4","#7fcdbb","#c7e9b4","#edf8b1","white","#ffffd9"),
+  scale_fill_manual(values =c("#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1","white","#FFFFD9"),
                     limits = c(levels(totalkin_table$Type)[2:9], "", "not living"),
                     labels = c("Grandchilden", "Childen", "Nieces/nephews", "Siblings", "Cousins", "Parents", "Aunts/Uncles", "Grandparents", "", "Dead kin")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -875,4 +1059,4 @@ Fig8b_socsim <- ggplot() +
 Fig8b_socsim
 ```
 
-![](2_Plots_SKU_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+<img src="2_Plots_SKU_files/figure-gfm/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
