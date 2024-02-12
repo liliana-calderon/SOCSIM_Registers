@@ -182,8 +182,7 @@ Fig1a_socsim <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYea
 Fig1a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig1a") %>% 
                       mutate(n_grandchildren = factor(n_grandchildren, 
-                                    levels = c("11 or more grandchildren", 
-                                               "6-10 grandchildren",
+                                    levels = c("11 or more grandchildren",                                                "6-10 grandchildren",
                                                "5 grandchildren",
                                                "4 grandchildren",
                                                "3 grandchildren",
@@ -415,7 +414,7 @@ Fig3_socsim <- ggplot() +
                     limits = c(levels=c("not living", 
                                         "half brother side", "full brother side",
                                         "half sister side", "full sister side")),
-                    labels = c("Deceased nieces and nephews", 
+                    labels = c("Deceased nieces \n and nephews", 
                                "Half brother's side","Full brother's side",
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -455,7 +454,7 @@ Fig3_SKU <- ggplot() +
                     limits = c("registered deceased",
                                "half brother side", "full brother side",
                                "half sister side", "full sister side"),
-                    labels = c("Deceased nieces and nephews", "Half brother's side", "Full brother's side", 
+                    labels = c("Deceased nieces \n and nephews", "Half brother's side", "Full brother's side", 
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
@@ -838,9 +837,9 @@ Fig6a_socsim <- ggplot() +
   geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_vline(xintercept = c(1940), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of parents", fill = "") +
-  scale_fill_manual(values = c("#2C7FB8", "#A1DAB4","#FFFFCC"),
-                    limits = c(levels(parent_table$Type)),
-                    labels = c("Fathers", "Mothers", "Registered deceased parents")) +
+  scale_fill_manual(values = c("white", "#FFFFCC", "#2C7FB8", "#A1DAB4"),
+                    limits = c("", "not living", "father", "mother"),
+                    labels = c("", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
@@ -853,7 +852,37 @@ Fig6a_socsim <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-Fig6a_socsim
+
+Fig6a_SKU <- SKU %>%
+            filter(Fig == "Fig6a") %>%
+  pivot_wider(names_from = Type, values_from = mean_kin) %>% 
+  mutate(unregistered = 2-(father + mother + `registered deceased`)) %>%
+  pivot_longer(cols = father:unregistered, 
+               names_to = "Type", values_to = "mean_kin") %>% 
+  mutate(Type = factor(Type,
+                       levels = c("unregistered", "registered deceased", 
+                                  "father", "mother"))) %>% 
+  ggplot() +
+  geom_area(mapping = aes(x = IDbirthYear, y =  mean_kin, fill = Type), 
+            color = "grey30", lwd = 0.5) +
+  geom_vline(xintercept = c(1940), color = "black", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of parents", fill = "") +
+  scale_fill_manual(values = c("#FED98E", "#FFFFCC", "#2C7FB8", "#A1DAB4"),
+                    limits = c("unregistered","registered deceased", "father", "mother"),
+                    labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+
+plot_grid(Fig6a_SKU, Fig6a_socsim, align = "hv")
 ```
 
 
@@ -892,9 +921,9 @@ Fig6b_socsim <- ggplot() +
   geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
   geom_vline(xintercept = c(1977), color = "black", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of aunts/uncles", fill = "") +
-  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#2C7FB8", "#253494", "#FFFFCC"),
-                    limits = c(levels(as.factor(parsib_tableAlt3$Type4))[1:4], "not living"),
-                    labels = c("Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt","Deceased parental siblings")) +
+  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
+                    limits = c("not living", "father brother", "father sister", "mother brother", "mother sister"),
+                    labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
@@ -905,9 +934,43 @@ Fig6b_socsim <- ggplot() +
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
 
-Fig6b_socsim
+Fig6b_SKU <- ggplot() +
+  geom_area(data = SKU %>% 
+              filter(Fig == "Fig6b") %>% 
+              mutate(type = factor(type,
+                                   levels = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"))) %>% 
+              filter(Fig == "Fig6b" & type == "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
+            color = "grey30", lwd = 0.7) + 
+    geom_area(data = SKU %>% 
+              filter(Fig == "Fig6b") %>% 
+              mutate(type = factor(type,
+                                   levels = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"))) %>% 
+              filter(Fig == "Fig6b" & type != "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
+            color = "grey30", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of aunts/uncles", fill = "") +
+  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
+                    limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
+                    labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
+
+plot_grid(Fig6b_SKU, Fig6b_socsim, align = "hv")
+
 ```
 
 
@@ -928,16 +991,24 @@ grandparent_table  <-
     grandparent_table[, .(mean_kin = .N / N_17, Type = "not living"),keyby = .(IDbirthYear)]
     , grandparent_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]
     ) %>%
-  distinct() 
+  distinct() %>% 
+  mutate(Type = factor(Type, levels = c("not living", 
+                                         "grandfather (father's side)",
+                                         "grandmother (father's side)",
+                                         "grandfather (mother's side)",
+                                         "grandmother (mother's side)")))
 
 Fig7_socsim <- ggplot() +
   geom_area(data = grandparent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_area(data = grandparent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
   geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#A1DAB4","#41B6C4","#2C7FB8","#253494", "#FFFFCC")
-                    , limits = c(levels(as.factor(grandparent_table$Type))[1:4],  "not living")
-                    , labels = c("Paternal grandfather", "Maternal grandfather", "Paternal grandmother", "Maternal grandfather", "Registered deceased grandparents")
-                    ) +
+  scale_fill_manual(values = c("white", "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+                    limits = c("", "not living", 
+                               "grandfather (father's side)", 
+                               "grandmother (father's side)", 
+                               "grandfather (mother's side)",
+                               "grandmother (mother's side)"), 
+                    labels = c("", "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of grandparents", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
@@ -951,7 +1022,67 @@ Fig7_socsim <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
-Fig7_socsim
+SKU_7 <- SKU %>%
+   filter(Fig == "Fig7") %>% 
+  pivot_wider(names_from = type, values_from = mean_kin) %>% 
+  mutate_at(c(15:19), ~ replace_na(.,0)) %>%  # Replace by 0 to sum
+  mutate(registered = (`registered deceased` + `grandmother (mother's side)` + `grandmother (father's side)` + `grandfather (mother's side)` + `grandfather (father's side)`)) %>% 
+  # The count of unregistered grandparents may be duplicated
+  group_by(IDbirthYear) %>%
+  mutate(unregistered = 4 - sum(registered)) %>%
+  ungroup() %>%
+  mutate_at(c(15:21), ~ na_if(., 0)) %>%
+  pivot_longer(cols = c(15:21), 
+               names_to = "type", values_to = "mean_kin") %>%
+  mutate(type = factor(type,
+                       levels = c("unregistered", 
+                                  "registered deceased", 
+                                  "grandfather (father's side)",
+                                  "grandmother (father's side)",
+                                  "grandfather (mother's side)",
+                                  "grandmother (mother's side)"))) 
+
+Fig7_SKU <- 
+  ggplot() +
+  # geom_area(data = SKU_7 %>%
+  #             filter(type == "unregistered"),
+  #           mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type),
+  #             color = "grey30", lwd = 0.7) +
+    geom_area(data = SKU_7 %>% 
+              filter(type == "registered deceased"), 
+            mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
+              color = "grey30", lwd = 0.7) + 
+    geom_area(data = SKU_7 %>% 
+              filter(type != "registered deceased" & type != "unregistered"), 
+            mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
+              color = "grey30", lwd = 0.7) +
+  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
+  scale_fill_manual(values = c("white", #"#FED98E", 
+                               "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+                    limits = c("", #"unregistered", 
+                               "registered deceased", 
+                               "grandfather (father's side)", 
+                               "grandmother (father's side)", 
+                               "grandfather (mother's side)",
+                               "grandmother (mother's side)"), 
+                    labels = c("",
+                      #"Unregistered grandparents", 
+                      "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
+  labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of grandparents", fill = "") +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", size = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", size = 0.3, linetype = 9),
+        legend.position = "bottom",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
+    
+plot_grid(Fig7_SKU, Fig7_socsim, align = "hv")
+
 ```
 
 
@@ -1047,7 +1178,7 @@ Fig8b_socsim <- ggplot() +
   labs(x = "Birth cohort \n(Age in 2018)", y = "Average number of kin", fill = "") +
   scale_fill_manual(values =c("#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1","white","#FFFFD9"),
                     limits = c(levels(totalkin_table$Type)[2:9], "", "not living"),
-                    labels = c("Grandchilden", "Childen", "Nieces/nephews", "Siblings", "Cousins", "Parents", "Aunts/Uncles", "Grandparents", "", "Dead kin")) +
+                    labels = c("Grandchildren", "Children", "Nieces/nephews", "Siblings", "Cousins", "Parents", "Aunts/Uncles", "Grandparents", "", "Dead kin")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   theme(panel.grid.major.y = element_line(colour = "grey60", size = 0.3, linetype = 9),
