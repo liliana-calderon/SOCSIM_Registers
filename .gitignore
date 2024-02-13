@@ -31,6 +31,7 @@ Pass.R
 # Rate and presim files
 rates/*
 presim*
+seed.Rda
 
 # Output Data
 Output/*
@@ -40,3 +41,6 @@ kin_count_sweden
 
 # HTML files
 2_Plots_SKU.html
+
+# Simulation results
+sim_results_*
