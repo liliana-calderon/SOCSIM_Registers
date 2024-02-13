@@ -2,10 +2,13 @@
 # SOCSIM - SOCSIM Registers - Data Format
 # U:/SOCSIM/SOCSIM_Registers/1_Data_Format.R
 
-##
+## Get reference table and cohort size from socsim output 
+# that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 23-11-2023
+# Last modified on 13-02-2024
+
+# This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 # Prevent scientific notation
@@ -14,48 +17,20 @@ options(scipen=999999)
 ## Load packages 
 library(data.table)
 library(tidyverse)
-library(ggh4x)  # To facet scales-
-library(HMDHFDplus)
-library(patchwork) # To combine ggplots
 library(reshape2)
-library(rsocsim) # Functions to estimate rates
-library(svglite) # To save svg files
-library(viridis)
 
-## Load theme for the graphs and to convert SOCSIM time
-source("Functions/Functions_Graphs.R")
-
-# Load the functions from kin_count_sweden (getRefTable and AddBirthsDeaths)
-# written by Martin?
-source("kin_count_sweden/R/functions.R")
-
-## Type inside the quotes HFD and HMD credentials (username and password) for the new website
-# This information is necessary to run the comparisons below
-
-# HFD credentials
-# HFD_username <- "Type_here_HFD_username"
-# HFD_password <- "Type_here_HFD_password"
-# 
-# # HMD credentials
-# HMD_username <- "Type_here_HMD_username"
-# HMD_password <- "Type_here_HMD_password"
+# Load the functions getRefTable and AddBirthsDeaths (from kin_count_sweden)
+source("Functions/Functions_Kin_Count.R")
 
 #------------------------------------------------------------------------------------------------------
-# NB: The code below is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
+## 1. Load SOCSIM output, convert time and add relevant variables
 
-## 1. Load the data 
-# Load saved list with opop from simulations, 
-# Temporarily using the one generated for the project U:/SOCSIM/SOCSIM_Genealogies
-load("sims_opop.RData")
-# Load saved list with omar from simulations
-# Temporarily using the one generated for the project U:/SOCSIM/SOCSIM_Genealogies
-load("sims_omar.RData")
+# Load opop 
+load("opop.RData")
+# Load omar
+load("omar.RData")
 
-# Select the first data frame from the opop and omar lists
-opop <- sims_opop[[1]]
-omar <- sims_omar[[1]]
-
-# Define parameters to convert socsim month to calendar years
+# Define parameters to convert SOCSIM months to calendar years
 last_month <- max(opop$dob)
 final_sim_year <- 2022
 
@@ -70,14 +45,11 @@ opop <- opop %>%
          ## Perhaps it's easier to set 9999 as dod for people alive at the end of the simulation
          death_year = ifelse(dod == 0, 9999, asYr(dod, last_month, final_sim_year)))
 
-
-## 2.  Format the data
-
-# Q for Martin: in Kon, 1 = M?
+#------------------------------------------------------------------------------------------------------
+## 2.  Format the data ----
 
 opop2 <- opop %>%
-  mutate(# age_death = death_year - birth_year,
-         Kon = fem + 1, 
+  mutate(Kon = fem + 1, 
          FodelselandGrp = 1) %>% 
   # Reformat to Swedish register format
   select(LopNr = pid, 
@@ -99,11 +71,11 @@ popdatdeaths <- opop2 %>%
   # -100 of year_min to be sure that we don't miss parents or grandparents
   filter(between(FoddAr, year_min -100, year_max))
 
-# 3. Create kinship objects
+#------------------------------------------------------------------------------------------------------
+## 3. Create kinship objects ----
 
-# age_range <- 0:100 # I think this is not necessary
-
-popdat <- popdatdeaths %>% select(-deathyear)
+popdat <- popdatdeaths %>% 
+  select(-deathyear)
 
 # get Ref Table (from Martin's functions)
 refTableList <- getRefTable(df = popdat, ref_TypeI = "all")
@@ -118,17 +90,16 @@ SimRefTableList <- lapply(refTableList, AddBirthsDeaths, df = opop2)
 reference_table_SweBorn <- 
   bind_rows(SimRefTableList, .id = "refGroup") %>% 
   mutate(refGroup = gsub("_df", "", refGroup)) %>%
-  inner_join(select(filter(popdat, FodelselandGrp == 1), LopNr, Kon, FodelselandGrp, FoddAr), by = c("ID" = "LopNr")) %>% 
-  # here he can safely remove all those people who are irrelevant 
+  inner_join(select(filter(popdat, FodelselandGrp == 1), LopNr, Kon, FodelselandGrp, FoddAr), 
+             by = c("ID" = "LopNr")) %>% 
   filter(between(IDbirthYear, year_min, year_max)) 
 
-# 4. Get other quantitites --------------
+#------------------------------------------------------------------------------------------------------
+## 4. Get other quantities ----
 
 # Get table with number of swedish born parents per person
 temp <- reference_table_SweBorn %>% 
   filter(refGroup == "parent" & !is.na(refID)) %>%
-  # left_join(., select(distinct(reference_table_SweBorn, ID, .keep_all = TRUE), ID, FodelselandGrp), by = c("refID" = "ID")) %>% 
-  filter(FodelselandGrp == 1) %>%
   group_by(ID, IDbirthYear, FoddAr) %>%
   summarise(n_swe_parents = n(), .groups = "drop") %>%
   setDT()
@@ -143,12 +114,16 @@ N_Cohort <- list(TotalPopulation[, .(N_ever = .N), keyby = FoddAr],
   rename(N_sweparent = N) %>% 
   mutate(IDbirthYear = FoddAr)
 
-# Table with N_cohort by kon
+# Table with N_cohort by sex
 temp <- reference_table_SweBorn[!is.na(FoddAr), .(N_17 = uniqueN(ID)), keyby = .(FoddAr, Kon)]
 
 temp <- temp %>% rename(IDbirthYear = FoddAr)
 
+#------------------------------------------------------------------------------------------------------
 # 5. Export ------
+
+# Create a sub-folder called "output" to save the rate files if it does not exist.
+ifelse(!dir.exists("Output"), dir.create("Output"), FALSE)
 
 save("reference_table_SweBorn", file = "Output/reference_table_SweBorn.RData")
 save(temp, file = "Output/temp.RData")
