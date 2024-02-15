@@ -6,7 +6,7 @@
 # that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 13-02-2024
+# Last modified on 15-02-2024
 
 # This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
 #------------------------------------------------------------------------------------------------------
@@ -42,7 +42,6 @@ asYr <- function(month, last_month, final_sim_year) {
 # Add year of birth and year of death to the opop file
 opop <- opop %>% 
   mutate(birth_year = asYr(dob, last_month, final_sim_year),
-         ## Perhaps it's easier to set 9999 as dod for people alive at the end of the simulation
          death_year = ifelse(dod == 0, 9999, asYr(dod, last_month, final_sim_year)))
 
 #------------------------------------------------------------------------------------------------------
@@ -66,10 +65,9 @@ opop2 <- opop %>%
 year_min <- 1900
 year_max <- 2022
 
-# Filter population born after 1800
+# Filter population (-100 years to avoid missing parents or grandparents)
 popdatdeaths <- opop2 %>% 
-  # -100 of year_min to be sure that we don't miss parents or grandparents
-  filter(between(FoddAr, year_min -100, year_max))
+  filter(between(FoddAr, year_min -100, year_max))  
 
 #------------------------------------------------------------------------------------------------------
 ## 3. Create kinship objects ----
@@ -79,6 +77,7 @@ popdat <- popdatdeaths %>%
 
 # get Ref Table (from Martin's functions)
 refTableList <- getRefTable(df = popdat, ref_TypeI = "all")
+
 # Warning messages while running this code
 # In inner_join(x = ., y = ., by = c(refID = "ID")) :
 #   Detected an unexpected many-to-many relationship between `x` and `y`.
@@ -92,12 +91,13 @@ reference_table_SweBorn <-
   mutate(refGroup = gsub("_df", "", refGroup)) %>%
   inner_join(select(filter(popdat, FodelselandGrp == 1), LopNr, Kon, FodelselandGrp, FoddAr), 
              by = c("ID" = "LopNr")) %>% 
-  filter(between(IDbirthYear, year_min, year_max)) 
-
+  filter(between(IDbirthYear, year_min, year_max)) %>% 
+  setDT() ## Add to allow the code below run
+ 
 #------------------------------------------------------------------------------------------------------
 ## 4. Get other quantities ----
 
-# Get table with number of swedish born parents per person
+# Get table with number of Swedish born parents per person
 temp <- reference_table_SweBorn %>% 
   filter(refGroup == "parent" & !is.na(refID)) %>%
   group_by(ID, IDbirthYear, FoddAr) %>%
