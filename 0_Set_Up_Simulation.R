@@ -14,7 +14,7 @@
 ## and read the output into R. 
 
 # Created on 13-02-2024
-# Last modified on 13-02-2024
+# Last modified on 15-02-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/0_Write_Input_Rates.R
@@ -173,7 +173,7 @@ write_socsim_rates_HMD(Country = "SWE",
 ## 2. Create initial .opop and empty omar file for the simulation ----
 
 # Set size of initial population
-size_opop <-  5000
+size_opop <-  50000
 # For 20000, Time difference of 1.524974 hours
 
 # Create data.frame with 14 columns and nrows = size_opop
@@ -246,7 +246,8 @@ rsocsim::socsim(folder, supfile, seed, process_method = "future")
 
 end <- Sys.time()
 print(end-start)
-# Time difference of 17.25873 minutes for  1 simulations, with initial population of 5000 and hetfert 0
+# Time difference of 17.25873 minutes for  1 simulation, with initial population of 5000 and hetfert 0
+# Time difference of 1.7874 daysfor  1 simulation, with initial population of 50000 and hetfert 0
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
