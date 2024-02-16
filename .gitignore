@@ -37,7 +37,7 @@ seed.Rda
 Output/*
 
 # DAG replication attempt
-kin_count_sweden
+kin_count_sweden_R/
 
 # HTML files
 2_Plots_SKU.html
