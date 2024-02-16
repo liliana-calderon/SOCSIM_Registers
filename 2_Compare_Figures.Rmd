@@ -1319,7 +1319,6 @@ Fig6b_SKU <- ggplot() +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
 
 
-
 Fig6b_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig6b") %>% 
                           select(IDbirthYear, mean_kin, type) %>% 
@@ -1464,8 +1463,65 @@ Fig7_SKU  <- ggplot() +
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
-    
+
+                        
+Fig7_Diff <- left_join(SKU %>% 
+                         filter(Fig == "Fig7") %>% 
+                         select(IDbirthYear, mean_kin, type) %>% 
+                         pivot_wider(names_from = type, values_from = mean_kin) %>%
+                         mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
+                         # The registered deceased from the table include both the living and the deceased
+                         # So, we need to estimate the actual number of deceased
+                         mutate(alive = `grandfather (father's side)` + `grandmother (father's side)` + 
+                                `grandfather (mother's side)` + `grandmother (mother's side)`,
+                                `not living` = `registered deceased`,
+                                 `registered deceased` = `not living` - alive,
+                                unregistered = 4-(alive + `registered deceased`)) %>%
+                         select(-c(alive,`not living`)) %>%
+                         pivot_longer(cols = c(2:7), 
+                                       names_to = "Type", values_to = "mean_kin_SKU"), 
+                       grandparent_table %>% 
+                         pivot_wider(names_from = Type, values_from = mean_kin) %>% 
+                         mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
+                         select(-`not living`) %>%
+                         # We need to add a value of 0 for unregistered grandparents and 
+                        # estimated the deceased, because for plotting not living have all the value of 4
+                         mutate(alive = `grandfather (father's side)` + `grandmother (father's side)` + 
+                                `grandfather (mother's side)` + `grandmother (mother's side)`,
+                                `registered deceased` = 4 - alive, 
+                                unregistered = 0) %>%
+                         select(-alive) %>% 
+                         pivot_longer(cols = c(2:7), 
+                                      names_to = "Type", values_to = "mean_kin_SOCSIM")) %>%
+  mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU) %>%
+  filter(!is.na(Difference)) %>% 
+  ggplot()+
+  geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
+  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
+  scale_color_manual(values = c("#FED98E", "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+                    limits = c("unregistered", 
+                               "registered deceased", 
+                               "grandfather (father's side)", 
+                               "grandmother (father's side)", 
+                               "grandfather (mother's side)",
+                               "grandmother (mother's side)"), 
+                    labels = c("Unregistered grandparents", 
+                      "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents", color = "") +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+        legend.position = "bottom",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
+
 plot_grid(Fig7_SOCSIM, Fig7_SKU, align = "hv")
+Fig7_Diff
 
 ```
 
@@ -1551,10 +1607,10 @@ totalkin_table  <- rbind(totalkin_table[, .(mean_kin = .N / N_17, Type = "not li
   distinct()%>%
   mutate(Type = factor(Type, levels = c("not living", "grandchild","child","sibchild","sibling","cousin","parent","parsib","grandparent")))
 
-
-totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
-                                                   mean_kin = 0,
-                                                   Type = c("sibchild", "sibling")))
+## No idea why this drop is add here
+# totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
+#                                                    mean_kin = 0,
+#                                                    Type = c("sibchild", "sibling")))
 
 Fig8b_SOCSIM <- ggplot() +
   geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
@@ -1599,7 +1655,43 @@ Fig8b_SKU <- SKU %>%
   guides(fill = guide_legend(override.aes = list(color = 0))) +
   expand_limits(y = c(0, 43))
 
+Fig8b_Diff <- full_join(SKU %>% 
+                         filter(Fig == "Fig8b") %>% 
+                         select(IDbirthYear, mean_kin_SKU = mean_kin, Type = type),
+                       totalkin_table %>% 
+                         pivot_wider(names_from = Type, values_from = mean_kin) %>%
+                         mutate_at(c(2:10), ~ replace_na(.,0)) %>% 
+                         # We need to add a value of 0 for unregistered grandparents and 
+                        # estimated the deceased, because for plotting not living have all the value of 4
+                         mutate(alive = grandchild + child + sibchild + sibling + cousin + parent + parsib + grandparent, 
+                                `registered deceased` = `not living` - alive) %>% 
+                         select(-c(`not living`, alive)) %>%
+                         pivot_longer(cols = c(2:10), 
+                                       names_to = "Type", values_to = "mean_kin_SOCSIM")) %>% 
+  mutate_at(c(2,4), ~ replace_na(.,0)) %>% 
+  mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU) %>%
+  filter(!is.na(Difference)) %>%
+  ggplot()+
+  geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin", color = "") +
+  scale_color_manual(values =c("#FFFFD9","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
+                    limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
+                    labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
+  scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
+                     labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+        legend.position = "right",
+        legend.key.height = unit(1, "line"),
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) +
+  guides(fill = guide_legend(override.aes = list(color = 0)))
+
 plot_grid(Fig8b_SOCSIM, Fig8b_SKU, align = "hv")
+Fig8b_Diff
 ```
 ```{r, include=FALSE, eval= TRUE}
 ggsave(file="Fig8b.jpg", width=17, height=9, dpi=300)
