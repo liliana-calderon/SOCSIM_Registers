@@ -39,8 +39,5 @@ Output/*
 # DAG replication attempt
 kin_count_sweden_R/
 
-# HTML files
-2_Plots_SKU.html
-
 # Simulation results
 sim_results_*
