@@ -2,7 +2,7 @@ Kinship networks over time: comparing Swedish population registers and
 microsimulation outputs
 ================
 …
-2024-02-16
+2024-02-19
 
 ``` r
 library(tidyverse)
@@ -36,7 +36,7 @@ SKU <- map_dfr(sheets_to_keep, ~ read_excel(path=file_SKU, sheet = .x), .id = "F
 SKU <- SKU %>% rename(Kon = gender)  # male=1 and female=2
 ```
 
-#### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 grandchild_table <- reference_table_SweBorn %>% 
@@ -87,52 +87,52 @@ grandchildren_dist_Table <- rbind(grandchildren_dist_Table[is.na(refID),.(n_gran
 
 
 Fig1b_SOCSIM <- ggplot() +
-  geom_area(data = grandchild_table, mapping = aes(x = IDbirthYear, y = mean_grandchildren, fill = isAlive), color = "grey30") +
-  geom_area(data=data.frame(x = c(2017-73,2017), y = c(4,4)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
+  geom_area(data = grandchild_table, mapping = aes(x = IDbirthYear, y = mean_grandchildren, fill = isAlive), color = "#4D4D4D") +
+  geom_area(data=data.frame(x = c(2017-73,2017), y = c(4,4)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1, scales = "free_x", strip.position = "top") +
   scale_fill_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
   labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white")) +
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
   guides(fill = guide_legend(reverse = TRUE))
 
 Fig1b_SKU <- ggplot() +
   geom_area(data = SKU %>% 
               filter(Fig == "Fig1b") %>% 
               mutate(isAlive = if_else(type == "registered deceased", FALSE, TRUE)), 
-            mapping = aes(x = IDbirthYear, y = mean_grandchildren, fill = isAlive), color = "grey30") +
-  geom_area(data=data.frame(x = c(2017-73,2017), y = c(4,4)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
+            mapping = aes(x = IDbirthYear, y = mean_grandchildren, fill = isAlive), color = "#4D4D4D") +
+  geom_area(data=data.frame(x = c(2017-73,2017), y = c(4,4)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1, scales = "free_x", strip.position = "top") +
   scale_fill_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
   labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white")) +
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
   guides(fill = guide_legend(reverse = TRUE))
 
 
@@ -147,7 +147,7 @@ Fig1b_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = isAlive), linewidth =1) +
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
   scale_color_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
@@ -155,87 +155,120 @@ Fig1b_Diff <- left_join(SKU %>%
   labs(x = "Birth cohort", y = "Average number of grandchildren (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white")) +
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
   guides(color = guide_legend(reverse = TRUE))
 
 plot_grid(Fig1b_SOCSIM, Fig1b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig1b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-3-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-2-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 Fig1a_SOCSIM <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYear <= 2017)) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_grandchildren), color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_grandchildren), color = "#4D4D4D", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1, scales = "free_x", strip.position = "top") +
   labs(x = "Birth cohort \n (Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
+                                "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
+                    limits = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren"),
+                    labels = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() + 
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) + 
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 Fig1a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig1a") %>% 
                       mutate(n_grandchildren = factor(n_grandchildren, 
-                                    levels = c("11 or more grandchildren",   
-                                               "6-10 grandchildren",
+                                    levels = c("11 or more grandchildren",                                                 "6-10 grandchildren",
                                                "5 grandchildren",
                                                "4 grandchildren",
                                                "3 grandchildren",
                                                "2 grandchildren",
                                                "1 grandchild",
                                                "No grandchildren")))) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_grandchildren), color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_grandchildren), color = "#4D4D4D", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) +
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1, scales = "free_x", strip.position = "top") +
   labs(x = "Birth cohort \n (Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) +
+  scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
+                                "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
+                    limits = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren"),
+                    labels = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA),
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 # Plot difference
 Fig1a_Diff <- left_join(SKU %>% 
@@ -243,50 +276,58 @@ Fig1a_Diff <- left_join(SKU %>%
                           select(IDbirthYear, Kon, n_grandchildren, proportion_SKU = proportion), 
                         grandchildren_dist_Table_living %>% 
                             rename(proportion_SOCSIM = proportion)) %>% 
-  mutate(Difference = proportion_SOCSIM - proportion_SKU, 
-         n_grandchildren = factor(n_grandchildren,
-                                  levels = c("11 or more grandchildren",
-                                             "6-10 grandchildren",
-                                             "5 grandchildren",
-                                             "4 grandchildren",
-                                             "3 grandchildren",
-                                             "2 grandchildren",
-                                             "1 grandchild",
-                                             "No grandchildren"))) %>%
+  mutate(Difference = proportion_SOCSIM - proportion_SKU) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_grandchildren), linewidth =1)+
-  geom_vline(xintercept = c(2017-73), color = "black", lty = 2) +
+  geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
   labs(x = "Birth cohort \n (Age in 2017)", y = "Proportion (SOCSIM-SKU)", color = "")+
-  scale_color_brewer(palette = "YlGnBu", direction = -1 ) +
+  scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
+                                "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
+                    limits = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren"),
+                    labels = c("11 or more grandchildren",
+                               "6-10 grandchildren",
+                               "5 grandchildren",
+                               "4 grandchildren",
+                               "3 grandchildren",
+                               "2 grandchildren",
+                               "1 grandchild",
+                               "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   guides(color = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) + 
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
+        legend.position = "bottom", 
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 plot_grid(Fig1a_SOCSIM, Fig1a_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig1a_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-4-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-3-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 children_dist_Table <-  
@@ -333,21 +374,21 @@ child_table <- child_table %>%
 
 Fig2b_SOCSIM <- ggplot() +
   geom_area(data = child_table %>% filter(Type == "not living"),
-            mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
+            mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = child_table %>% filter(Type != "not living"), 
-            mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1,scales = "free_x") +
-  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFFFCC"), 
+            mapping = aes(x = IDbirthYear, y = mean_children, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1,scales = "free_x") +
+  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children", fill = " ") +
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -355,29 +396,29 @@ Fig2b_SOCSIM <- ggplot() +
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 Fig2b_SKU <- ggplot() +
   geom_area(data = SKU %>% 
               mutate(type = factor(type, levels = c("registered deceased", ">2", "2", "1"))) %>% 
               filter(Fig == "Fig2b" & type == "registered deceased"), 
-            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "grey30", lwd = 0.5) +
+            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = SKU %>% 
               mutate(type = factor(type, levels = c("registered deceased", ">2", "2", "1"))) %>% 
               filter(Fig == "Fig2b" & type != "registered deceased"), 
-            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) +
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1,scales = "free_x") +
-  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFFFCC"), 
+            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) +
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1,scales = "free_x") +
+  scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFE6CC"), 
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children", fill = " ") +
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -385,7 +426,7 @@ Fig2b_SKU <- ggplot() +
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))+
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))+
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5))
 
 # Plot difference
@@ -400,17 +441,17 @@ Fig2b_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1,scales = "free_x") +
-  scale_color_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFFFCC"), 
+  scale_color_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children (SOCSIM-SKU)", color = " ") +
   theme_bw() +
   guides(color = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -418,39 +459,39 @@ Fig2b_Diff <- left_join(SKU %>%
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 plot_grid(Fig2b_SOCSIM, Fig2b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig2b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-4-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 Fig2a_SOCSIM <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 2017)) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1, scales = "free_x") +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFFFCC"),
+  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -458,29 +499,29 @@ Fig2a_SOCSIM <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 Fig2a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig2a") %>%  
                       mutate(n_children = factor(n_children, 
                                                  levels = c("4 or more children", "3 children", 
                                                             "2 children", "1 child", "No children" )))) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
-  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
+  facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1, scales = "free_x") +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFFFCC"),
+  scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -488,7 +529,7 @@ Fig2a_SKU <- ggplot(data = SKU %>%
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 Fig2a_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig2a") %>% 
@@ -503,20 +544,20 @@ Fig2a_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_children), linewidth =1) +
-  geom_vline(xintercept = c(2017-40), color = "black", lty = 2) +
+  geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion (SOCSIM-SKU)", color = "")+
-  scale_color_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFFFCC"),
+  scale_color_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
   guides(color = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
@@ -524,20 +565,20 @@ Fig2a_Diff <- left_join(SKU %>%
         text = element_text(family = "Times", size = 12),
         legend.key = element_blank(),
         strip.placement = "outside",
-        strip.background = element_rect(color = "black", fill = "white"))
+        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
 
 plot_grid(Fig2a_SOCSIM, Fig2a_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig2a_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 sibchild_table <- reference_table_SweBorn %>% 
@@ -556,15 +597,15 @@ sibchild_table  <- rbind(sibchild_table[, .(mean_kin = .N / N_17, Type = "not li
 Fig3_SOCSIM <- ggplot() +
   geom_area(data = sibchild_table %>% 
               filter(Type == "not living"),
-            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = sibchild_table %>% 
               filter(Type != "not living"),
-            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces/nephews", fill = "") +
-  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+            mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces and nephews in Microsimulation", fill = "") +
+  scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c(levels=c("not living", 
                                         "half brother side", "full brother side",
                                         "half sister side", "full sister side")),
@@ -573,9 +614,9 @@ Fig3_SOCSIM <- ggplot() +
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -591,7 +632,7 @@ Fig3_SKU <- ggplot() +
                                               "half sister side", "full sister side"))) %>% 
               filter(Fig == "Fig3" & type == "registered deceased"), 
             mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
-            color = "grey30", lwd = 0.5) +
+            color = "#4D4D4D", lwd = 0.5) +
     geom_area(data = SKU %>%
               mutate(type = factor(type,
                                    levels = c("registered deceased",
@@ -599,12 +640,12 @@ Fig3_SKU <- ggplot() +
                                               "half sister side", "full sister side"))) %>% 
               filter(Fig == "Fig3" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
-            color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces/nephews", fill = "") +
-  scale_fill_manual(values = c( "#FFFFCC","#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+            color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces and nephews in Registers", fill = "") +
+  scale_fill_manual(values = c( "#FFE6CC","#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("registered deceased",
                                "half brother side", "full brother side",
                                "half sister side", "full sister side"),
@@ -612,9 +653,9 @@ Fig3_SKU <- ggplot() +
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -634,10 +675,10 @@ Fig3_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(1940, 2017-46), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces/nephews (SOCSIM - SKU)", 
+  geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of nieces and nephews (SOCSIM - SKU)", 
        color = "") +
-  scale_color_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c(levels=c("not living", 
                                         "half brother side", "full brother side",
                                         "half sister side", "full sister side")),
@@ -648,29 +689,29 @@ Fig3_Diff <- left_join(SKU %>%
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", 
                                     "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) +
-  guides(fill = guide_legend(override.aes = list(color = "black")))
+  guides(fill = guide_legend(override.aes = list(color = "#000000")))
  
 
 plot_grid(Fig3_SOCSIM, Fig3_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig3_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-7-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 sibling_table <- reference_table_SweBorn %>% 
@@ -705,21 +746,21 @@ sibling_dist_Table_living <- rbind(sibling_dist_Table[is.na(refID),.(n_siblings 
   .[,.(n_siblings = n_siblings, freq = freq, N_17 = sum(freq), proportion = freq /sum(freq)),keyby = .(IDbirthYear)]
 
 Fig4a_SOCSIM <- ggplot() +
-  geom_area(data = sibling_table[refTypeIIII == "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "grey30", lwd = 0.5) +
-  geom_area(data = sibling_table[refTypeIIII != "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFFFCC"), 
+  geom_area(data = sibling_table[refTypeIIII == "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data = sibling_table[refTypeIIII != "not living"], mapping = aes(x = IDbirthYear, y = mean_siblings, fill = refTypeIIII), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("half.mother", "half.father", "full", "not living"), 
                     labels = c("Half siblings on mother's side", "Half siblings on father's side", 
                                "Full siblings", "Deceased siblings")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -736,7 +777,7 @@ Fig4a_SKU <- ggplot() +
                                               "half.mother"))) %>% 
               filter(Fig == "Fig4a" & type == "not living"), 
               mapping = aes(x = IDbirthYear, y = mean_siblings, fill = type), 
-              color = "grey30", lwd = 0.5) +
+              color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = SKU %>%
               filter(Fig == "Fig4a") %>%
               mutate(type = factor(type,
@@ -746,20 +787,20 @@ Fig4a_SKU <- ggplot() +
                                               "half.mother"))) %>% 
             filter(Fig == "Fig4a" & type != "not living"), 
             mapping = aes(x = IDbirthYear, y = mean_siblings, fill = type), 
-            color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFFFCC"), 
+            color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1930,1940), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(2.5,2.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("half.mother", "half.father", "full", "not living"), 
                     labels = c("Half siblings on mother's side", "Half siblings on father's side", 
                                "Full siblings", "Deceased siblings")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -778,16 +819,16 @@ Fig4a_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  scale_color_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFFFCC"), 
+  scale_color_manual(values = c("#A1DAB4", "#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("half.mother", "half.father", "full", "not living"), 
                     labels = c("Half siblings on mother's side", "Half siblings on father's side", 
                                "Full siblings", "Deceased siblings")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -797,30 +838,46 @@ Fig4a_Diff <- left_join(SKU %>%
 plot_grid(Fig4a_SOCSIM, Fig4a_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig4a_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-8-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-7-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), color = "grey30", lwd = 0.7) +    geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), color = "#4D4D4D", lwd = 0.7) +    
+  geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Microsimulation", fill = "")+
+  scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
+                                "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
+                    limits = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings"),
+                    labels = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -830,22 +887,36 @@ Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
 Fig4b_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig4b") %>%  
                       mutate(n_siblings = factor(n_siblings, 
-                                                 levels = c("6 or more siblings", "5 siblings", "4 siblings",
-                                                            "3 siblings", "2 siblings", "1 sibling", "No siblings")))) +
+                                                 levels = c("6 or more siblings", "5 siblings", "4 siblings", "3 siblings", "2 siblings", "1 sibling", "No siblings")))) +
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_siblings), 
-            color = "grey30", lwd = 0.7) +  
-  geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.25) + 
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+            color = "#4D4D4D", lwd = 0.7) +  
+  geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
+  geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Registers", fill = "")+
+    scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
+                                "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
+                    limits = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings"),
+                    labels = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -857,23 +928,35 @@ Fig4b_Diff <- left_join(SKU %>%
                           select(IDbirthYear, n_siblings, proportion_SKU = proportion), 
                         sibling_dist_Table_living %>% 
                           select(IDbirthYear, n_siblings, proportion_SOCSIM = proportion)) %>% 
-  mutate(Difference = proportion_SOCSIM - proportion_SKU, 
-         n_siblings = factor(n_siblings, 
-                             levels = c("6 or more siblings", "5 siblings", "4 siblings",
-                                        "3 siblings", "2 siblings", "1 sibling", "No siblings"))) %>%
+  mutate(Difference = proportion_SOCSIM - proportion_SKU) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_siblings), linewidth =1)+
-  geom_vline(xintercept = c(1940, 2017-13), color = "black", lty = 2) +
+  geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", color = "")+
-  scale_color_brewer(palette = "YlGnBu", direction = -1 ) + 
+  scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", 
+                                "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
+                    limits = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings"),
+                    labels = c("6 or more siblings", 
+                               "5 siblings", 
+                               "4 siblings", 
+                               "3 siblings", 
+                               "2 siblings", 
+                               "1 sibling", 
+                               "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -883,15 +966,15 @@ Fig4b_Diff <- left_join(SKU %>%
 plot_grid(Fig4b_SOCSIM, Fig4b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig4b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-9-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-8-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 cousin_table <- reference_table_SweBorn %>% 
@@ -953,23 +1036,22 @@ cousin_dist_Table_living <- rbind(cousin_dist_Table[is.na(refID),.(n_cousins = 0
 
 Fig5b_SOCSIM <- ggplot() +
   geom_area(data = cousin_tableAlt3[Type4 == "not living"], 
-            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
+            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = cousin_tableAlt3[Type4 != "not living"], 
-            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#FFFFCC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
-                    limits = c("not living", "father.brother", "father.sister",
+            mapping = aes(x = IDbirthYear, y = mean_cousins, fill = Type4), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1950,1977), y = c(8.5, 8.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#FFE6CC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"),                     limits = c("not living", "father.brother", "father.sister",
                                 "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -985,7 +1067,7 @@ Fig5b_SKU <- ggplot() +
                                             "mother.brother", "mother.sister"))) %>% 
             filter(Fig == "Fig5b" & type == "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_cousins, fill = type), 
-            color = "grey30", lwd = 0.5) +
+            color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = SKU %>%
             filter(Fig == "Fig5b") %>%
             mutate(type = factor(type,
@@ -994,21 +1076,20 @@ Fig5b_SKU <- ggplot() +
                                             "mother.brother", "mother.sister"))) %>% 
             filter(Fig == "Fig5b" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_cousins, fill = type), 
-            color = "grey30", lwd = 0.5)+
-  geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#FFFFCC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
-                    limits = c("registered deceased", "father.brother", "father.sister",
+            color = "#4D4D4D", lwd = 0.5)+
+  geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#FFE6CC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"),                     limits = c("registered deceased", "father.brother", "father.sister",
                                 "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -1041,8 +1122,8 @@ Fig5b_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  scale_color_manual(values = c("#FFFFCC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
+  scale_color_manual(values = c("#FFE6CC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"), 
                     limits = c("registered deceased", "father.brother", "father.sister",
                                "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
@@ -1050,9 +1131,9 @@ Fig5b_Diff <- left_join(SKU %>%
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -1062,57 +1143,66 @@ Fig5b_Diff <- left_join(SKU %>%
 plot_grid(Fig5b_SOCSIM, Fig5b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig5b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-9-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 5a: Proportional distribution of the number of cousins by birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 5a: Proportional distribution of the number of cousins by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 Fig5a_SOCSIM <- ggplot(data = cousin_dist_Table_living) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_cousins), color = "grey30", lwd = 0.7) +  
-  geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_cousins), color = "#4D4D4D", lwd = 0.7) +  
+  geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Microsimulation", fill = "")+
+  scale_fill_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
+                              "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
+                    limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                               "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"), 
+                    labels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                                       "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12))
 
 Fig5a_SKU <- ggplot(data = SKU %>% 
-                    filter(Fig == "Fig5a") %>% 
-                      mutate(n_cousins = factor(n_cousins, 
-                                                 levels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
-                                                            "4 cousins", "3 cousins", "2 cousins", "1 cousin", 
-                                                            "No cousins")))) +
-  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_cousins), color = "grey30", lwd = 0.7) +  
-  geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", fill = "")+
-  scale_fill_brewer(palette = "YlGnBu", direction = -1 ) + 
+                    filter(Fig == "Fig5a") %>%
+                      mutate(n_cousins = factor(n_cousins,
+                                                levels = c("11 or more cousins", "6 - 10 cousins", "5 cousins", "4 cousins", "3 cousins", "2 cousins", "1 cousin", 
+                                                           "No cousins")))) +
+  geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_cousins), color = "#4D4D4D", lwd = 0.7) +  
+  geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Registers", fill = "")+
+  scale_fill_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
+                              "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
+                    limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                               "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"), 
+                    labels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                                       "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
   guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -1123,25 +1213,26 @@ Fig5a_Diff <- left_join(SKU %>%
                           select(IDbirthYear, n_cousins, proportion_SKU = proportion), 
                         cousin_dist_Table_living %>% 
                           select(IDbirthYear, n_cousins, proportion_SOCSIM = proportion)) %>% 
-  mutate(Difference = proportion_SOCSIM - proportion_SKU, 
-         n_cousins = factor(n_cousins, 
-                            levels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
-                                       "4 cousins", "3 cousins", "2 cousins", "1 cousin", 
-                                       "No cousins"))) %>%
+  mutate(Difference = proportion_SOCSIM - proportion_SKU) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_cousins), linewidth =1)+
-  geom_vline(xintercept = c(1977, 2017-19), color = "black", lty = 2) +
+  geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", color = "")+
-  scale_color_brewer(palette = "YlGnBu", direction = -1 ) + 
+  scale_color_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
+                              "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
+                    limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                               "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"), 
+                    labels = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
+                                       "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(-1,0.4, by = 0.2))+
   theme_bw() +
   guides(color = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
@@ -1150,15 +1241,15 @@ Fig5a_Diff <- left_join(SKU %>%
 plot_grid(Fig5a_SOCSIM, Fig5a_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig5a_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-11-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 parent_table <- 
@@ -1182,18 +1273,18 @@ parent_table  <-
   mutate(new = 2)
 
 Fig6a_SOCSIM <- ggplot() +
-  geom_area(data = parent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_vline(xintercept = c(1940), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents", fill = "") +
-  scale_fill_manual(values = c("white", "#FFFFCC", "#2C7FB8", "#A1DAB4"),
+  geom_area(data = parent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents in Microsimulation", fill = "") +
+  scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("", "not living", "father", "mother"),
                     labels = c("", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1212,17 +1303,17 @@ Fig6a_SKU <- SKU %>%
                                   "father", "mother"))) %>% 
   ggplot() +
   geom_area(mapping = aes(x = IDbirthYear, y =  mean_kin, fill = Type), 
-            color = "grey30", lwd = 0.5) +
-  geom_vline(xintercept = c(1940), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents", fill = "") +
-  scale_fill_manual(values = c("#FED98E", "#FFFFCC", "#2C7FB8", "#A1DAB4"),
+            color = "#4D4D4D", lwd = 0.5) +
+  geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents in Registers", fill = "") +
+  scale_fill_manual(values = c("#FED98E", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1238,7 +1329,7 @@ Fig6a_Diff <- left_join(SKU %>%
                                        names_to = "Type", values_to = "mean_kin_SKU") %>% 
                           select(IDbirthYear, mean_kin_SKU, Type), 
                         # We need to add a value of 0 for unregistered parents and 
-                        # estimated the deceased, because for plotting they have all the value of 2
+                        # estimate the deceased, because for plotting they have all the value of 2
                        parent_table %>%
                          pivot_wider(names_from = Type, values_from = mean_kin) %>% 
                          select(-c(new, `not living`)) %>% 
@@ -1251,17 +1342,17 @@ Fig6a_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(1940), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents", color = "") +
-  scale_color_manual(values = c("#FED98E", "#FFFFCC", "#2C7FB8", "#A1DAB4"),
+  geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of parents in Registers", color = "") +
+  scale_color_manual(values = c("#FED98E", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1272,19 +1363,15 @@ Fig6a_Diff <- left_join(SKU %>%
 plot_grid(Fig6a_SOCSIM, Fig6a_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig6a_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-12-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-11-2.png" style="display: block; margin: auto;" />
 
-``` r
-# Check why there are no fathers in 1931, 1932
-```
-
-#### Fig. 6b. Average number of parent siblings by birth cohort 1950–2017. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 6b. Average number of parent siblings by birth cohort 1950–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 parsib_table <- reference_table_SweBorn %>% 
@@ -1314,19 +1401,19 @@ parsib_tableAlt3  <- rbind(parsib_table[, .(mean_kin = .N / N_17, Type4 = "not l
   distinct()
 
 Fig6b_SOCSIM <- ggplot() +
-  geom_area(data = parsib_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "grey30", lwd = 0.5) +
-  geom_area(data = parsib_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "grey30", lwd = 0.5) +
-  geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of aunts/uncles", fill = "") +
-  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
+  geom_area(data = parsib_tableAlt3[Type4 == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data = parsib_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data=data.frame(x = c(1950,1977), y = c(5,5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of aunts and uncles in Microsimulation", fill = "") +
+  scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("not living", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1341,25 +1428,25 @@ Fig6b_SKU <- ggplot() +
                                    levels = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"))) %>% 
               filter(Fig == "Fig6b" & type == "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
-            color = "grey30", lwd = 0.7) + 
+            color = "#4D4D4D", lwd = 0.7) + 
     geom_area(data = SKU %>% 
               filter(Fig == "Fig6b") %>% 
               mutate(type = factor(type,
                                    levels = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"))) %>% 
               filter(Fig == "Fig6b" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
-            color = "grey30", lwd = 0.7) +
-  geom_area(data=data.frame(x = c(1950,1977), y = c(0,5)), aes(x=x,y=y), fill = "white", alpha = 0.2) + 
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of aunts/uncles", fill = "") +
-  scale_fill_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
+            color = "#4D4D4D", lwd = 0.7) +
+  geom_area(data=data.frame(x = c(1950,1977), y = c(5,5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of aunts and uncles in Registers", fill = "") +
+  scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1389,35 +1476,35 @@ Fig6b_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of aunts/uncles (SOCSIM-SKU)", color = "") +
-  scale_color_manual(values = c("#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
+  scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) +
-  guides(fill = guide_legend(override.aes = list(color = "black"), ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = "#000000"), ncol = 3, byrow = TRUE))
 
 plot_grid(Fig6b_SOCSIM, Fig6b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig6b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-13-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-12-2.png" style="display: block; margin: auto;" />
 
-#### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 grandparent_table <- 
@@ -1442,22 +1529,22 @@ grandparent_table  <-
                                          "grandmother (mother's side)")))
 
 Fig7_SOCSIM <- ggplot() +
-  geom_area(data = grandparent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data = grandparent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  scale_fill_manual(values = c("white", "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  geom_area(data = grandparent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data = grandparent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("", "not living", 
                                "grandfather (father's side)", 
                                "grandmother (father's side)", 
                                "grandfather (mother's side)",
                                "grandmother (mother's side)"), 
                     labels = c("", "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1486,17 +1573,17 @@ Fig7_SKU  <- ggplot() +
   geom_area(data = SKU_7 %>% 
               filter(type == "unregistered"),
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type),
-              color = "grey30", lwd = 0.7) +
+              color = "#4D4D4D", lwd = 0.7) +
     geom_area(data = SKU_7 %>% 
               filter(type == "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
-              color = "grey30", lwd = 0.7) + 
+              color = "#4D4D4D", lwd = 0.7) + 
     geom_area(data = SKU_7 %>% 
               filter(type != "registered deceased" & type != "unregistered"), 
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
-              color = "grey30", lwd = 0.7) +
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  scale_fill_manual(values = c("#FED98E", "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+              color = "#4D4D4D", lwd = 0.7) +
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
+  scale_fill_manual(values = c("#FED98E", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("unregistered", 
                                "registered deceased", 
                                "grandfather (father's side)", 
@@ -1505,12 +1592,12 @@ Fig7_SKU  <- ggplot() +
                                "grandmother (mother's side)"), 
                     labels = c("Unregistered grandparents", 
                       "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents", fill = "") +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1551,8 +1638,8 @@ Fig7_Diff <- left_join(SKU %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  geom_vline(xintercept = c(1977), color = "black", lty = 2) +
-  scale_color_manual(values = c("#FED98E", "#FFFFCC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
+  scale_color_manual(values = c("#FED98E", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("unregistered", 
                                "registered deceased", 
                                "grandfather (father's side)", 
@@ -1564,9 +1651,9 @@ Fig7_Diff <- left_join(SKU %>%
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "bottom",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1577,13 +1664,13 @@ Fig7_Diff <- left_join(SKU %>%
 plot_grid(Fig7_SOCSIM, Fig7_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig7_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-14-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-13-2.png" style="display: block; margin: auto;" />
 
 #### Fig. 8a: Distribution of the total number of kin by birth cohort 1915–2017. SOCSIM outputs
 
@@ -1630,16 +1717,16 @@ Fig8a_SOCSIM <- ggplot() +
               scale = "area", bw = 1) +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
                width = 1.5, show.legend = FALSE, color = "maroon")+
-  scale_fill_manual(values = c("white", "#FFFFD9", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Total number of living kin") +
+  scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Total number of living kin in Microsimulation") +
   scale_y_continuous(breaks = seq(0,80, by = 10), limits = c(0,70)) + 
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
                      labels = paste(seq(1920, 2010, by=10), "\n", "(",2018 -seq(1920, 2010, by=10),")"),
                      sec.axis = dup_axis(name = "Percentage with median number of kin by cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.y = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         panel.grid.minor.x = element_blank(),
         legend.position = "none",
         panel.background = element_rect(fill = NA), 
@@ -1649,9 +1736,9 @@ Fig8a_SOCSIM <- ggplot() +
 Fig8a_SOCSIM
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-14-1.png" style="display: block; margin: auto;" />
 
-#### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017. SOCSIM (left) vs Swedish Kinship Universe (right)
+#### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 ``` r
 totalkin_table <- reference_table_SweBorn %>% 
@@ -1667,23 +1754,19 @@ totalkin_table  <- rbind(totalkin_table[, .(mean_kin = .N / N_17, Type = "not li
   distinct()%>%
   mutate(Type = factor(Type, levels = c("not living", "grandchild","child","sibchild","sibling","cousin","parent","parsib","grandparent")))
 
-## No idea why this drop is add here
-# totalkin_table <- rbind(totalkin_table, data.frame(IDbirthYear = 1931,
-#                                                    mean_kin = 0,
-#                                                    Type = c("sibchild", "sibling")))
 
 Fig8b_SOCSIM <- ggplot() +
-  geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "grey30", lwd = 0.5) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin", fill = "") +
-  scale_fill_manual(values =c("#FFFFD9","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
+  geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin in Microsimulation", fill = "") +
+  scale_fill_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("not living", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1697,16 +1780,16 @@ Fig8b_SKU <- SKU %>%
                        levels = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"))) %>%
   ggplot() +
   geom_area(mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
-            color = "grey30", lwd = 0.5) +
-  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin", fill = "") +
-  scale_fill_manual(values =c("#FFFFD9","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
+            color = "#4D4D4D", lwd = 0.5) +
+  labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin in Registers", fill = "") +
+  scale_fill_manual(values =c("#FFE6CC", "#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1734,15 +1817,15 @@ Fig8b_Diff <- full_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of kin", color = "") +
-  scale_color_manual(values =c("#FFFFD9","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
+  scale_color_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "grey60", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour = "grey70", linewidth = 0.3, linetype = 9),
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
         panel.background = element_rect(fill = NA), 
@@ -1753,10 +1836,10 @@ Fig8b_Diff <- full_join(SKU %>%
 plot_grid(Fig8b_SOCSIM, Fig8b_SKU, align = "hv")
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" />
 
 ``` r
 Fig8b_Diff
 ```
 
-<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-16-2.png" style="display: block; margin: auto;" />
+<img src="2_Compare_Figures_files/figure-gfm/unnamed-chunk-15-2.png" style="display: block; margin: auto;" />
