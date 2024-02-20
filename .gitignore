@@ -5,7 +5,7 @@
 *.RData
 
 # Temp Data files
-*.RDataTmp
+*.RDataTmp*
 
 # User-specific files
 .Ruserdata
