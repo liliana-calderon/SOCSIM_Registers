@@ -432,14 +432,16 @@ Fig2b_SKU <- ggplot() +
         strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))+
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5))
 
+# The data for children (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
+# as registered deceased or not living.
+# So, we need to estimate the actual registered deceased by subtracting the number of people alive
+
 # Plot difference
 Fig2b_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig2b") %>% 
                           select(IDbirthYear, Kon, mean_children, type) %>% 
                           pivot_wider(names_from = type, values_from = mean_children) %>% 
                           mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
-                          # The registered deceased from the table include both the living and the deceased
-                          # So, we need to estimate the actual number of deceased
                           mutate(`not living` = `registered deceased` - `1` - `2` - `>2`) %>%
                           select(-`registered deceased`) %>% 
                           pivot_longer(cols = c(3:6), 
@@ -666,14 +668,31 @@ Fig3_SKU <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
+# The data for niblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
+# as registered deceased or not living.
+# So, we need to estimate the actual registered deceased by subtracting the number of people alive
+
 Fig3_Diff <- left_join(SKU %>% 
-                          filter(Fig == "Fig3") %>% 
-                          select(IDbirthYear, mean_kin_SKU = mean_kin, type) %>% 
-                          mutate(type = ifelse(type == "registered deceased", "not living", type), 
-                                 type = factor(type, levels = c("not living", "half brother side","full brother side", "half sister side","full sister side"))) %>% 
-                         rename(Type = type), 
+                         filter(Fig == "Fig3") %>% 
+                         select(IDbirthYear, mean_kin, type) %>% 
+                         pivot_wider(names_from = type, values_from = mean_kin) %>% 
+                         mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
+                         # The not living from the table include both the living and the deceased
+                         # So, we need to estimate the actual number of deceased
+                         mutate(alive = `half brother side` + `full brother side` + `half sister side` + `full sister side`,
+                                `not living` = `registered deceased` - alive) %>%
+                         select(-c(`registered deceased`, alive)) %>% 
+                         pivot_longer(cols = c(2:6), 
+                                      names_to = "Type", values_to = "mean_kin_SKU"),
                         sibchild_table %>% 
-                          rename(mean_kin_SOCSIM = mean_kin)) %>% 
+                         pivot_wider(names_from = Type, values_from = mean_kin) %>% 
+                         rename(all = `not living`) %>% 
+                         mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
+                         mutate(alive = `half brother side` + `full brother side` + `half sister side` + `full sister side`,
+                                `not living` = all - alive) %>%
+                         select(-c(all, alive)) %>% 
+                         pivot_longer(cols = c(2:6), 
+                                      names_to = "Type", values_to = "mean_kin_SOCSIM")) %>%  
   mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
@@ -804,14 +823,29 @@ Fig4a_SKU <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
+# The data for siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased cousins as non.living.
+# So, we need to estimate the actual registered deceased by subtracting the number of people alive
 
 Fig4a_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig4a") %>% 
-                          select(IDbirthYear, mean_siblings_SKU = mean_siblings, type) %>% 
-                         rename(Type = type), 
-                        sibling_table %>% 
-                          rename(mean_siblings_SOCSIM = mean_siblings, 
-                                 Type = refTypeIIII)) %>% 
+                          select(IDbirthYear, mean_siblings, type) %>% 
+                          pivot_wider(names_from = type, values_from = mean_siblings) %>% 
+                          rename(all = `not living`) %>% 
+                          mutate_at(c(2:5), ~ replace_na(.,0)) %>% 
+                          mutate(alive = full +  half.father + half.mother,
+                                `not living` = all - alive) %>%
+                          select(-c(all, alive)) %>% 
+                          pivot_longer(cols = c(2:5), 
+                                       names_to = "Type", values_to = "mean_siblings_SKU"), 
+                          sibling_table %>% 
+                          pivot_wider(names_from = refTypeIIII, values_from = mean_siblings) %>% 
+                          rename(all = `not living`) %>% 
+                          mutate_at(c(2:5), ~ replace_na(.,0)) %>% 
+                          mutate(alive = full +  half.father + half.mother,
+                                `not living` = all - alive) %>%
+                          select(-c(all, alive)) %>% 
+                          pivot_longer(cols = c(2:5), 
+                                       names_to = "Type", values_to = "mean_siblings_SOCSIM")) %>%  
   mutate(Difference = mean_siblings_SOCSIM - mean_siblings_SKU) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
@@ -848,20 +882,10 @@ Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Microsimulation", fill = "")+
   scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                 "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
-                    limits = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings"),
-                    labels = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings")) +
+                    limits = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings"),
+                    labels = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
@@ -887,20 +911,10 @@ Fig4b_SKU <- ggplot(data = SKU %>%
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion in Registers", fill = "")+
     scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                 "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
-                    limits = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings"),
-                    labels = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings")) +
+                    limits = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings"),
+                    labels = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() +
@@ -927,20 +941,10 @@ Fig4b_Diff <- left_join(SKU %>%
   labs(x = "Birth cohort \n(Age in 2017)", y = "Proportion", color = "")+
   scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                 "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
-                    limits = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings"),
-                    labels = c("6 or more siblings", 
-                               "5 siblings", 
-                               "4 siblings", 
-                               "3 siblings", 
-                               "2 siblings", 
-                               "1 sibling", 
-                               "No siblings")) +
+                    limits = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings"),
+                    labels = c("6 or more siblings", "5 siblings", "4 siblings", 
+                               "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2018 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() +
@@ -1295,6 +1299,7 @@ Fig6a_SKU <- SKU %>%
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 Fig6a_Diff <- left_join(SKU %>% 
+                          # We need estimate the number of unregistered parents which is not included in the table
                           filter(Fig == "Fig6a") %>% 
                           pivot_wider(names_from = Type, values_from = mean_kin) %>% 
                           mutate(unregistered = 2-(father + mother + `registered deceased`)) %>%
@@ -1421,7 +1426,9 @@ Fig6b_SKU <- ggplot() +
         text = element_text(family = "Times", size = 12)) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
 
-
+# The data for parents siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin
+# as `registered deceased` or not living.
+# So, we need to estimate the actual registered deceased by subtracting the number of people alive
 Fig6b_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig6b") %>% 
                           select(IDbirthYear, mean_kin, type) %>% 
