@@ -2,7 +2,7 @@ Kinship networks over time: comparing Swedish population registers and
 microsimulation outputs
 ================
 …
-2024-02-19
+2024-02-20
 
 ``` r
 library(tidyverse)
@@ -432,12 +432,25 @@ Fig2b_SKU <- ggplot() +
 # Plot difference
 Fig2b_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig2b") %>% 
-                          select(IDbirthYear, Kon, mean_children_SKU = mean_children, type) %>% 
-                          mutate(Type = ifelse(type == "registered deceased", "not living", type), 
-                                 Type = factor(Type, levels = c("not living", ">2", "2", "1"))),
+                          select(IDbirthYear, Kon, mean_children, type) %>% 
+                          pivot_wider(names_from = type, values_from = mean_children) %>% 
+                          mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
+                          # The registered deceased from the table include both the living and the deceased
+                          # So, we need to estimate the actual number of deceased
+                          mutate(`not living` = `registered deceased` - `1` - `2` - `>2`) %>%
+                          select(-`registered deceased`) %>% 
+                          pivot_longer(cols = c(3:6), 
+                                       names_to = "Type", values_to = "mean_children_SKU"),
                         child_table %>% 
-                          rename(mean_children_SOCSIM = mean_children)) %>% 
-  mutate(Difference = mean_children_SOCSIM - mean_children_SKU) %>%
+                          pivot_wider(names_from = Type, values_from = mean_children) %>% 
+                          rename(all = `not living`) %>% 
+                          mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
+                          mutate(`not living` = all - `1` - `2` - `>2`) %>%
+                          select(-all) %>% 
+                          pivot_longer(cols = c(3:6), 
+                                       names_to = "Type", values_to = "mean_children_SOCSIM")) %>% 
+  mutate(Difference = mean_children_SOCSIM - mean_children_SKU, 
+         Type = factor(Type, levels = c("not living", ">2", "2", "1"))) %>%
   filter(!is.na(Difference)) %>% 
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
@@ -1077,7 +1090,7 @@ Fig5b_SKU <- ggplot() +
             filter(Fig == "Fig5b" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y =  mean_cousins, fill = type), 
             color = "#4D4D4D", lwd = 0.5)+
-  geom_area(data=data.frame(x = c(1950,1977), y = c(0,8.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
+  geom_area(data=data.frame(x = c(1950,1977), y = c(8.5,8.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_area(data=data.frame(x = c(2017-19,2017), y = c(7,7)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
   scale_fill_manual(values = c("#FFE6CC", "#253494", "#2C7FB8", "#41B6C4", "#A1DAB4"),                     limits = c("registered deceased", "father.brother", "father.sister",
