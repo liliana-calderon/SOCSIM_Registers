@@ -26,8 +26,10 @@ library(extrafont)
 library(fs)
 library(ggthemes)
 library(ggtext)
+library(magick)
 library(RColorBrewer)
 library(readxl)
+theme_set(theme_bw())
 windowsFonts(Times = windowsFont("Times New Roman"))
 
 load("Output/reference_table_SweBorn.RData")
@@ -1696,8 +1698,15 @@ Fig8a_SOCSIM <- ggplot() +
         panel.background = element_rect(fill = NA), 
         panel.ontop = TRUE,
         text = element_text(family = "Times", size = 12)) 
+ggsave(file="Fig8a_SOCSIM.png", dpi=300)
 
-Fig8a_SOCSIM
+# Import violin plots from the Swedish Kinship Universe
+Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
+
+plot_grid(Fig8a_SOCSIM, Fig8a_SKU, align = "hv",
+          rel_heights = c(0.75,0.5), 
+          rel_widths = c(0.7,0.5), 
+          scale(c(0.75, 0.5)))
 ```
 
 
@@ -1798,7 +1807,4 @@ Fig8b_Diff <- full_join(SKU %>%
 
 plot_grid(Fig8b_SOCSIM, Fig8b_SKU, align = "hv")
 Fig8b_Diff
-```
-```{r, include=FALSE, eval= FALSE}
-ggsave(file="Fig8b.jpg", width=17, height=9, dpi=300)
 ```
