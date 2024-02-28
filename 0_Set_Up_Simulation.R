@@ -14,7 +14,7 @@
 ## and read the output into R. 
 
 # Created on 13-02-2024
-# Last modified on 15-02-2024
+# Last modified on 28-02-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/0_Write_Input_Rates.R
@@ -228,26 +228,32 @@ folder <- getwd()
 # Otherwise, the working directory must be specified after "folder <- "
 
 # Name of the supervisory file stored in the above folder:
-supfile <- "Sweden_0.sup"
-# Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), 
-# using marry after childbirth directive (heterogeneous fertility disabled)
+# Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), with marry after childbirth 
+
+# supfile <- "Sweden_0.sup" # hetfert 0
+# supfile <- "Sweden_a0b1.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 1 (exactly initial fmult)
+# supfile <- "Sweden_a0b0.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
+# supfile <- "Sweden_a0b05.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 05 (higher fmult than initial, but lower than beta 0)
+# supfile <- "Sweden_a0b2.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 2 (lower fmult than initial)
 
 # Random number generator seed:
-seed <- as.character(sample(1:99999, 1, replace = F))
+#seed <- as.character(sample(1:99999, 1, replace = F))
 
 # Save the seed number to use them later to read the data
-save(seed, file = "seed.Rda")
+# save(seed, file = "seed.Rda")
+load("seed.Rda")
 
 ## Run the simulation for the random seed. 
 start <- Sys.time()
 
 ### Run a single SOCSIM-simulation with a given folder and supervisory file
 rsocsim::socsim(folder, supfile, seed, process_method = "future")
-
 end <- Sys.time()
+
 print(end-start)
-# Time difference of 17.25873 minutes for  1 simulation, with initial population of 5000 and hetfert 0
-# Time difference of 1.7874 daysfor  1 simulation, with initial population of 50000 and hetfert 0
+# Time difference of 17.25873 minutes for  1 simulation, with initial opop of 5000 and hetfert 0
+# Time difference of 1.7874 days for 1 simulation, with initial opop 50000 and hetfert 0
+# Time difference of 12.42807 hours for 1 simulation, with initial opop 50000, hetfert 1 alpha 0 beta 1
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
@@ -255,22 +261,104 @@ print(end-start)
 load("seed.Rda")
 seed <- as.numeric(seed)
 
+## No heterogeneous fertility (hetfert_0)
 # Read opop
-opop <- rsocsim::read_opop(folder = getwd(),
-                           supfile = "Sweden_0.sup",
-                           seed = seed,
-                           suffix = "",
-                           fn = NULL)
-
+opop_hetfert0 <- rsocsim::read_opop(folder = getwd(),
+                                   supfile = "Sweden_0.sup",
+                                   seed = seed,
+                                   suffix = "",
+                                   fn = NULL)
 # Save opop to use later
-save(opop, file = "opop.RData")
+save(opop_hetfert0, file = "opop_hetfert0.RData")
 
 # Read omar
-omar <- rsocsim::read_omar(folder = getwd(),
-                           supfile = "Sweden_0.sup",
-                           seed = seed,
-                           suffix = "",
-                           fn = NULL)
-
+omar_hetfert0 <- rsocsim::read_omar(folder = getwd(),
+                                   supfile = "Sweden_0.sup",
+                                   seed = seed,
+                                   suffix = "",
+                                   fn = NULL)
 # Save omar to use later
-save(omar, file = "omar.RData")
+save(omar_hetfert0, file = "omar_hetfert0.RData")
+
+
+## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 1 (exactly initial random fmult)
+# Read opop
+opop_a0b1 <- rsocsim::read_opop(folder = getwd(),
+                                supfile = "Sweden_a0b1.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save opop to use later
+save(opop_a0b1, file = "opop_a0b1.RData")
+
+# Read omar
+omar_a0b1 <- rsocsim::read_omar(folder = getwd(),
+                                supfile = "Sweden_a0b1.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save omar to use later
+save(omar_a0b1, file = "omar_a0b1.RData")
+
+
+## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
+
+# Read opop
+opop_a0b0 <- rsocsim::read_opop(folder = getwd(),
+                                supfile = "Sweden_a0b0.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save opop to use later
+save(opop_a0b0, file = "opop_a0b0.RData")
+
+# Read omar
+omar_a0b0 <- rsocsim::read_omar(folder = getwd(),
+                                supfile = "Sweden_a0b0.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save omar to use later
+save(omar_a0b0, file = "omar_a0b0.RData")
+
+
+## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 0.5 (higher fmult than initial)
+
+# Read opop
+opop_a0b05 <- rsocsim::read_opop(folder = getwd(),
+                                supfile = "Sweden_a0b05.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save opop to use later
+save(opop_a0b05, file = "opop_a0b05.RData")
+
+# Read omar
+omar_a0b05 <- rsocsim::read_omar(folder = getwd(),
+                                supfile = "Sweden_a0b05.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save omar to use later
+save(omar_a0b05, file = "omar_a0b05.RData")
+
+
+## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 2 (higher fmult than initial)
+
+# Read opop
+opop_a0b2 <- rsocsim::read_opop(folder = getwd(),
+                                supfile = "Sweden_a0b2.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save opop to use later
+save(opop_a0b2, file = "opop_a0b2.RData")
+
+# Read omar
+omar_a0b2 <- rsocsim::read_omar(folder = getwd(),
+                                supfile = "Sweden_a0b2.sup",
+                                seed = seed,
+                                suffix = "",
+                                fn = NULL)
+# Save omar to use later
+save(omar_a0b2, file = "omar_a0b2.RData")
