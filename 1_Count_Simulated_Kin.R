@@ -23,29 +23,53 @@ library(reshape2)
 source("Functions/Functions_Kin_Count.R")
 
 #------------------------------------------------------------------------------------------------------
-## 1. Load SOCSIM output, convert time and add relevant variables
+## Load SOCSIM output, convert time and add relevant variables
 
-# Load opop 
-load("opop.RData")
-# Load omar
-load("omar.RData")
+# Load opop and omar from simulation with no heterogeneous fertility (hetfert_0)
+load("opop_hetfert0.RData")
+load("omar_hetfert0.RData")
+
+# Load opop and omar from simulation with heterogeneous fertility, a0b1
+# with alpha 0 (no mother inheritance), beta 1 (exactly initial random fmult)
+load("opop_a0b1.RData")
+load("omar_a0b1.RData")
+
+# Load opop and omar from simulation with heterogeneous fertility, a0b0
+# with alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
+# load("opop_a0b0.RData")
+# load("omar_a0b0.RData")
+
+# Load opop and omar from simulation with heterogeneous fertility, a0b05
+# with alpha 0 (no mother inheritance), beta 0.5 (higher fmult than initial)
+# load("opop_a0b05.RData")
+# load("omar_a0b05.RData")
+
+# Load opop and omar from simulation with heterogeneous fertility, a0b2
+# with alpha 0 (no mother inheritance), beta 2 (higher fmult than initial)
+load("opop_a0b2.RData")
+load("omar_a0b2.RData")
+
+#------------------------------------------------------------------------------------------------------
+## Function to create and save reference table, temp and N_Cohort from different opop ----
+
+
+reference_table_opop <- function(opop, sim_param, final_sim_year, year_min, year_max) {
+  
+## 1. Format the data
+  
+# Function to convert SOCSIM months to calendar years
+  asYr <- function(month, last_month, final_sim_year) {
+    return(final_sim_year - trunc((last_month - month)/12))
+  }
 
 # Define parameters to convert SOCSIM months to calendar years
 last_month <- max(opop$dob)
-final_sim_year <- 2022
-
-# Convert SOCSIM months to calendar years
-asYr <- function(month, last_month, final_sim_year) {
-  return(final_sim_year - trunc((last_month - month)/12))
-}
+#final_sim_year <- 2022
 
 # Add year of birth and year of death to the opop file
 opop <- opop %>% 
   mutate(birth_year = asYr(dob, last_month, final_sim_year),
          death_year = ifelse(dod == 0, 9999, asYr(dod, last_month, final_sim_year)))
-
-#------------------------------------------------------------------------------------------------------
-## 2.  Format the data ----
 
 opop2 <- opop %>%
   mutate(Kon = fem + 1, 
@@ -62,25 +86,18 @@ opop2 <- opop %>%
   mutate(LopNrFar = ifelse(LopNrFar == 0, NA, LopNrFar), 
          LopNrMor = ifelse(LopNrMor == 0, NA, LopNrMor))
 
-year_min <- 1900
-year_max <- 2022
 
 # Filter population (-100 years to avoid missing parents or grandparents)
-popdatdeaths <- opop2 %>% 
+popdatdeaths <- opop2 %>%  
   filter(between(FoddAr, year_min -100, year_max))  
 
-#------------------------------------------------------------------------------------------------------
-## 3. Create kinship objects ----
 
-popdat <- popdatdeaths %>% 
-  select(-deathyear)
+## 2. Create kinship objects 
+
+popdat <- popdatdeaths %>% select(-deathyear)
 
 # get Ref Table (from Martin's functions)
 refTableList <- getRefTable(df = popdat, ref_TypeI = "all")
-
-# Warning messages while running this code
-# In inner_join(x = ., y = ., by = c(refID = "ID")) :
-#   Detected an unexpected many-to-many relationship between `x` and `y`.
 
 # Add years of birth and death (from Martin's functions)
 # According to Diego, this is not really needed, but still did it
@@ -94,8 +111,8 @@ reference_table_SweBorn <-
   filter(between(IDbirthYear, year_min, year_max)) %>% 
   setDT() ## Add to allow the code below run
  
-#------------------------------------------------------------------------------------------------------
-## 4. Get other quantities ----
+
+## 3. Get other quantities
 
 # Get table with number of Swedish born parents per person
 temp <- reference_table_SweBorn %>% 
@@ -117,14 +134,39 @@ N_Cohort <- list(TotalPopulation[, .(N_ever = .N), keyby = FoddAr],
 # Table with N_cohort by sex
 temp <- reference_table_SweBorn[!is.na(FoddAr), .(N_17 = uniqueN(ID)), keyby = .(FoddAr, Kon)]
 
-temp <- temp %>% rename(IDbirthYear = FoddAr)
+temp <- temp %>% 
+  rename(IDbirthYear = FoddAr)
+
+# 4. Export 
+
+# Create a sub-folder called "Output_" and the simulation parameters to save the files
+output_folder <- paste0("Output_", sim_param, "/")
+
+if (!dir.exists(output_folder)) { dir.create(output_folder)}
+  
+  save(reference_table_SweBorn, file = paste0(output_folder, "reference_table_SweBorn.RData"))
+  save(temp, file = paste0(output_folder, "temp.RData"))
+  save(N_Cohort, file = paste0(output_folder, "N_Cohort.RData"))
+  
+}
 
 #------------------------------------------------------------------------------------------------------
-# 5. Export ------
+## Get the reference table and additional tables for each opop file ----
 
-# Create a sub-folder called "output" to save the rate files if it does not exist.
-ifelse(!dir.exists("Output"), dir.create("Output"), FALSE)
+reference_table_opop(opop = opop_hetfert0, 
+                     sim_param = "hetfert0", 
+                     final_sim_year = 2022, 
+                     year_min = 1900, 
+                     year_max = 2022)
 
-save("reference_table_SweBorn", file = "Output/reference_table_SweBorn.RData")
-save(temp, file = "Output/temp.RData")
-save(N_Cohort, file = "Output/N_Cohort.RData")
+reference_table_opop(opop = opop_a0b1, 
+                     sim_param = "a0b1", 
+                     final_sim_year = 2022, 
+                     year_min = 1900, 
+                     year_max = 2022)
+
+reference_table_opop(opop = opop_a0b2, 
+                     sim_param = "a0b2", 
+                     final_sim_year = 2022, 
+                     year_min = 1900, 
+                     year_max = 2022)
