@@ -1700,13 +1700,33 @@ Fig8a_SOCSIM <- ggplot() +
         text = element_text(family = "Times", size = 12)) 
 ggsave(file="Fig8a_SOCSIM.png", dpi=300)
 
+## Difference in the Percentage with median number of kin by cohort
+Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10), 
+                               mean_kin_SOCSIM_per = c(round(100*annotate_living$freq/annotate_living$N_17, 2)), 
+                               mean_kin_SKU_per = c(8.27, 8.65, 6.95, 7.05, 5.36, 4.49, 4.5, 5.04, 6, 7.11)) %>% 
+  mutate(Difference = mean_kin_SOCSIM_per - mean_kin_SKU_per) %>% 
+  ggplot()+
+  geom_line(aes(x = Cohort, y = Difference), linewidth =1)+
+  labs(x = "Birth cohort", y = "Difference in the percentage with the median number of kin by cohort")+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_blank(),
+        legend.position = "none",
+        panel.background = element_rect(fill = NA), 
+        panel.ontop = TRUE,
+        text = element_text(family = "Times", size = 12)) 
+  
+
 # Import violin plots from the Swedish Kinship Universe
 Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
 
 plot_grid(Fig8a_SOCSIM, Fig8a_SKU, align = "hv",
-          rel_heights = c(0.75,0.5), 
-          rel_widths = c(0.7,0.5), 
-          scale(c(0.75, 0.5)))
+          rel_heights = c(1,0.5), 
+          rel_widths = c(0.5,0.5), 
+          scale(c(0.6, 0.5)))
+Fig8a_Diff
 ```
 
 
