@@ -41,3 +41,6 @@ kin_count_sweden_R/
 
 # Simulation results
 sim_results_*
+
+# Alternative simulation trials
+z_Simulations/*
