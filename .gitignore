@@ -44,3 +44,6 @@ sim_results_*
 
 # Alternative simulation trials
 z_Simulations/*
+
+# Figures saved for paper 
+Graphs/*
