@@ -6,7 +6,7 @@
 # that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 15-02-2024
+# Last modified on 26-03-2024
 
 # This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
 #------------------------------------------------------------------------------------------------------
@@ -31,23 +31,18 @@ load("omar_hetfert0.RData")
 
 # Load opop and omar from simulation with heterogeneous fertility, a0b1
 # with alpha 0 (no mother inheritance), beta 1 (exactly initial random fmult)
-load("opop_a0b1.RData")
-load("omar_a0b1.RData")
-
-# Load opop and omar from simulation with heterogeneous fertility, a0b0
-# with alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
-# load("opop_a0b0.RData")
-# load("omar_a0b0.RData")
+load("z_Simulations/opop_a0b1.RData")
+load("z_Simulations/omar_a0b1.RData")
 
 # Load opop and omar from simulation with heterogeneous fertility, a0b05
-# with alpha 0 (no mother inheritance), beta 0.5 (higher fmult than initial)
-# load("opop_a0b05.RData")
-# load("omar_a0b05.RData")
+# with alpha 0 (no mother inheritance), beta 0.7 (higher fmult than initial)
+load("z_Simulations/opop_a0b07.RData")
+load("z_Simulations/omar_a0b07.RData")
 
 # Load opop and omar from simulation with heterogeneous fertility, a0b2
-# with alpha 0 (no mother inheritance), beta 2 (higher fmult than initial)
-load("opop_a0b2.RData")
-load("omar_a0b2.RData")
+# with alpha 0 (no mother inheritance), beta 2 (lower fmult than initial)
+load("z_Simulations/opop_a0b2.RData")
+load("z_Simulations/omar_a0b2.RData")
 
 #------------------------------------------------------------------------------------------------------
 ## Function to create and save reference table, temp and N_Cohort from different opop ----
@@ -64,7 +59,6 @@ reference_table_opop <- function(opop, sim_param, final_sim_year, year_min, year
 
 # Define parameters to convert SOCSIM months to calendar years
 last_month <- max(opop$dob)
-#final_sim_year <- 2022
 
 # Add year of birth and year of death to the opop file
 opop <- opop %>% 
@@ -161,6 +155,12 @@ reference_table_opop(opop = opop_hetfert0,
 
 reference_table_opop(opop = opop_a0b1, 
                      sim_param = "a0b1", 
+                     final_sim_year = 2022, 
+                     year_min = 1900, 
+                     year_max = 2022)
+
+reference_table_opop(opop = opop_a0b07, 
+                     sim_param = "a0b07", 
                      final_sim_year = 2022, 
                      year_min = 1900, 
                      year_max = 2022)
