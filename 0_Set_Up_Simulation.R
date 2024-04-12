@@ -14,7 +14,7 @@
 ## and read the output into R. 
 
 # Created on 13-02-2024
-# Last modified on 19-03-2024
+# Last modified on 11-04-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/0_Write_Input_Rates.R
@@ -74,7 +74,10 @@ library(readr)
 library(HMDHFDplus)
 
 # Load functions to write SOCSIM rate files from HFD/HMD and HFC
-source("Functions/Functions_Input_Rates.R")
+# source("Functions/Functions_Input_Rates.R")
+
+# Load functions to write SOCSIM rate files from HFD/HMD and HFD, with parity specific fertility rates
+source("Functions/Functions_Input_Rates_Parity.R")
 
 #----------------------------------------------------------------------------------------------------
 ## 1.1 Write fertility rate files for SOCSIM using data from HFD ----
@@ -103,6 +106,17 @@ source("Functions/Functions_Input_Rates.R")
 write_socsim_rates_HFD(Country = "SWE",
                        HFD_username = "Type_here_HFD_username",
                        HFD_password = "Type_here_HFD_password")
+
+#----------------------------------------------------------------------------------------------------
+## 1.1 Write fertility rate files by parity for SOCSIM using data from HFD ----
+
+# For the period 1970-2022, we can use data on conditional fertility rates by parity.
+# The format of the files is similar to that for all birth orders combined above, 
+# except for the inclusion of specific fertility rates for each parity order (0-4+).
+
+write_socsim_rates_HFD_parity(Country = "SWE",
+                              HFD_username = "Type_here_HFD_username",
+                              HFD_password = "Type_here_HFD_password")
 
 
 #----------------------------------------------------------------------------------------------------
@@ -230,12 +244,8 @@ folder <- getwd()
 # Name of the supervisory file stored in the above folder:
 # Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), with marry after childbirth 
 
-supfile <- "Sweden_0.sup" # hetfert 0
-# supfile <- "Sweden_a0b1.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 1 (exactly initial fmult)
-# supfile <- "Sweden_a0b0.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
-# supfile <- "Sweden_a0b05.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 05 (higher fmult than initial, but lower than beta 0)
-# supfile <- "Sweden_a0b07.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 07 (higher fmult than initial, but lower than beta 0)
-# supfile <- "Sweden_a0b2.sup" # hetfert 1, alpha 0 (no mother inheritance), beta 2 (lower fmult than initial)
+# supfile <- "Sweden_0.sup" # hetfert 0
+supfile <- "Sweden_0_par.sup" # hetfert 0 with parity-specific rates for 1970-2022
 
 # Random number generator seed:
 #seed <- as.character(sample(1:99999, 1, replace = F))
@@ -252,11 +262,11 @@ rsocsim::socsim(folder, supfile, seed, process_method = "future")
 end <- Sys.time()
 
 print(end-start)
-# Time difference of 17.25873 minutes for  1 simulation, with initial opop of 5000 and hetfert 0
+
+
 # Time difference of 1.7874 days for 1 simulation, with initial opop 50000 and hetfert 0
-# Time difference of 12.42807 hours for 1 simulation, with initial opop 50000, hetfert 1 alpha 0 beta 1
-# Time difference of 6.10245 days for 1 simulation, with initial opop of 5000 and hetfert 1, alpha 0 beta 0.5 (but not completed)
-# Time difference of 3.744903 hours for 1 simulation, with initial opop of 5000 and hetfert 1, alpha 0 beta 0.7
+# Time difference of 1.053164 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
+
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
@@ -266,89 +276,39 @@ seed <- as.numeric(seed)
 
 ## No heterogeneous fertility (hetfert_0)
 # Read opop
-opop_hetfert0 <- rsocsim::read_opop(folder = getwd(),
+opop_0 <- rsocsim::read_opop(folder = getwd(),
                                    supfile = "Sweden_0.sup",
                                    seed = seed,
                                    suffix = "",
                                    fn = NULL)
 # Save opop to use later
-save(opop_hetfert0, file = "opop_hetfert0.RData")
+save(opop_0, file = "opop_0.RData")
 
 # Read omar
-omar_hetfert0 <- rsocsim::read_omar(folder = getwd(),
+omar_0 <- rsocsim::read_omar(folder = getwd(),
                                    supfile = "Sweden_0.sup",
                                    seed = seed,
                                    suffix = "",
                                    fn = NULL)
 # Save omar to use later
-save(omar_hetfert0, file = "omar_hetfert0.RData")
+save(omar_0, file = "omar_0.RData")
 
 
-## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 1 (exactly initial random fmult)
+## No heterogeneous fertility but parity specific rates for 1970-2022 (hetfert0_par)
 # Read opop
-opop_a0b1 <- rsocsim::read_opop(folder = getwd(),
-                                supfile = "Sweden_a0b1.sup",
-                                seed = seed,
-                                suffix = "",
-                                fn = NULL)
+opop_0_par <- rsocsim::read_opop(folder = getwd(),
+                                        supfile = "Sweden_0_par.sup",
+                                        seed = seed,
+                                        suffix = "",
+                                        fn = NULL)
 # Save opop to use later
-save(opop_a0b1, file = "opop_a0b1.RData")
+save(opop_0_par, file = "opop_0_par.RData")
 
 # Read omar
-omar_a0b1 <- rsocsim::read_omar(folder = getwd(),
-                                supfile = "Sweden_a0b1.sup",
-                                seed = seed,
-                                suffix = "",
-                                fn = NULL)
+omar_0_par <- rsocsim::read_omar(folder = getwd(),
+                                        supfile = "Sweden_0_par.sup",
+                                        seed = seed,
+                                        suffix = "",
+                                        fn = NULL)
 # Save omar to use later
-save(omar_a0b1, file = "omar_a0b1.RData")
-
-
-## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 2 (higher fmult than initial)
-
-# Read opop
-opop_a0b2 <- rsocsim::read_opop(folder = getwd(),
-                                supfile = "Sweden_a0b2.sup",
-                                seed = seed,
-                                suffix = "",
-                                fn = NULL)
-# Save opop to use later
-save(opop_a0b2, file = "opop_a0b2.RData")
-
-# Read omar
-omar_a0b2 <- rsocsim::read_omar(folder = getwd(),
-                                supfile = "Sweden_a0b2.sup",
-                                seed = seed,
-                                suffix = "",
-                                fn = NULL)
-# Save omar to use later
-save(omar_a0b2, file = "omar_a0b2.RData")
-
-## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 0 (higher fmult than initial)
-# I had to stop the simulation with alpha 0 and betaT 0 (with initial opop 5000) before it finished
-# because it took more than 11 days to reach month 3500 and had already 871700 living individuals. 
-
-## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 0.5 (higher fmult than initial)
-# rsocsim stopped writing the logfile at Segment NO:	255 of 273 
-# but on the console it indicated Socsim Main Done Socsim Don after reading rates for 2022
-# The population pyramid stopped at month 254 and wrote no opop file
-
-## Heterogeneous fertility, with alpha 0 (no mother inheritance), beta 0.7 (higher fmult than initial)
-
-# Read opop
-opop_a0b07 <- rsocsim::read_opop(folder = getwd(),
-                                 supfile = "Sweden_a0b07.sup",
-                                 seed = seed,
-                                 suffix = "",
-                                 fn = NULL)
-# Save opop to use later
-save(opop_a0b07, file = "opop_a0b07.RData")
-
-# Read omar
-omar_a0b07 <- rsocsim::read_omar(folder = getwd(),
-                                 supfile = "Sweden_a0b07.sup",
-                                 seed = seed,
-                                 suffix = "",
-                                 fn = NULL)
-# Save omar to use later
-save(omar_a0b07, file = "omar_a0b07.RData")
+save(omar_0_par, file = "omar_0_par.RData")
