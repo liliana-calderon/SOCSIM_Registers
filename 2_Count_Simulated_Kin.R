@@ -6,7 +6,7 @@
 # that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 26-03-2024
+# Last modified on 11-04-2024
 
 # This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
 #------------------------------------------------------------------------------------------------------
@@ -25,16 +25,20 @@ source("Functions/Functions_Kin_Count.R")
 #------------------------------------------------------------------------------------------------------
 ## Load SOCSIM output, convert time and add relevant variables
 
-# Load opop and omar from simulation with no heterogeneous fertility (hetfert_0)
-load("opop_hetfert0.RData")
-load("omar_hetfert0.RData")
+# Load opop and omar from simulation with no heterogeneous fertility (0)
+load("opop_0.RData")
+load("omar_0.RData")
+
+# Load opop and omar from simulation with no heterogeneous fertility but parity-specific rates (0_par)
+load("opop_0_par.RData")
+load("omar_0_par.RData")
 
 # Load opop and omar from simulation with heterogeneous fertility, a0b1
 # with alpha 0 (no mother inheritance), beta 1 (exactly initial random fmult)
 load("z_Simulations/opop_a0b1.RData")
 load("z_Simulations/omar_a0b1.RData")
 
-# Load opop and omar from simulation with heterogeneous fertility, a0b05
+# Load opop and omar from simulation with heterogeneous fertility, a0b07
 # with alpha 0 (no mother inheritance), beta 0.7 (higher fmult than initial)
 load("z_Simulations/opop_a0b07.RData")
 load("z_Simulations/omar_a0b07.RData")
@@ -147,11 +151,19 @@ if (!dir.exists(output_folder)) { dir.create(output_folder)}
 #------------------------------------------------------------------------------------------------------
 ## Get the reference table and additional tables for each opop file ----
 
-reference_table_opop(opop = opop_hetfert0, 
-                     sim_param = "hetfert0", 
+reference_table_opop(opop = opop_0, 
+                     sim_param = "0", 
                      final_sim_year = 2022, 
                      year_min = 1900, 
                      year_max = 2022)
+
+reference_table_opop(opop = opop_0_par, 
+                     sim_param = "0_par", 
+                     final_sim_year = 2022, 
+                     year_min = 1900, 
+                     year_max = 2022)
+
+# The results below have been moved to the z_Simulations folder
 
 reference_table_opop(opop = opop_a0b1, 
                      sim_param = "a0b1", 
