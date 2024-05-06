@@ -14,7 +14,7 @@
 ## and read the output into R. 
 
 # Created on 13-02-2024
-# Last modified on 11-04-2024
+# Last modified on 06-05-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/0_Write_Input_Rates.R
@@ -36,6 +36,8 @@
 
 # Female fertility rates are identical for all marital status, but are specified for single and married women
 # Other marital status (divorced, widowed, cohabiting) follow the SOCSIM rate default rules. 
+# Age-specific female fertility rates are for all birth orders combined up to 1969,
+# and conditional age-specific fertility rates by birth order for 1970-2022
 # Mortality rates correspond to probabilities of death (qx) of HMD period life tables. 
 # They are identical for all marital status of each sex, and are only specified for single women and men. 
 # Other marital status will follow the rate default rules. 
@@ -73,11 +75,8 @@ library(readr)
 # install.packages("HMDHFDplus")
 library(HMDHFDplus)
 
-# Load functions to write SOCSIM rate files from HFD/HMD and HFC
-# source("Functions/Functions_Input_Rates.R")
-
 # Load functions to write SOCSIM rate files from HFD/HMD and HFD, with parity specific fertility rates
-source("Functions/Functions_Input_Rates_Parity.R")
+source("Functions/Functions_Input_Rates.R")
 
 #----------------------------------------------------------------------------------------------------
 ## 1.1 Write fertility rate files for SOCSIM using data from HFD ----
@@ -113,6 +112,11 @@ write_socsim_rates_HFD(Country = "SWE",
 # For the period 1970-2022, we can use data on conditional fertility rates by parity.
 # The format of the files is similar to that for all birth orders combined above, 
 # except for the inclusion of specific fertility rates for each parity order (0-4+).
+
+# To write the input fertility rate files by parity from HFD, 
+# please type inside the quotes the name of the country as used in HFD) 
+# and your HFD credentials (username and password) for the new website
+# If needed, check the countries' names and availability with getHFDcountries()
 
 write_socsim_rates_HFD_parity(Country = "SWE",
                               HFD_username = "Type_here_HFD_username",
@@ -242,10 +246,9 @@ folder <- getwd()
 # Otherwise, the working directory must be specified after "folder <- "
 
 # Name of the supervisory file stored in the above folder:
-# Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), with marry after childbirth 
-
-# supfile <- "Sweden_0.sup" # hetfert 0
-supfile <- "Sweden_0_par.sup" # hetfert 0 with parity-specific rates for 1970-2022
+# Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), 
+# with marry after childbirth, hetfert 0 and parity-specific rates for 1970-2022
+supfile <- "Sweden_0_par.sup" # 
 
 # Random number generator seed:
 #seed <- as.character(sample(1:99999, 1, replace = F))
@@ -263,10 +266,7 @@ end <- Sys.time()
 
 print(end-start)
 
-
-# Time difference of 1.7874 days for 1 simulation, with initial opop 50000 and hetfert 0
 # Time difference of 1.053164 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
-
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
@@ -274,41 +274,21 @@ print(end-start)
 load("seed.Rda")
 seed <- as.numeric(seed)
 
-## No heterogeneous fertility (hetfert_0)
-# Read opop
-opop_0 <- rsocsim::read_opop(folder = getwd(),
-                                   supfile = "Sweden_0.sup",
-                                   seed = seed,
-                                   suffix = "",
-                                   fn = NULL)
-# Save opop to use later
-save(opop_0, file = "opop_0.RData")
-
-# Read omar
-omar_0 <- rsocsim::read_omar(folder = getwd(),
-                                   supfile = "Sweden_0.sup",
-                                   seed = seed,
-                                   suffix = "",
-                                   fn = NULL)
-# Save omar to use later
-save(omar_0, file = "omar_0.RData")
-
-
 ## No heterogeneous fertility but parity specific rates for 1970-2022 (hetfert0_par)
 # Read opop
-opop_0_par <- rsocsim::read_opop(folder = getwd(),
-                                        supfile = "Sweden_0_par.sup",
-                                        seed = seed,
-                                        suffix = "",
-                                        fn = NULL)
+opop <- rsocsim::read_opop(folder = getwd(),
+                           supfile = "Sweden_0_par.sup",
+                           seed = seed,
+                           suffix = "",
+                           fn = NULL)
 # Save opop to use later
-save(opop_0_par, file = "opop_0_par.RData")
+save(opop, file = "opop.RData")
 
 # Read omar
-omar_0_par <- rsocsim::read_omar(folder = getwd(),
-                                        supfile = "Sweden_0_par.sup",
-                                        seed = seed,
-                                        suffix = "",
-                                        fn = NULL)
+omar <- rsocsim::read_omar(folder = getwd(),
+                           supfile = "Sweden_0_par.sup",
+                           seed = seed,
+                           suffix = "",
+                           fn = NULL)
 # Save omar to use later
-save(omar_0_par, file = "omar_0_par.RData")
+save(omar, file = "omar.RData")
