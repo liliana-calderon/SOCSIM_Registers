@@ -30,6 +30,7 @@ Pass.R
 
 # Rate and presim files
 rates/*
+rates_parity/*
 presim*
 seed.Rda
 
