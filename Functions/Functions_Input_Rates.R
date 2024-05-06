@@ -2,15 +2,23 @@
 # Functions to Write SOCSIM fertility and mortality input rate files using HFD and HMD data
 # retrieved using the HMDHFDplus package 
 # and the Human Fertility COllection for the period not covered in HFD
+# This set of rates include parity-specific data for the period 1970-2022
 
 ## Write SOCSIM input rates from HMD and HFD using the HMDHFDplus package ----
 
 # Created on 08-06-2022
-# Last modified on 25-05-2023
+# Last modified on 06-05-2024
 
 #----------------------------------------------------------------------------------------------------
+#### Create subfolders ----
+
 # Create a sub-folder called "rates" to save the rate files if it does not exist.
 ifelse(!dir.exists("rates"), dir.create("rates"), FALSE)
+# If the sub-folder name changes, 
+# it must be also changed in the functions when opening the output file connection\
+
+# Create a sub-folder called "rates_parity" to save the rate files by parity if it does not exist.
+ifelse(!dir.exists("rates_parity"), dir.create("rates_parity"), FALSE)
 # If the sub-folder name changes, 
 # it must be also changed in the functions when opening the output file connection
 
@@ -100,6 +108,158 @@ write_socsim_rates_HFD <- function(Country, HFD_username, HFD_password) {
     cat("birth", "1", "F", "married", "0", "\n", file = outfilename)
     for(i in n_row) {
       cat(c(as.matrix(ASFR)[i,-1],"\n"), file = outfilename) }
+    
+    close(outfilename)
+    
+  }
+  
+}
+
+
+#----------------------------------------------------------------------------------------------------
+#### Write SOCSIM input fertility rates by parity from HFD using the HMDHFDplus package ----
+
+write_socsim_rates_HFD_parity <- function(Country, HFD_username, HFD_password) {
+  
+  # Get Conditional ASFR by birth order from HFD
+  asfrp <- 
+    readHFDweb(CNTRY = Country,
+               item = "mi", 
+               username = HFD_username,
+               password = HFD_password)
+  
+  # Wrangle data and compute monthly fertility rates
+  ASFRp <- 
+    asfrp %>% 
+    select(-c("OpenInterval")) %>% 
+    pivot_longer(cols =c("m1x":"m5px"), names_to = "Parity", values_to = "ASFR") %>% 
+    arrange(Year, Parity) %>% 
+    mutate(ASFR = ifelse(is.na(ASFR), 0, ASFR), 
+           Age_up = Age + 1, # SOCSIM uses the upper age bound
+           Month = 0, 
+           ASFR_mo = ASFR/12) %>% 
+    select(-ASFR)
+  
+  # Add rows with rates = 0 for ages 0-12 and 56-100
+  ASFRp <- 
+    ASFRp %>% 
+    group_by(Year, Parity) %>% 
+    group_split() %>% 
+    map_df(~ add_row(.x,
+                     Year = unique(.x$Year), 
+                     Age = 0, 
+                     Parity = unique(.x$Parity),
+                     Age_up = 12,  Month = 0, ASFR_mo = 0.0, 
+                     .before = 1)) %>% 
+    group_by(Year, Parity) %>% 
+    group_split() %>% 
+    map_df(~ add_row(.x, 
+                     Year = unique(.x$Year), 
+                     Age = 56, 
+                     Parity = unique(.x$Parity),
+                     Age_up = 111, Month = 0, ASFR_mo = 0.0, 
+                     .after = 45)) %>% 
+    ungroup() %>% 
+    select(-Age) %>% 
+    pivot_wider(names_from = "Parity", values_from = "ASFR_mo")
+  
+  # Extract the years available in HFD
+  years <- ASFRp %>% pull(Year) %>% unique()
+  
+  # Row numbers corresponding to sequence of years of age in ASFR
+  rows_ageF <- ASFRp %>% pull(Age_up) %>% unique() %>% seq_along()
+  
+  
+  ## Write the fertility rate files for each year
+  
+  for(Year in years) {
+    
+    # Find the index of each year of the iteration
+    n <- which(Year == years)
+    # Find the row numbers for each parity 
+    n_row <- (n-1)*46 + rows_ageF
+    
+    # Open an output file connection
+    outfilename <- file(paste0("rates_parity/",Country,"fert",Year), "w") 
+    # without ".txt" specification as the original files had no format. 
+    
+    # Include country and year of the corresponding rates
+    cat(c("** Period (Monthly) Conditional Age-Specific Fertility Rates by Parity for", Country, "in", Year, "\n"), 
+        file = outfilename)
+    cat(c("* Retrieved from the Human Fertility Database, www.humanfertility.org", "\n"), 
+        file = outfilename)
+    cat(c("* Max Planck Institute for Demographic Research (Germany) and", "\n"), 
+        file = outfilename)
+    cat(c("* Vienna Institute of Demography (Austria)", "\n"), 
+        file = outfilename)
+    cat(c("* Data downloaded on ", format(Sys.time(), format= "%d %b %Y %X %Z"), 
+          "using the HMDHFDplus R-Package", "\n"), 
+        file = outfilename)
+    cat(c("** NB: The original HFD annual rates have been converted into monthly rates", "\n"), 
+        file = outfilename)
+    cat(c("** The open age intervals (12- and 55+) are limited to one year [12-13) and [55-56)", "\n"), 
+        file = outfilename)
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (single females, parity 0) 
+    cat("birth", "1", "F", "single", "0", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 4)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (single females, parity 1) 
+    cat("birth", "1", "F", "single", "1", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 5)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (single females, parity 2) 
+    cat("birth", "1", "F", "single", "2", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 6)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (single females, parity 3) 
+    cat("birth", "1", "F", "single", "3", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 7)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (single females, parity 4) 
+    cat("birth", "1", "F", "single", "4", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 8)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    
+    # Print birth rates (married females, parity 0) 
+    cat("birth", "1", "F", "married", "0", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 4)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (married females, parity 1) 
+    cat("birth", "1", "F", "married", "1", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 5)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (married females, parity 2) 
+    cat("birth", "1", "F", "married", "2", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 6)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (married females, parity 3) 
+    cat("birth", "1", "F", "married", "3", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 7)], "\n"), file = outfilename) }
+    cat("\n", file = outfilename)
+    
+    # Print birth rates (married females, parity 4) 
+    cat("birth", "1", "F", "married", "4", "\n", file = outfilename)
+    for(i in n_row) {
+      cat(c(as.matrix(ASFRp)[i, c(2:3, 8)], "\n"), file = outfilename) }
     
     close(outfilename)
     
