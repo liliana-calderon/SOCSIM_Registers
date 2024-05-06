@@ -2,14 +2,14 @@
 # SOCSIM - SOCSIM Registers - Compare Input and Output Rates
 # U:/SOCSIM/SOCSIM_Registers/1_Compare_Input_Output.R
 
-## Compare input and output age-specific rates from different SOCSIM microsimulations for Sweden (1751-2022)
+## Compare input and output age-specific rates from a SOCSIM microsimulation for Sweden (1751-2022)
 # as well as summary measures such as TFR, e0
 
 ## To run the following code, it is necessary to have already run the simulations and read the .opop file
 # c.f. script 0_Set_Up_Simulation.R
 
 # Created on 26-02-2024
-# Last modified on 11-04-2024
+# Last modified on 06-05-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/2_Compare_Input_Output.R
@@ -46,9 +46,10 @@ HMD_username <- "Type_here_HMD_username"
 HMD_password <- "Type_here_HMD_password"
 
 
-## Load opop and omar generated in 0_Set_Up_Simulation.R from simulation with no heterogeneous fertility (hetfert_0)
-load("opop_0.RData")
-load("omar_0.RData")
+## Load opop and omar generated in 0_Set_Up_Simulation.R 
+# from simulation with no heterogeneous fertility but parity-specific rates
+load("opop.RData")
+load("omar.RData")
 
 #------------------------------------------------------------------------------------------------------
 # Age-Specific Fertility and Mortality rates, 5x5 ----
@@ -57,32 +58,32 @@ load("omar_0.RData")
 ifelse(!dir.exists("Measures"), dir.create("Measures"), FALSE)
 
 # Retrieve age-specific fertility rates with hetfert 0
-asfr_0 <- estimate_fertility_rates(opop = opop_0,
-                                          final_sim_year = 2022, #[Jan-Dec]
-                                          year_min = 1750, # Closed [
-                                          year_max = 2020, # Open )
-                                          year_group = 5, 
-                                          age_min_fert = 10, # Closed [
-                                          age_max_fert = 55, # Open ) 
-                                          age_group = 5) # [,)
-save(asfr_0, file = "Measures/asfr_0.RData")
+asfr <- estimate_fertility_rates(opop = opop,
+                                 final_sim_year = 2022, #[Jan-Dec]
+                                 year_min = 1750, # Closed [
+                                 year_max = 2020, # Open )
+                                 year_group = 5, 
+                                 age_min_fert = 10, # Closed [
+                                 age_max_fert = 55, # Open ) 
+                                 age_group = 5) # [,)
+save(asfr, file = "Measures/asfr.RData")
 
 # Retrieve age-specific mortality rates with hetfert 0
-asmr_0 <- estimate_mortality_rates(opop = opop_0,
-                                          final_sim_year = 2022, #[Jan-Dec]
-                                          year_min = 1750, # Closed
-                                          year_max = 2020, # Open )
-                                          year_group = 5,
-                                          age_max_mort = 110, # Open )
-                                          age_group = 5) # [,) 
-save(asmr_0, file = "Measures/asmr_0.RData")
+asmr <- estimate_mortality_rates(opop = opop,
+                                 final_sim_year = 2022, #[Jan-Dec]
+                                 year_min = 1750, # Closed
+                                 year_max = 2020, # Open )
+                                 year_group = 5,
+                                 age_max_mort = 110, # Open )
+                                 age_group = 5) # [,) 
+save(asmr, file = "Measures/asmr.RData")
 
 
 ## Plots ASFR and ASMR
 
 # Load ASFR and ASMR from the simulations 
-load("Measures/asfr_0.RData")
-load("Measures/asmr_0.RData")
+load("Measures/asfr.RData")
+load("Measures/asmr.RData")
 
 # Create a sub-folder called "Graphs" to save the plots if it does not exist.
 ifelse(!dir.exists("Graphs"), dir.create("Graphs"), FALSE)
@@ -94,12 +95,12 @@ ifelse(!dir.exists("Graphs"), dir.create("Graphs"), FALSE)
 yrs_plot <- c("[1800,1805)", "[1900,1905)", "[2000,2005)") 
 
 # Get the age levels to define them before plotting and avoid wrong order
-age_levels <- levels(asmr_0$age)
+age_levels <- levels(asmr$age)
 
-bind_rows(asfr_0 %>%
+bind_rows(asfr %>%
             mutate(rate = "ASFR",                   
                    sex = "female"),
-          asmr_0 %>% 
+          asmr %>% 
             mutate(rate = "ASMR") %>% 
             filter(sex == "female")) %>% 
   mutate(age = factor(as.character(age), levels = age_levels)) %>% 
@@ -115,7 +116,7 @@ bind_rows(asfr_0 %>%
   scale_color_manual(values = c("#79B727", "#2779B7", "#B72779"))+ 
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   labs(x = "Age", y = "Estimate")
-ggsave(file="Graphs/SOCSIM_ASFR_ASMR_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/SOCSIM_ASFR_ASMR.jpeg", width=17, height=9, dpi=300)
 
 #----------------------------------------------------------------------------------------------------
 ## Comparison with HFC/HFD and HMD data (used as input) ----
@@ -150,13 +151,13 @@ HFC <- HFC  %>%
 # Extract year and age breaks used in estimate_fertility_rates() to apply the same values to HFD data
 
 # Year breaks. Extract all the unique numbers from the intervals. 
-year_breaks_fert <- unique(as.numeric(str_extract_all(asfr_0$year, "\\d+", simplify = T)))
+year_breaks_fert <- unique(as.numeric(str_extract_all(asfr$year, "\\d+", simplify = T)))
 
 # Year range to filter HFD data
 year_range_fert <- min(year_breaks_fert):max(year_breaks_fert-1)
 
 # Age breaks of fertility rates. Extract all the unique numbers from the intervals 
-age_breaks_fert <- unique(as.numeric(str_extract_all(asfr_0$age, "\\d+", simplify = T)))
+age_breaks_fert <- unique(as.numeric(str_extract_all(asfr$age, "\\d+", simplify = T)))
 
 
 # Wrangle HFC and HFD data
@@ -175,7 +176,7 @@ HFCD0 <- bind_rows(HFC, HFD) %>%
          Rate = "ASFR")
 
 # Wrangle SOCSIM data
-SocsimF0 <- asfr_0 %>% 
+SocsimF0 <- asfr %>% 
   rename(ASFR = socsim) %>% 
   mutate(Source = "SOCSIM",
          Rate = "ASFR")
@@ -194,7 +195,7 @@ bind_rows(HFCD0, SocsimF0) %>%
   scale_alpha_discrete(guide="none", range = c(1, 0.4))+
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_graphs()
-ggsave(file="Graphs/HFD_SOCSIM_ASFR_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/HFD_SOCSIM_ASFR.jpeg", width=17, height=9, dpi=300)
 
 
 # ASMR ----
@@ -216,13 +217,13 @@ ltm <- readHMDweb(CNTRY = "SWE",
 # Extract year and age breaks used in the estimate_mortality_rates() to apply the same values to HMD data
 
 # Year breaks. Extract all the unique numbers from the intervals 
-year_breaks_mort <- unique(as.numeric(str_extract_all(asmr_0$year, "\\d+", simplify = T)))
+year_breaks_mort <- unique(as.numeric(str_extract_all(asmr$year, "\\d+", simplify = T)))
 
 # Year range to filter HMD data
 year_range_mort <- min(year_breaks_mort):max(year_breaks_mort-1)
 
 # Age breaks of mortality rates. Extract all the unique numbers from the intervals 
-age_breaks_mort <- unique(as.numeric(str_extract_all(asmr_0$age, "\\d+", simplify = T)))
+age_breaks_mort <- unique(as.numeric(str_extract_all(asmr$age, "\\d+", simplify = T)))
 
 # Wrangle HMD life tables
 HMD <- ltf %>%
@@ -244,7 +245,7 @@ HMD <- ltf %>%
          Rate = "ASMR")
 
 # Wrangle SOCSIM data
-SocsimM <- asmr_0 %>% 
+SocsimM <- asmr %>% 
   rename(mx = socsim) %>% 
   mutate(Sex = ifelse(sex == "male", "Male", "Female"),
          Source = "SOCSIM",
@@ -269,7 +270,7 @@ bind_rows(HMD, SocsimM) %>%
   scale_alpha_discrete(guide="none", range = c(1, 0.4))+
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_graphs()
-ggsave(file="Graphs/HMD_SOCSIM_ASMR_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/HMD_SOCSIM_ASMR.jpeg", width=17, height=9, dpi=300)
 
 #---------------------------------------------------------------------------------------------------
 ## Final plot combining ASFR and ASMR ----
@@ -308,34 +309,34 @@ bind_rows(HFCD0 %>% rename(Estimate = ASFR),
   labs(x = "Age")+
   theme_graphs()
 
-ggsave(file="Graphs/Socsim_HFD_HMD1_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/Socsim_HFD_HMD1.jpeg", width=17, height=9, dpi=300)
 #----------------------------------------------------------------------------------------------------
 ## Summary measures: TFR and e0 ----
 # Here, we use the socsim rates by 1 year age group and 1 calendar year
 # Total Fertility Rate ----
 
 ## Retrieve age-specific fertility rates, by 1 year age group and 1 calendar year
-asfr_0_1 <- estimate_fertility_rates(opop = opop_0,
-                                            final_sim_year = 2022 , #[Jan-Dec]
-                                            year_min = 1750, # Closed [
-                                            year_max = 2023, # Open )
-                                            year_group = 1, 
-                                            age_min_fert = 10, # Closed [
-                                            age_max_fert = 55, # Open )
-                                            age_group = 1) # [,)
-save(asfr_0_1, file = "Measures/asfr_0_1.RData")
+asfr_1 <- estimate_fertility_rates(opop = opop,
+                                   final_sim_year = 2022 , #[Jan-Dec]
+                                   year_min = 1750, # Closed [
+                                   year_max = 2023, # Open )
+                                   year_group = 1, 
+                                   age_min_fert = 10, # Closed [
+                                   age_max_fert = 55, # Open )
+                                   age_group = 1) # [,)
+save(asfr_1, file = "Measures/asfr_1.RData")
 
 # Load ASFR 1x1 and calculate TFR for plotting ----
-load("Measures/asfr_0_1.RData")
+load("Measures/asfr_1.RData")
 
 # Year breaks. Extract all the unique numbers from the intervals. 
-year_breaks_fert_1 <- unique(as.numeric(str_extract_all(asfr_0_1$year, "\\d+", simplify = T)))
+year_breaks_fert_1 <- unique(as.numeric(str_extract_all(asfr_1$year, "\\d+", simplify = T)))
 
 # Year range to filter HFD data
 year_range_fert_1 <- min(year_breaks_fert_1):max(year_breaks_fert_1-1)
 
 # Age breaks of fertility rates. Extract all the unique numbers from the intervals 
-age_breaks_fert_1 <- unique(as.numeric(str_extract_all(asfr_0_1$age, "\\d+", simplify = T)))
+age_breaks_fert_1 <- unique(as.numeric(str_extract_all(asfr_1$age, "\\d+", simplify = T)))
 
 # Retrieve age_group size
 age_group_fert_1 <- unique(diff(age_breaks_fert_1))
@@ -350,7 +351,7 @@ TFR_HFCD <- bind_rows(HFC, HFD) %>%
   mutate(Source = "HFC/HFD")
 
 # Calculate TFR from SOCSIM
-TFR_0 <-  asfr_0_1 %>% 
+TFR <-  asfr_1 %>% 
   mutate(Year = as.numeric(str_extract(year, "\\d+"))) %>% 
   group_by(Year) %>% 
   summarise(TFR = sum(socsim)*age_group_fert_1) %>%
@@ -358,7 +359,7 @@ TFR_0 <-  asfr_0_1 %>%
   mutate(Source = "SOCSIM") 
 
 ## Plot TFR from HFD vs SOCSIM 
-bind_rows(TFR_HFCD, TFR_0) %>%
+bind_rows(TFR_HFCD, TFR) %>%
   mutate(transp = ifelse(Source == "SOCSIM", "0", "1")) %>% 
   ggplot(aes(x = Year, y = TFR, group = Source)) +
   geom_line(aes(colour = Source, alpha = transp), linewidth = 1.3)+
@@ -366,12 +367,12 @@ bind_rows(TFR_HFCD, TFR_0) %>%
   scale_alpha_discrete(guide = "none", range = c(0.2, 1))+
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_graphs()
-ggsave(file="Graphs/HFD_SOCSIM_TFR_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/HFD_SOCSIM_TFR.jpeg", width=17, height=9, dpi=300)
 
 # Summary measure of error in TFR ----
 
 # Differences of means
-DM_TFR <- bind_rows(TFR_HFCD, TFR_0) %>%
+DM_TFR <- bind_rows(TFR_HFCD, TFR) %>%
   filter(Year > 1750) %>% 
   group_by(Year, Source) %>% 
   summarise(TFR = mean(TFR, na.rm = T)) %>% 
@@ -382,7 +383,7 @@ DM_TFR <- bind_rows(TFR_HFCD, TFR_0) %>%
   select(Year, Error, Type) 
 
 # Mean of differences
-MD_TFR <- bind_rows(TFR_HFCD, TFR_0) %>% 
+MD_TFR <- bind_rows(TFR_HFCD, TFR) %>% 
   filter(Year > 1750) %>% 
   pivot_wider(id_cols = Year, names_from = "Source", values_from = "TFR") %>% 
   mutate(Error = SOCSIM - `HFC/HFD`) %>% 
@@ -396,31 +397,31 @@ bind_rows(DM_TFR, MD_TFR) %>%
   geom_line(linewidth = 1.3)+
   geom_point(aes(shape = Type), size = 2)+
   theme_graphs()
-# ggsave(file="Graphs/HFD_SOCSIM_TFR_Error_0.jpeg", width=17, height=9, dpi=300)
+# ggsave(file="Graphs/HFD_SOCSIM_TFR_Error.jpeg", width=17, height=9, dpi=300)
 # The difference between both measure is almost imperceptible. 
 
 # Life Expectancy at birth ----
 # Calculate life expectancy at birth 1x1 for the 10 SOCSIM simulations
 
 # Retrieve age-specific mortality rates, by 1 year age group and 1 calendar year
-asmr_0_1 <- estimate_mortality_rates(opop = opop_0,
-                                            final_sim_year = 2022, #[Jan-Dec]
-                                            year_min = 1750, # Closed
-                                            year_max = 2023, # Open )
-                                            year_group = 1,
-                                            age_max_mort = 110, # Open )
-                                            age_group = 1) # [,)
-save(asmr_0_1, file = "Measures/asmr_0_1.RData")
+asmr_1 <- estimate_mortality_rates(opop = opop,
+                                   final_sim_year = 2022, #[Jan-Dec]
+                                   year_min = 1750, # Closed
+                                   year_max = 2023, # Open )
+                                   year_group = 1,
+                                   age_max_mort = 110, # Open )
+                                   age_group = 1) # [,)
+save(asmr_1, file = "Measures/asmr_1.RData")
 
 # Compute life tables from asmr 1x1 from the SOCSIM simulation
-lt_0 <- lt_socsim(asmr_socsim = asmr_0_1)
-save(lt_0, file = "Measures/lt_0.RData")
+lt <- lt_socsim(asmr_socsim = asmr_1)
+save(lt, file = "Measures/lt.RData")
 
 
 # Load and wrangle life tables for plotting ----
 
 # Load life tables from asmr 1x1 from the SOCSIM simulation
-load("Measures/lt_0.RData")
+load("Measures/lt.RData")
 
 ## Compare with ex at age 0 for Sweden in HMD
 
@@ -437,10 +438,10 @@ ltm <- readHMDweb(CNTRY = "SWE",
                   password = HMD_password)
 
 # Load asmr 1x1 for the 10 simulations
-load("Measures/asmr_0_1.RData")
+load("Measures/asmr_1.RData")
 
 # Year breaks. Extract all the unique numbers from the intervals 
-year_breaks_mort_1 <- unique(as.numeric(str_extract_all(asmr_0_1$year, "\\d+", simplify = T)))
+year_breaks_mort_1 <- unique(as.numeric(str_extract_all(asmr_1$year, "\\d+", simplify = T)))
 
 # Year range to filter HMD data
 year_range_mort_1 <- min(year_breaks_mort_1):max(year_breaks_mort_1-1)
@@ -457,12 +458,12 @@ lt_HMD <- ltf %>%
   select(Year, ex, Source, sex, Age)
 
 # Wrangle SOCSIM life tables
-lt_0b <- lt_0 %>%
+ltb <- lt %>%
   mutate(Year = as.numeric(str_extract(year, "\\d+")),
          Source = "SOCSIM") %>% 
   select(Year, ex, Source, sex, Age)
 
-bind_rows(lt_HMD, lt_0b) %>% 
+bind_rows(lt_HMD, ltb) %>% 
   filter(Age == 0 & Year %in% year_range_mort_1) %>%
   mutate(transp = ifelse(Source == "SOCSIM", "0", "1"),
          Sex = ifelse(sex == "female", "Female", "Male")) %>% 
@@ -473,12 +474,12 @@ bind_rows(lt_HMD, lt_0b) %>%
   facet_wrap(~Sex) +
   theme_graphs()+
   labs(y = "e0") 
-ggsave(file="Graphs/HMD_SOCSIM_e0_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/HMD_SOCSIM_e0.jpeg", width=17, height=9, dpi=300)
 
 # Summary measure of error in e0 ----
 
 # Differences of means
-DM_e0 <- bind_rows(lt_HMD, lt_0b) %>%
+DM_e0 <- bind_rows(lt_HMD, ltb) %>%
   filter(Year > 1750 & Age == 0) %>% 
   group_by(Year, sex, Source) %>% 
   summarise(ex = mean(ex, na.rm = T)) %>% 
@@ -489,7 +490,7 @@ DM_e0 <- bind_rows(lt_HMD, lt_0b) %>%
   select(Year, sex, Error, Type) 
 
 # Mean of differences
-MD_e0 <- bind_rows(lt_HMD, lt_0b) %>% 
+MD_e0 <- bind_rows(lt_HMD, ltb) %>% 
   filter(Year > 1750 & Age == 0) %>% 
   pivot_wider(id_cols = c(Year, sex), names_from = "Source", values_from = "ex") %>% 
   mutate(Error = SOCSIM - HMD) %>% 
@@ -505,7 +506,7 @@ bind_rows(DM_e0, MD_e0) %>%
   geom_point(aes(shape = Type), size = 3)+
   theme_graphs()
 # The difference between both measures is almost imperceptible. 
-ggsave(file="Graphs/HFD_SOCSIM_e0_Error_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/HFD_SOCSIM_e0_Error.jpeg", width=17, height=9, dpi=300)
 
 #----------------------------------------------------------------------------------------------------
 ## Final plot combining TFR and e0 ----
@@ -516,10 +517,10 @@ y_breaks_e0 <- c(20, 40, 60, 80)
 
 ## Plotting TFR and e0 (for females) from HFD/HMD vs SOCSIM 
 bind_rows(TFR_HFCD %>% rename(Estimate = TFR) %>%  mutate(Rate = "TFR"),
-          TFR_0 %>% rename(Estimate = TFR) %>% mutate(Rate = "TFR")) %>% 
+          TFR %>% rename(Estimate = TFR) %>% mutate(Rate = "TFR")) %>% 
   mutate(sex = "female") %>%   
   bind_rows(lt_HMD %>% filter(Age == 0) %>% rename(Estimate = ex) %>% mutate(Rate = "e0"),
-            lt_0b %>% filter(Age == 0) %>% rename(Estimate = ex) %>% mutate(Rate = "e0")) %>% 
+            ltb %>% filter(Age == 0) %>% rename(Estimate = ex) %>% mutate(Rate = "e0")) %>% 
   filter(sex == "female") %>%
   mutate(transp = ifelse(Source == "SOCSIM", "0", "1"),
          Rate = ifelse(Rate == "TFR", "Total Fertility Rate", "Life Expectancy at Birth"), 
@@ -534,4 +535,4 @@ bind_rows(TFR_HFCD %>% rename(Estimate = TFR) %>%  mutate(Rate = "TFR"),
   scale_x_continuous(breaks = c(1750, 1800, 1850, 1900, 1950, 2000))+
   theme_graphs()
 Summary
-ggsave(file="Graphs/Socsim_HFD_HMD2_0.jpeg", width=17, height=9, dpi=300)
+ggsave(file="Graphs/Socsim_HFD_HMD2.jpeg", width=17, height=9, dpi=300)
