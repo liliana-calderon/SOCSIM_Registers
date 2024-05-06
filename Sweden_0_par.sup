@@ -1,12 +1,13 @@
 ************************************************************************
 * Supervisory file for SWEDEN simulation 1751-2022
 * Created on 15.09.2022
-* Last modified on 25.05.2023
+* Last modified on 02.04.2024
 ************************************************************************
 ** NB: 
 * Probabilities of death come from HMD for the whole period (1751-2022)
 * Fertility rates come from HFD for the period 1891-2022, 
 * but from the HFC for the period 1751-1890
+* Fertility rates are parity-specific for the period 1970-2022
 ************************************************************************
 segments  273
 input_file presim
@@ -1124,266 +1125,266 @@ include rates/SWEmort1969
 run
 
 duration 12
-include rates/SWEfert1970
+include rates_parity/SWEfert1970
 include rates/SWEmort1970
 run
 
 duration 12
-include rates/SWEfert1971
+include rates_parity/SWEfert1971
 include rates/SWEmort1971
 run
 
 duration 12
-include rates/SWEfert1972
+include rates_parity/SWEfert1972
 include rates/SWEmort1972
 run
 
 duration 12
-include rates/SWEfert1973
+include rates_parity/SWEfert1973
 include rates/SWEmort1973
 run
 
 duration 12
-include rates/SWEfert1974
+include rates_parity/SWEfert1974
 include rates/SWEmort1974
 run
 
 duration 12
-include rates/SWEfert1975
+include rates_parity/SWEfert1975
 include rates/SWEmort1975
 run
 
 duration 12
-include rates/SWEfert1976
+include rates_parity/SWEfert1976
 include rates/SWEmort1976
 run
 
 duration 12
-include rates/SWEfert1977
+include rates_parity/SWEfert1977
 include rates/SWEmort1977
 run
 
 duration 12
-include rates/SWEfert1978
+include rates_parity/SWEfert1978
 include rates/SWEmort1978
 run
 
 duration 12
-include rates/SWEfert1979
+include rates_parity/SWEfert1979
 include rates/SWEmort1979
 run
 
 duration 12
-include rates/SWEfert1980
+include rates_parity/SWEfert1980
 include rates/SWEmort1980
 run
 
 duration 12
-include rates/SWEfert1981
+include rates_parity/SWEfert1981
 include rates/SWEmort1981
 run
 
 duration 12
-include rates/SWEfert1982
+include rates_parity/SWEfert1982
 include rates/SWEmort1982
 run
 
 duration 12
-include rates/SWEfert1983
+include rates_parity/SWEfert1983
 include rates/SWEmort1983
 run
 
 duration 12
-include rates/SWEfert1984
+include rates_parity/SWEfert1984
 include rates/SWEmort1984
 run
 
 duration 12
-include rates/SWEfert1985
+include rates_parity/SWEfert1985
 include rates/SWEmort1985
 run
 
 duration 12
-include rates/SWEfert1986
+include rates_parity/SWEfert1986
 include rates/SWEmort1986
 run
 
 duration 12
-include rates/SWEfert1987
+include rates_parity/SWEfert1987
 include rates/SWEmort1987
 run
 
 duration 12
-include rates/SWEfert1988
+include rates_parity/SWEfert1988
 include rates/SWEmort1988
 run
 
 duration 12
-include rates/SWEfert1989
+include rates_parity/SWEfert1989
 include rates/SWEmort1989
 run
 
 duration 12
-include rates/SWEfert1990
+include rates_parity/SWEfert1990
 include rates/SWEmort1990
 run
 
 duration 12
-include rates/SWEfert1991
+include rates_parity/SWEfert1991
 include rates/SWEmort1991
 run
 
 duration 12
-include rates/SWEfert1992
+include rates_parity/SWEfert1992
 include rates/SWEmort1992
 run
 
 duration 12
-include rates/SWEfert1993
+include rates_parity/SWEfert1993
 include rates/SWEmort1993
 run
 
 duration 12
-include rates/SWEfert1994
+include rates_parity/SWEfert1994
 include rates/SWEmort1994
 run
 
 duration 12
-include rates/SWEfert1995
+include rates_parity/SWEfert1995
 include rates/SWEmort1995
 run
 
 duration 12
-include rates/SWEfert1996
+include rates_parity/SWEfert1996
 include rates/SWEmort1996
 run
 
 duration 12
-include rates/SWEfert1997
+include rates_parity/SWEfert1997
 include rates/SWEmort1997
 run
 
 duration 12
-include rates/SWEfert1998
+include rates_parity/SWEfert1998
 include rates/SWEmort1998
 run
 
 duration 12
-include rates/SWEfert1999
+include rates_parity/SWEfert1999
 include rates/SWEmort1999
 run
 
 duration 12
-include rates/SWEfert2000
+include rates_parity/SWEfert2000
 include rates/SWEmort2000
 run
 
 duration 12
-include rates/SWEfert2001
+include rates_parity/SWEfert2001
 include rates/SWEmort2001
 run
 
 duration 12
-include rates/SWEfert2002
+include rates_parity/SWEfert2002
 include rates/SWEmort2002
 run
 
 duration 12
-include rates/SWEfert2003
+include rates_parity/SWEfert2003
 include rates/SWEmort2003
 run
 
 duration 12
-include rates/SWEfert2004
+include rates_parity/SWEfert2004
 include rates/SWEmort2004
 run
 
 duration 12
-include rates/SWEfert2005
+include rates_parity/SWEfert2005
 include rates/SWEmort2005
 run
 
 duration 12
-include rates/SWEfert2006
+include rates_parity/SWEfert2006
 include rates/SWEmort2006
 run
 
 duration 12
-include rates/SWEfert2007
+include rates_parity/SWEfert2007
 include rates/SWEmort2007
 run
 
 duration 12
-include rates/SWEfert2008
+include rates_parity/SWEfert2008
 include rates/SWEmort2008
 run
 
 duration 12
-include rates/SWEfert2009
+include rates_parity/SWEfert2009
 include rates/SWEmort2009
 run
 
 duration 12
-include rates/SWEfert2010
+include rates_parity/SWEfert2010
 include rates/SWEmort2010
 run
 
 duration 12
-include rates/SWEfert2011
+include rates_parity/SWEfert2011
 include rates/SWEmort2011
 run
 
 duration 12
-include rates/SWEfert2012
+include rates_parity/SWEfert2012
 include rates/SWEmort2012
 run
 
 duration 12
-include rates/SWEfert2013
+include rates_parity/SWEfert2013
 include rates/SWEmort2013
 run
 
 duration 12
-include rates/SWEfert2014
+include rates_parity/SWEfert2014
 include rates/SWEmort2014
 run
 
 duration 12
-include rates/SWEfert2015
+include rates_parity/SWEfert2015
 include rates/SWEmort2015
 run
 
 duration 12
-include rates/SWEfert2016
+include rates_parity/SWEfert2016
 include rates/SWEmort2016
 run
 
 duration 12
-include rates/SWEfert2017
+include rates_parity/SWEfert2017
 include rates/SWEmort2017
 run
 
 duration 12
-include rates/SWEfert2018
+include rates_parity/SWEfert2018
 include rates/SWEmort2018
 run
 
 duration 12
-include rates/SWEfert2019
+include rates_parity/SWEfert2019
 include rates/SWEmort2019
 run
 
 duration 12
-include rates/SWEfert2020
+include rates_parity/SWEfert2020
 include rates/SWEmort2020
 run
 
 duration 12
-include rates/SWEfert2021
+include rates_parity/SWEfert2021
 include rates/SWEmort2021
 run
 
 duration 12
-include rates/SWEfert2022
+include rates_parity/SWEfert2022
 include rates/SWEmort2022
 run
