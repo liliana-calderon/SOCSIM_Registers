@@ -536,3 +536,184 @@ bind_rows(TFR_HFCD %>% rename(Estimate = TFR) %>%  mutate(Rate = "TFR"),
   theme_graphs()
 Summary
 ggsave(file="Graphs/Socsim_HFD_HMD2.jpeg", width=17, height=9, dpi=300)
+
+#----------------------------------------------------------------------------------------------------
+## Compare the number of children by cohort in 2017, between the HFD, SOCSIM and the registers ----
+
+## I. Number of children by cohort from HFD
+# To get the number of children for all cohorts included in the paper, 
+# we need to combine the Completed cohort fertility (for female cohorts aged 55 and plus in 2017)
+# and the Cumulative cohort fertility rates for female cohorts aged 55 or less in 2017)
+
+# A. Completed cohort fertility
+# For cohorts with completed fertility in 2017 (aged 55 and plus)
+# For birth cohorts, the corresponding quantities of TFR represent the completed cohort fertility (CCF).
+tfrVH <- readHFDweb(CNTRY = "SWE",
+                    item = "tfrVH", 
+                    username = HFD_username,
+                    password = HFD_password)
+
+ccf <- tfrVH %>% 
+  select(-c("CCF40", "OpenInterval")) %>% 
+  # Filter cohorts without completed fertility
+  filter(!is.na(CCF))
+
+
+# B. Cumulative cohort fertility rates (horizontal parallelograms)
+# Average number of children born to a woman from birth cohort c by age x
+# Computed by summing up the set of age-specific fertility rates of the cohort c observed over their reproductive lives up to age x. 
+# CCFRs are calculated for all cohorts c who are observed from age xmin that is equal to 15 or younger.
+
+# For cohorts with incomplete fertility in 2017 (aged 55 or less)
+# We need to calculate the Year (Cohort + Age) and filter the values for 2017
+ccfrVH <- readHFDweb(CNTRY = "SWE",
+                     item = "ccfrVH", 
+                     username = HFD_username,
+                     password = HFD_password)
+
+ccfr <- ccfrVH %>% 
+  mutate(Year = Cohort + Age) %>% 
+  filter(Year == 2017) %>% 
+  select(-c("OpenInterval", "Year")) 
+
+HFD_cc <- full_join(ccf, ccfr) %>% 
+  # In 2017, cohorts 1962-1972 were 45 to 55 years old and thus have not completed their fertility schedule
+  # Hence, the values of CCFR in 2017 are slightly lower than their final CCF. 
+  # So, we need to omit the CCF and keep the CFR
+  mutate(CCF = ifelse(is.na(Age), CCF, NA),
+         CC = ifelse(is.na(CCFR) & !is.na(CCF), CCF, ifelse(is.na(CCF) & !is.na(CCFR), CCFR, NA))) %>% 
+  select(Cohort, CC)
+
+
+## II. Number of children by cohort from the registers
+# Import the data for the figures included in "The Swedish Kinship Universe" (online appendix 2)
+# Figure 2b Average number of living and dead children in 2017 by sex and birth cohort. 
+# Here the deceased include both the deceased and the living 
+SKU <- read_excel(path="kolk_esm2.xlsx", sheet = "Fig2b") 
+
+SKU_cc <- SKU %>% 
+  filter(type == "registered deceased" & gender == 2) %>% 
+  select(Cohort = IDbirthYear, mean_children)
+
+left_join(HFD_cc, SKU_cc) %>% 
+  # Omit the cohorts not included in the paper
+  filter(!is.na(mean_children)) %>% 
+  mutate(Difference = CC - mean_children) %>% 
+  ggplot(aes(x = Cohort, y = Difference))+
+  geom_line(linewidth =1) +
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9), 
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = NA),
+        text = element_text(family = "serif", size = 12))
+ggsave(file="Graphs/Children_HFD_Registers.jpg", width=18, height=9, dpi=200)
+
+
+## III. Number of children by female cohort from SOCSIM
+
+## Load opop and omar generated in 0_Set_Up_Simulation.R from simulation with no heterogeneous fertility, 
+# but parity specific rates
+load("opop.RData")
+load("omar.RData")
+
+# Function to convert SOCSIM months to calendar years. 
+asYr <- function(month, last_month, final_sim_year) {
+  return(final_sim_year - trunc((last_month - month)/12))
+}
+
+
+last_month <- max(opop$dob)
+final_sim_year <- 2022
+cohort_range <- 1915:2017
+year_alive <- max(cohort_range)
+
+
+opop <- opop %>% 
+  mutate(birth_year = asYr(dob, last_month, final_sim_year), 
+         death_year = ifelse(dod == 0, 999999, asYr(dod, last_month, final_sim_year))) 
+
+## Births by Cohort
+numerator <- opop %>% 
+  left_join(opop %>% select(mom = pid, cohort = birth_year, mother_death = death_year), 
+            by = "mom") %>% 
+  filter(birth_year <= year_alive & cohort %in% cohort_range) %>% 
+  filter(is.na(mother_death) | mother_death > alive_year) %>% 
+  select(cohort, birth_year) %>% 
+  count(cohort)
+
+## Women by Cohort alive in 2017
+denominator <- opop %>% 
+  rename(cohort = birth_year) %>% 
+  filter(fem == 1 & cohort %in% cohort_range & death_year > alive_year) %>% 
+  count(cohort)
+
+# Estimate mean number of children born to woman from birth cohort
+SOCSIM_cc <- left_join(numerator %>% rename(nume = n), 
+                       denominator %>% rename(deno = n)) %>%
+  mutate(mean_children_soc = nume/deno)
+
+full_join(SOCSIM_cc %>% select(Cohort = cohort, mean_children_soc), 
+          SKU_cc) %>% 
+  mutate(mean_children_soc = ifelse(is.na(mean_children_soc), 0, mean_children_soc),
+         Difference = mean_children_soc - mean_children) %>% 
+  ggplot(aes(x = Cohort, y = Difference))+
+  geom_line(linewidth = 1) +
+  labs(title = "Difference in the number of children by cohort in 2017, SOCSIM - Registers. (From total numbers)")+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9), 
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = NA),
+        text = element_text(family = "serif", size = 12))
+ggsave(file="Graphs/Children_SOCSIM_Registers.jpg", width=18, height=9, dpi=200)
+# This calculation is wrong as it does not account for the age-structure
+
+## Approximate SOCSIM Cohort fertility from the diagonals in the asfr 
+# Load ASFR 1x1
+load("Measures/asfr_1.RData")
+
+SOCSIM_cc_diag <- asfr_1 %>% 
+  mutate(year1 = as.numeric(str_extract(year, "\\d+")), 
+         age1 = as.numeric(str_extract(age, "\\d+")), 
+         cohort = year1 - age1) %>% 
+  filter(cohort %in% cohort_range & cohort < 2004) %>% 
+  group_by(cohort) %>% 
+  summarise(mean_children_soc = sum(socsim)) %>% 
+  ungroup()
+
+
+full_join(SOCSIM_cc_diag %>% select(Cohort = cohort, mean_children_soc), 
+          SKU_cc) %>% 
+  mutate(Difference = mean_children_soc - mean_children) %>% 
+  ggplot(aes(x = Cohort, y = Difference))+
+  geom_line(linewidth =1) +
+  labs(title = "Difference in the number of children by cohort in 2017, SOCSIM - Registers. (From ASFR diagonals)")+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9), 
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = NA),
+        text = element_text(family = "serif", size = 12))
+ggsave(file="Graphs/Children_SOCSIM2_Registers.jpg", width=18, height=9, dpi=200)
+
+full_join(SOCSIM_cc_diag %>% select(Cohort = cohort, mean_children_soc), 
+          SKU_cc) %>% 
+  left_join(HFD_cc) %>% 
+  mutate(SOCSIM_SKU = mean_children_soc - mean_children, 
+         HFD_SKU = CC - mean_children) %>% 
+  pivot_longer(SOCSIM_SKU:HFD_SKU, names_to = "Source", values_to = "Difference") %>% 
+  ggplot(aes(x = Cohort, y = Difference, colour = Source))+
+  geom_line(linewidth =1) +
+  scale_color_manual(values = c("#CA650D", "#007A75"))+
+  theme_bw() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9), 
+        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill = NA),
+        text = element_text(family = "serif", size = 12))
+ggsave(file="Graphs/Children_HFD_SOCSIM_SKU.jpg", width=18, height=9, dpi=200)
