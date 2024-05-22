@@ -36,6 +36,7 @@ windowsFonts(serif = windowsFont("TT Times New Roman"))
 load("Output_/reference_table_SweBorn.RData")
 load("Output_/N_Cohort.RData")
 load("Output_/temp.RData")
+source("Functions/Functions_Graphs.R")
 
 ```
 
@@ -115,18 +116,9 @@ Fig1b_SOCSIM <- ggplot() +
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
   labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
+  theme_bw() + theme_graphs2() + 
   guides(fill = guide_legend(reverse = TRUE))
+
 
 Fig1b_SKU <- ggplot() +
   geom_area(data = SKU %>% 
@@ -141,19 +133,10 @@ Fig1b_SKU <- ggplot() +
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
   labs(x = "Birth cohort", y = "Average number of grandchildren", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
-  guides(fill = guide_legend(reverse = TRUE))
-
+  theme_bw() + theme_graphs2() +
+  theme(legend.key = element_blank()) +
+  guides(fill = guide_legend(reverse = TRUE)) 
+  
 
 # Plot difference
 Fig1b_Diff <- left_join(SKU %>% 
@@ -173,18 +156,7 @@ Fig1b_Diff <- left_join(SKU %>%
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
   labs(x = "Birth cohort", y = "Average number of grandchildren (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw(base_family = "serif") +
-  theme(
-        panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF")) +
+  theme_bw() + theme_graphs2() +
   guides(color = guide_legend(reverse = TRUE))
 
 plot_grid(Fig1b_SOCSIM, Fig1b_SKU, align = "hv")
@@ -222,19 +194,11 @@ Fig1a_SOCSIM <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYea
                                "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() + 
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) + 
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() + 
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        legend.key = element_blank()) +
+  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
 
 Fig1a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig1a") %>% 
@@ -271,19 +235,12 @@ Fig1a_SKU <- ggplot(data = SKU %>%
                                "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
         panel.background = element_rect(fill = NA),
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        legend.key = element_blank()) +
+  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
 
 # Plot difference
 Fig1a_Diff <- left_join(SKU %>% 
@@ -317,19 +274,11 @@ Fig1a_Diff <- left_join(SKU %>%
                                "1 grandchild",
                                "No grandchildren")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  guides(color = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE)) + 
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom", 
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        legend.key = element_blank()) +
+    guides(color = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
 
 plot_grid(Fig1a_SOCSIM, Fig1a_SKU, align = "hv")
 ggsave(file="Graphs/Fig1a.jpg", width=17, height=9, dpi=200)
@@ -395,25 +344,18 @@ Fig2b_SOCSIM <- ggplot() +
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children", fill = " ") +
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+  theme_bw() + theme_graphs2() + 
+  theme(legend.key = element_blank(),
+        strip.placement = "outside") +
+  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE))
+
 
 Fig2b_SKU <- ggplot() +
   geom_area(data = SKU %>% 
               mutate(type = factor(type, levels = c("registered deceased", ">2", "2", "1"))) %>% 
               filter(Fig == "Fig2b" & type == "registered deceased"), 
-            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "#4D4D4D", lwd = 0.5) +
+            mapping = aes(x = IDbirthYear, y = mean_children, fill = type), color = "#4D4D4D", lwd = 0.5)+
   geom_area(data = SKU %>% 
               mutate(type = factor(type, levels = c("registered deceased", ">2", "2", "1"))) %>% 
               filter(Fig == "Fig2b" & type != "registered deceased"), 
@@ -425,20 +367,12 @@ Fig2b_SKU <- ggplot() +
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children", fill = " ") +
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))+
-  scale_y_continuous(breaks = seq(0,2.5, by = 0.5))
+  scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
+  theme_bw() + theme_graphs2() +
+  theme(legend.key = element_blank(),
+        strip.placement = "outside")+
+  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) 
 
 # The data for children (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
 # as registered deceased or not living.
@@ -473,19 +407,12 @@ Fig2b_Diff <- left_join(SKU %>%
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of children (SOCSIM-SKU)", color = " ") +
-  theme_bw() +
-  guides(color = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) + 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_blank(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
-        legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+  scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
+  theme_bw() + theme_graphs2() +
+  theme(legend.key = element_blank(),
+        strip.placement = "outside")+
+  guides(color = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE))
 
 plot_grid(Fig2b_SOCSIM, Fig2b_SKU, align = "hv")
 ggsave(file="Graphs/Fig2b.jpg", width=17, height=9, dpi=200)
@@ -508,20 +435,12 @@ Fig2a_SOCSIM <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
         legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        strip.placement = "outside") +
+   guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
 
 Fig2a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig2a") %>%  
@@ -538,20 +457,13 @@ Fig2a_SKU <- ggplot(data = SKU %>%
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
         legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        strip.placement = "outside")+
+  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
+
 
 Fig2a_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig2a") %>% 
@@ -574,20 +486,13 @@ Fig2a_Diff <- left_join(SKU %>%
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  guides(color = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12),
         legend.key = element_blank(),
-        strip.placement = "outside",
-        strip.background = element_rect(color = "#000000", fill = "#FFFFFF"))
+        strip.placement = "outside")+
+  guides(color = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
+
 
 plot_grid(Fig2a_SOCSIM, Fig2a_SKU, align = "hv")
 ggsave(file="Graphs/Fig2a.jpg", width=17, height=9, dpi=200)
@@ -630,15 +535,10 @@ Fig3_SOCSIM <- ggplot() +
                                "Half brother's side","Full brother's side",
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
 Fig3_SKU <- ggplot() +
@@ -669,15 +569,10 @@ Fig3_SKU <- ggplot() +
                     labels = c("Deceased nieces \n and nephews", "Half brother's side", "Full brother's side", 
                                "Half sister's side","Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
 # The data for niblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
@@ -722,15 +617,10 @@ Fig3_Diff <- left_join(SKU %>%
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", 
                                     "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = "#000000")))
  
 
@@ -787,14 +677,8 @@ Fig4a_SOCSIM <- ggplot() +
                                "Full siblings", "Deceased siblings")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
 Fig4a_SKU <- ggplot() +
@@ -827,14 +711,8 @@ Fig4a_SKU <- ggplot() +
                                "Full siblings", "Deceased siblings")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
 
 # The data for siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased cousins as non.living.
@@ -870,14 +748,8 @@ Fig4a_Diff <- left_join(SKU %>%
                                "Full siblings", "Deceased siblings")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of siblings (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(color = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
  
 plot_grid(Fig4a_SOCSIM, Fig4a_SKU, align = "hv")
@@ -904,15 +776,8 @@ Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
                                "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))+
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
   guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 Fig4b_SKU <- ggplot(data = SKU %>% 
@@ -933,15 +798,8 @@ Fig4b_SKU <- ggplot(data = SKU %>%
                                "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))+
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
   guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 Fig4b_Diff <- left_join(SKU %>% 
@@ -963,15 +821,8 @@ Fig4b_Diff <- left_join(SKU %>%
                                "3 siblings", "2 siblings", "1 sibling", "No siblings")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))+
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
   guides(color = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 plot_grid(Fig4b_SOCSIM, Fig4b_SKU, align = "hv")
@@ -1055,14 +906,8 @@ Fig5b_SOCSIM <- ggplot() +
                                "Maternal uncle's side","Maternal aunt's side")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
 
 Fig5b_SKU <- ggplot() +
@@ -1093,14 +938,8 @@ Fig5b_SKU <- ggplot() +
                                "Maternal uncle's side","Maternal aunt's side")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
 
 
@@ -1137,14 +976,8 @@ Fig5b_Diff <- left_join(SKU %>%
                                "Maternal uncle's side","Maternal aunt's side")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of cousins (SOCSIM - SKU)", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
   guides(color = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
 
 plot_grid(Fig5b_SOCSIM, Fig5b_SKU, align = "hv")
@@ -1171,16 +1004,10 @@ Fig5a_SOCSIM <- ggplot(data = cousin_dist_Table_living) +
                                        "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
+  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE))
+  
 
 Fig5a_SKU <- ggplot(data = SKU %>% 
                     filter(Fig == "Fig5a") %>%
@@ -1200,16 +1027,10 @@ Fig5a_SKU <- ggplot(data = SKU %>%
                                        "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
-  theme_bw() +
-  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
+  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE))
+
 
 Fig5a_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig5a") %>% 
@@ -1230,16 +1051,9 @@ Fig5a_Diff <- left_join(SKU %>%
                                        "4 cousins", "3 cousins", "2 cousins", "1 cousin", "No cousins"))+ 
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(-1,0.4, by = 0.2))+
-  theme_bw() +
+  theme_bw() + theme_graphs2() +
   guides(color = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12))
+  theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))
 
 plot_grid(Fig5a_SOCSIM, Fig5a_SKU, align = "hv")
 ggsave(file="Graphs/Fig5a.jpg", width=17, height=9, dpi=200)
@@ -1280,15 +1094,9 @@ Fig6a_SOCSIM <- ggplot() +
                     limits = c("", "not living", "father", "mother"),
                     labels = c("", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 Fig6a_SKU <- SKU %>%
@@ -1309,15 +1117,9 @@ Fig6a_SKU <- SKU %>%
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 Fig6a_Diff <- left_join(SKU %>% 
@@ -1349,15 +1151,9 @@ Fig6a_Diff <- left_join(SKU %>%
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 plot_grid(Fig6a_SOCSIM, Fig6a_SKU, align = "hv")
@@ -1406,15 +1202,9 @@ Fig6b_SOCSIM <- ggplot() +
                     limits = c("not living", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
 
 Fig6b_SKU <- ggplot() +
@@ -1439,15 +1229,9 @@ Fig6b_SKU <- ggplot() +
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
 
 # The data for parents siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin
@@ -1480,15 +1264,9 @@ Fig6b_Diff <- left_join(SKU %>%
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = "#000000"), ncol = 3, byrow = TRUE))
 
 plot_grid(Fig6b_SOCSIM, Fig6b_SKU, align = "hv")
@@ -1536,15 +1314,9 @@ Fig7_SOCSIM <- ggplot() +
                     labels = c("", "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
 
 
@@ -1589,15 +1361,9 @@ Fig7_SKU  <- ggplot() +
                       "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
 
                         
@@ -1645,15 +1411,9 @@ Fig7_Diff <- left_join(SKU %>%
                       "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
   labs(x = "Birth cohort \n(Age in 2017)", y = "Average number of grandparents", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
-        legend.position = "bottom",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
 
 plot_grid(Fig7_SOCSIM, Fig7_SKU, align = "hv")
@@ -1715,15 +1475,12 @@ Fig8a_SOCSIM <- ggplot() +
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
                      labels = paste(seq(1920, 2010, by=10), "\n", "(",2018 -seq(1920, 2010, by=10),")"),
                      sec.axis = dup_axis(name = "Percentage with median number of kin by cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor.x = element_blank(),
-        legend.position = "none",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) 
+        legend.position = "none") 
 
 ## Difference in the Percentage with median number of kin by cohort
 Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10), 
@@ -1733,24 +1490,21 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
   ggplot()+
   geom_line(aes(x = Cohort, y = Difference), linewidth =1)+
   labs(x = "Birth cohort", y = "Difference in the percentage with the median number of kin by cohort")+
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
-        panel.grid.minor.y = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+        panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor.x = element_blank(),
-        legend.position = "none",
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) 
+        legend.position = "none") 
   
 
 # Import violin plots from the Swedish Kinship Universe
 Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
 
 plot_grid(Fig8a_SOCSIM, Fig8a_SKU, align = "hv",
-          rel_heights = c(1,0.5), 
+          rel_heights = c(1.4,0.4), 
           rel_widths = c(0.5,0.5), 
-          scale(c(0.6, 0.5)))
+          scale(c(0.7, 0.5)))
 ggsave(file="Graphs/Fig8a.jpg", width=17, height=9, dpi=200)
 Fig8a_Diff
 ggsave(file="Graphs/Fig8a_Diff.jpg", width=17, height=9, dpi=200)
@@ -1783,15 +1537,11 @@ Fig8b_SOCSIM <- ggplot() +
                     limits = c("not living", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
         legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        axis.text.x = element_text(family="serif", size = 14, colour = "#000000")) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
 Fig8b_SKU <- SKU %>%
@@ -1806,15 +1556,11 @@ Fig8b_SKU <- SKU %>%
                     limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        legend.key.height = unit(1, "line"), 
+        axis.text.x = element_text(family="serif", size = 14, colour = "#000000")) +
   guides(fill = guide_legend(override.aes = list(color = 0))) +
   expand_limits(y = c(0, 43))
 
@@ -1842,15 +1588,10 @@ Fig8b_Diff <- full_join(SKU %>%
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
-  theme_bw() +
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
-        panel.grid.minor = element_line(colour ="#B3B3B3", linewidth = 0.3, linetype = 9),
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.position = "right",
-        legend.key.height = unit(1, "line"),
-        panel.background = element_rect(fill = NA), 
-        panel.ontop = TRUE,
-        text = element_text(family = "serif", size = 12)) +
+        legend.key.height = unit(1, "line")) +
   guides(fill = guide_legend(override.aes = list(color = 0)))
 
 plot_grid(Fig8b_SOCSIM, Fig8b_SKU, align = "hv")
