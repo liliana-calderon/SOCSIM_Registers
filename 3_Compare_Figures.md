@@ -3,7 +3,7 @@ estimates on micro-level data on kin relations for the Swedish
 population
 ================
 …
-2024-05-22
+2024-06-03
 
 #### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
