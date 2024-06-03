@@ -3,14 +3,14 @@ title: "Empirical and microsimulated kinship networks. Comparing and evaluating 
 data on kin relations for the Swedish population"
 author: '...'
 date: "`r Sys.Date()`"
-# output:
-#   github_document:
-#     pandoc_args: --webtex
-#     toc: true
-#     toc_depth: 1
 output:
-  html_document: default
-  pdf_document: default
+  github_document:
+    pandoc_args: --webtex
+    toc: true
+    toc_depth: 1
+# output:
+#   html_document: default
+#   pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
