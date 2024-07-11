@@ -114,7 +114,7 @@ Fig1b_SOCSIM <- ggplot() +
   scale_fill_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Average Number of Grandchildren", fill = "") +
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Average Number of Grandchildren in Microsimulation", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() + 
   guides(fill = guide_legend(reverse = TRUE))
@@ -131,7 +131,7 @@ Fig1b_SKU <- ggplot() +
   scale_fill_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Average Number of Grandchildren", fill = "") +
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Average Number of Grandchildren in Registers", fill = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(legend.key = element_blank()) +
@@ -154,13 +154,17 @@ Fig1b_Diff <- left_join(SKU %>%
   scale_color_manual(values = c("#225EA8", "#7FCDBB"), 
                     limits = c("FALSE", "TRUE"), 
                     labels = c("Deceased grandchildren", "Living grandchildren")) +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Average Number of Grandchildren (SOCSIM-Registers)", color = "") +
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Difference between the Average Number of Grandchildren", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   guides(color = guide_legend(reverse = TRUE))
 
-plot_grid(Fig1b_SOCSIM, Fig1b_SKU, align = "hv")
+Fig1b_nl <- plot_grid(Fig1b_SOCSIM + theme(legend.position = "none"), 
+                      Fig1b_SKU + theme(legend.position = "none"), align = "hv")
+legend_1b <- get_plot_component(Fig1b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig1b_nl, legend_1b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig1b.jpg", width=17, height=9, dpi=200)
+
 Fig1b_Diff
 ggsave(file="Graphs/Fig1b_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -173,7 +177,7 @@ Fig1a_SOCSIM <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYea
   geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1, scales = "free_x", strip.position = "top") +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Proportion", fill = "")+
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Proportion in Microsimulation", fill = "")+
   scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
                                 "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
                     limits = c("11 or more grandchildren",
@@ -198,12 +202,13 @@ Fig1a_SOCSIM <- ggplot(data = filter(grandchildren_dist_Table_living, IDbirthYea
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.key = element_blank()) +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 Fig1a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig1a") %>% 
                       mutate(n_grandchildren = factor(n_grandchildren, 
-                                    levels = c("11 or more grandchildren",                                                 "6-10 grandchildren",
+                                    levels = c("11 or more grandchildren",
+                                               "6-10 grandchildren",
                                                "5 grandchildren",
                                                "4 grandchildren",
                                                "3 grandchildren",
@@ -214,7 +219,7 @@ Fig1a_SKU <- ggplot(data = SKU %>%
   geom_area(data=data.frame(x = c(2017-73,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) +
   geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1, scales = "free_x", strip.position = "top") +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Proportion", fill = "")+
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Proportion in Registers", fill = "")+
   scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
                                 "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
                     limits = c("11 or more grandchildren",
@@ -240,7 +245,7 @@ Fig1a_SKU <- ggplot(data = SKU %>%
         axis.line = element_line(),
         panel.background = element_rect(fill = NA),
         legend.key = element_blank()) +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
+   guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 # Plot difference
 Fig1a_Diff <- left_join(SKU %>% 
@@ -254,7 +259,7 @@ Fig1a_Diff <- left_join(SKU %>%
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_grandchildren), linewidth =1)+
   geom_vline(xintercept = c(2017-73), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x", strip.position = "top") +
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Proportion (SOCSIM-Registers)", color = "")+
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Difference between Proportions", color = "")+
   scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", "#41B6C4",
                                 "#7FCDBB","#C7E9B4","#EDF8B1", "#F6EAD2"),
                     limits = c("11 or more grandchildren",
@@ -278,10 +283,14 @@ Fig1a_Diff <- left_join(SKU %>%
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         axis.line = element_line(),
         legend.key = element_blank()) +
-    guides(color = guide_legend(reverse = TRUE, ncol = 3, byrow = TRUE))
+    guides(color = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
-plot_grid(Fig1a_SOCSIM, Fig1a_SKU, align = "hv")
+Fig1a_nl <- plot_grid(Fig1a_SOCSIM + theme(legend.position = "none"), 
+                      Fig1a_SKU + theme(legend.position = "none"), align = "hv")
+legend_1a <- get_plot_component(Fig1a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig1a_nl, legend_1a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig1a.jpg", width=17, height=9, dpi=200)
+
 Fig1a_Diff
 ggsave(file="Graphs/Fig1a_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -343,12 +352,12 @@ Fig2b_SOCSIM <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Children", fill = " ") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Children in Microsimulation", fill = " ") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() + 
   theme(legend.key = element_blank(),
         strip.placement = "outside") +
-  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 
 Fig2b_SKU <- ggplot() +
@@ -366,13 +375,13 @@ Fig2b_SKU <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFE6CC"), 
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Children", fill = " ") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Children in Registers", fill = " ") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
   theme_bw() + theme_graphs2() +
   theme(legend.key = element_blank(),
         strip.placement = "outside")+
-  guides(fill = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE)) 
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE)) 
 
 # The data for children (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
 # as registered deceased or not living.
@@ -406,16 +415,20 @@ Fig2b_Diff <- left_join(SKU %>%
   scale_color_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Children (SOCSIM-Registers)", color = " ") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Children", color = " ") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
   theme_bw() + theme_graphs2() +
   theme(legend.key = element_blank(),
         strip.placement = "outside")+
-  guides(color = guide_legend(reverse = TRUE, ncol = 2, byrow = TRUE))
+  guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-plot_grid(Fig2b_SOCSIM, Fig2b_SKU, align = "hv")
+Fig2b_nl <- plot_grid(Fig2b_SOCSIM + theme(legend.position = "none"), 
+                      Fig2b_SKU + theme(legend.position = "none"), align = "hv")
+legend_2b <- get_plot_component(Fig2b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig2b_nl, legend_2b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig2b.jpg", width=17, height=9, dpi=200)
+
 Fig2b_Diff
 ggsave(file="Graphs/Fig2b_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -429,7 +442,7 @@ Fig2a_SOCSIM <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Microsimulation", "2" = "Women in Microsimulation")), ncol = 1, scales = "free_x") +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion", fill = "")+
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion in Microsimulation", fill = "")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -440,7 +453,7 @@ Fig2a_SOCSIM <- ggplot(data = filter(children_dist_Table_living, IDbirthYear <= 
         axis.line = element_line(),
         legend.key = element_blank(),
         strip.placement = "outside") +
-   guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
+   guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 Fig2a_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig2a") %>%  
@@ -451,7 +464,7 @@ Fig2a_SKU <- ggplot(data = SKU %>%
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men in Registers", "2" = "Women in Registers")), ncol = 1, scales = "free_x") +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion", fill = "")+
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion in Registers", fill = "")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -462,7 +475,7 @@ Fig2a_SKU <- ggplot(data = SKU %>%
         axis.line = element_line(),
         legend.key = element_blank(),
         strip.placement = "outside")+
-  guides(fill = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 
 Fig2a_Diff <- left_join(SKU %>% 
@@ -480,7 +493,7 @@ Fig2a_Diff <- left_join(SKU %>%
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_children), linewidth =1) +
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
   facet_wrap(~ Kon, labeller = labeller(Kon = c("1" = "Men", "2" = "Women")), ncol = 1, scales = "free_x") +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion (SOCSIM-Registers)", color = "")+
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between Proportions", color = "")+
   scale_color_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -491,11 +504,14 @@ Fig2a_Diff <- left_join(SKU %>%
         axis.line = element_line(),
         legend.key = element_blank(),
         strip.placement = "outside")+
-  guides(color = guide_legend(reverse = TRUE, ncol = 3, nrow = 3, byrow = TRUE))
+  guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-
-plot_grid(Fig2a_SOCSIM, Fig2a_SKU, align = "hv")
+Fig2a_nl <- plot_grid(Fig2a_SOCSIM + theme(legend.position = "none"), 
+                      Fig2a_SKU + theme(legend.position = "none"), align = "hv")
+legend_2a <- get_plot_component(Fig2a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig2a_nl, legend_2a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig2a.jpg", width=17, height=9, dpi=200)
+
 Fig2a_Diff
 ggsave(file="Graphs/Fig2a_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -526,7 +542,7 @@ Fig3_SOCSIM <- ggplot() +
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces and Nephews in Microsimulation", fill = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces/Nephews in Microsimulation", fill = "") +
   scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c(levels=c("not living", 
                                         "half brother side", "full brother side",
@@ -538,7 +554,7 @@ Fig3_SOCSIM <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0)))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 Fig3_SKU <- ggplot() +
     geom_area(data = SKU %>%
@@ -560,7 +576,7 @@ Fig3_SKU <- ggplot() +
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces and Nephews in Registers", fill = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces/Nephews in Registers", fill = "") +
   scale_fill_manual(values = c( "#FFE6CC","#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("registered deceased",
                                "half brother side", "full brother side",
@@ -571,7 +587,7 @@ Fig3_SKU <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0)))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 # The data for niblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin 
 # as registered deceased or not living.
@@ -603,7 +619,7 @@ Fig3_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces and Nephews (SOCSIM-Registers)", 
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Nieces/Nephews", 
        color = "") +
   scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c(levels=c("not living", 
@@ -618,11 +634,15 @@ Fig3_Diff <- left_join(SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = "#000000")))
+  guides(fill = guide_legend(override.aes = list(color = "#000000"), nrow = 1, byrow = TRUE))
  
 
-plot_grid(Fig3_SOCSIM, Fig3_SKU, align = "hv")
+Fig3_nl <- plot_grid(Fig3_SOCSIM + theme(legend.position = "none"), 
+                      Fig3_SKU + theme(legend.position = "none"), align = "hv")
+legend_3 <- get_plot_component(Fig3_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig3_nl, legend_3, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig3.jpg", width=17, height=9, dpi=200)
+
 Fig3_Diff
 ggsave(file="Graphs/Fig3_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -676,7 +696,7 @@ Fig4a_SOCSIM <- ggplot() +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 Fig4a_SKU <- ggplot() +
   geom_area(data = SKU %>%
@@ -710,7 +730,7 @@ Fig4a_SKU <- ggplot() +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(fill = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 # The data for siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased cousins as non.living.
 # So, we need to estimate the actual registered deceased by subtracting the number of people alive
@@ -743,14 +763,18 @@ Fig4a_Diff <- left_join(SKU %>%
                     limits = c("half.mother", "half.father", "full", "not living"), 
                     labels = c("Half siblings on mother's side", "Half siblings on father's side", 
                                "Full siblings", "Deceased siblings")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Siblings (SOCSIM-Registers)", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Siblings", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(color = guide_legend(ncol = 2, byrow = TRUE, reverse = TRUE))
+  guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
  
-plot_grid(Fig4a_SOCSIM, Fig4a_SKU, align = "hv")
+Fig4a_nl <- plot_grid(Fig4a_SOCSIM + theme(legend.position = "none"), 
+                      Fig4a_SKU + theme(legend.position = "none"), align = "hv")
+legend_4a <- get_plot_component(Fig4a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig4a_nl, legend_4a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig4a.jpg", width=17, height=9, dpi=200)
+
 Fig4a_Diff
 ggsave(file="Graphs/Fig4a_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -775,7 +799,7 @@ Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
-  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 Fig4b_SKU <- ggplot(data = SKU %>% 
                       filter(Fig == "Fig4b") %>%  
@@ -797,7 +821,7 @@ Fig4b_SKU <- ggplot(data = SKU %>%
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
-  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
 Fig4b_Diff <- left_join(SKU %>% 
                           filter(Fig == "Fig4b") %>% 
@@ -809,7 +833,7 @@ Fig4b_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_siblings), linewidth =1)+
   geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion", color = "")+
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between Proportions", color = "")+
   scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                 "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
                     limits = c("6 or more siblings", "5 siblings", "4 siblings", 
@@ -820,10 +844,15 @@ Fig4b_Diff <- left_join(SKU %>%
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
-  guides(color = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
+  guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-plot_grid(Fig4b_SOCSIM, Fig4b_SKU, align = "hv")
+Fig4b_nl <- plot_grid(Fig4b_SOCSIM + theme(legend.position = "none"), 
+                      Fig4b_SKU + theme(legend.position = "none"), align = "hv")
+legend_4b <- get_plot_component(Fig4b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+plot_grid(Fig4b_nl, legend_4b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig4b.jpg", width=17, height=9, dpi=200)
+
 Fig4b_Diff
 ggsave(file="Graphs/Fig4b_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -905,7 +934,7 @@ Fig5b_SOCSIM <- ggplot() +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 
 Fig5b_SKU <- ggplot() +
   geom_area(data = SKU %>%
@@ -937,7 +966,7 @@ Fig5b_SKU <- ggplot() +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(fill = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(nrow = 1, byrow = TRUE))
 
 
 # The data for cousins (both in the .xlsx and SOCSIM) include both the alive and the deceased cousins 
@@ -971,14 +1000,18 @@ Fig5b_Diff <- left_join(SKU %>%
                                "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Cousins (SOCSIM-Registers)", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Cousins", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
-  guides(color = guide_legend(reverse = F, ncol = 3, byrow = TRUE))
+  guides(color = guide_legend(nrow = 1, byrow = TRUE))
 
-plot_grid(Fig5b_SOCSIM, Fig5b_SKU, align = "hv")
+Fig5b_nl <- plot_grid(Fig5b_SOCSIM + theme(legend.position = "none"), 
+                      Fig5b_SKU + theme(legend.position = "none"), align = "hv")
+legend_5b <- get_plot_component(Fig5b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig5b_nl, legend_5b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig5b.jpg", width=17, height=9, dpi=200)
+
 Fig5b_Diff
 ggsave(file="Graphs/Fig5b_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -1003,7 +1036,7 @@ Fig5a_SOCSIM <- ggplot(data = cousin_dist_Table_living) +
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
-  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
   
 
 Fig5a_SKU <- ggplot(data = SKU %>% 
@@ -1026,7 +1059,7 @@ Fig5a_SKU <- ggplot(data = SKU %>%
   scale_y_continuous(breaks = seq(0,1, by = 0.2))+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))+
-  guides(fill = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 
 Fig5a_Diff <- left_join(SKU %>% 
@@ -1039,7 +1072,7 @@ Fig5a_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_cousins), linewidth =1)+
   geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Proportion", color = "")+
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between Proportions", color = "")+
   scale_color_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
                               "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
                     limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
@@ -1049,11 +1082,15 @@ Fig5a_Diff <- left_join(SKU %>%
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(-1,0.4, by = 0.2))+
   theme_bw() + theme_graphs2() +
-  guides(color = guide_legend(reverse = TRUE, nrow = 3, byrow = TRUE)) +
+  guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE)) +
   theme(panel.grid.minor.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9))
 
-plot_grid(Fig5a_SOCSIM, Fig5a_SKU, align = "hv")
+Fig5a_nl <- plot_grid(Fig5a_SOCSIM + theme(legend.position = "none"), 
+                      Fig5a_SKU + theme(legend.position = "none"), align = "hv")
+legend_5a <- get_plot_component(Fig5a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig5a_nl, legend_5a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig5a.jpg", width=17, height=9, dpi=200)
+
 Fig5a_Diff
 ggsave(file="Graphs/Fig5a_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -1094,7 +1131,7 @@ Fig6a_SOCSIM <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 Fig6a_SKU <- SKU %>%
             filter(Fig == "Fig6a") %>%
@@ -1117,7 +1154,7 @@ Fig6a_SKU <- SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 Fig6a_Diff <- left_join(SKU %>% 
                           # We need estimate the number of unregistered parents which is not included in the table
@@ -1142,7 +1179,7 @@ Fig6a_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Parents in Registers", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Parents", color = "") +
   scale_color_manual(values = c("#FED98E", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
@@ -1151,10 +1188,14 @@ Fig6a_Diff <- left_join(SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
-plot_grid(Fig6a_SOCSIM, Fig6a_SKU, align = "hv")
+Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"), 
+                      Fig6a_SKU + theme(legend.position = "none"), align = "hv")
+legend_6a <- get_plot_component(Fig6a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig6a_nl, legend_6a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig6a.jpg", width=17, height=9, dpi=200)
+
 Fig6a_Diff
 ggsave(file="Graphs/Fig6a_Diff.jpg", width=17, height=9, dpi=200)
 ```
@@ -1202,7 +1243,7 @@ Fig6b_SOCSIM <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 Fig6b_SKU <- ggplot() +
   geom_area(data = SKU %>% 
@@ -1229,7 +1270,7 @@ Fig6b_SKU <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 # The data for parents siblings (both in the .xlsx and SOCSIM) include both the alive and the deceased kin
 # as `registered deceased` or not living.
@@ -1256,7 +1297,7 @@ Fig6b_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Aunts and Uncles (SOCSIM-Registers)", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Aunts and Uncles", color = "") +
   scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
@@ -1264,10 +1305,14 @@ Fig6b_Diff <- left_join(SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = "#000000"), ncol = 3, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = "#000000"), nrow = 1, byrow = TRUE))
 
-plot_grid(Fig6b_SOCSIM, Fig6b_SKU, align = "hv")
+Fig6b_nl <- plot_grid(Fig6b_SOCSIM + theme(legend.position = "none"), 
+                      Fig6b_SKU + theme(legend.position = "none"), align = "hv")
+legend_6b <- get_plot_component(Fig6b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig6b_nl, legend_6b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig6b.jpg", width=17, height=9, dpi=200)
+
 Fig6b_Diff
 ggsave(file="Graphs/Fig6b_Diff.jpg", width=17, height=9, dpi=200)
 
@@ -1314,7 +1359,7 @@ Fig7_SOCSIM <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE))
 
 
 SKU_7 <- SKU %>%
@@ -1361,7 +1406,7 @@ Fig7_SKU  <- ggplot() +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE))  
 
                         
 Fig7_Diff <- left_join(SKU %>% 
@@ -1406,15 +1451,19 @@ Fig7_Diff <- left_join(SKU %>%
                                "grandmother (mother's side)"), 
                     labels = c("Unregistered grandparents", 
                       "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Grandparents", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Grandparents", color = "") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0), ncol = 2, byrow = TRUE))  
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE))  
 
-plot_grid(Fig7_SOCSIM, Fig7_SKU, align = "hv")
+Fig7_nl <- plot_grid(Fig7_SOCSIM + theme(legend.position = "none"), 
+                      Fig7_SKU + theme(legend.position = "none"), align = "hv")
+legend_7 <- get_plot_component(Fig7_SKU, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig7_nl, legend_7, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig7.jpg", width=17, height=9, dpi=200)
+
 Fig7_Diff
 ggsave(file="Graphs/Fig7_Diff.jpg", width=17, height=9, dpi=200)
 
@@ -1467,11 +1516,11 @@ Fig8a_SOCSIM <- ggplot() +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
                width = 1.5, show.legend = FALSE, color = "maroon")+
   scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Total number of living kin in Microsimulation") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Total Number of Living Kin in Microsimulation") +
   scale_y_continuous(breaks = seq(0,80, by = 10), limits = c(0,70)) + 
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
                      labels = paste(seq(1920, 2010, by=10), "\n", "(",2018 -seq(1920, 2010, by=10),")"),
-                     sec.axis = dup_axis(name = "Percentage with median number of kin by cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
+                     sec.axis = dup_axis(name = "Percentage With Median Number of Kin by Cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
@@ -1486,7 +1535,7 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
   mutate(Difference = mean_kin_SOCSIM_per - mean_kin_SKU_per) %>% 
   ggplot()+
   geom_line(aes(x = Cohort, y = Difference), linewidth =1)+
-  labs(x = "Birth Cohort \n (Age in 2017)", y = "Difference in the percentage with the median number of kin by cohort")+
+  labs(x = "Birth Cohort \n (Age in 2017)", y = "Difference in the Percentage With the Median Number of Kin")+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
@@ -1498,11 +1547,12 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
 # Import violin plots from the Swedish Kinship Universe
 Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
 
-plot_grid(Fig8a_SOCSIM, Fig8a_SKU, align = "hv",
+plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
           rel_heights = c(1.4,0.4), 
           rel_widths = c(0.5,0.5), 
           scale(c(0.7, 0.5)))
 ggsave(file="Graphs/Fig8a.jpg", width=17, height=9, dpi=200)
+
 Fig8a_Diff
 ggsave(file="Graphs/Fig8a_Diff.jpg", width=17, height=9, dpi=200)
                             
@@ -1538,7 +1588,7 @@ Fig8b_SOCSIM <- ggplot() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line"),
         axis.text.x = element_text(family="serif", size = 14, colour = "#000000")) +
-  guides(fill = guide_legend(override.aes = list(color = 0)))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE))
 
 Fig8b_SKU <- SKU %>%
             filter(Fig == "Fig8b") %>% 
@@ -1555,9 +1605,10 @@ Fig8b_SKU <- SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line"), 
-        axis.text.x = element_text(family="serif", size = 14, colour = "#000000")) +
-  guides(fill = guide_legend(override.aes = list(color = 0))) +
-  expand_limits(y = c(0, 43))
+        axis.text.x = element_text(family="serif", size = 14, colour = "#000000")) +  
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE)) +
+  expand_limits(y = c(0, 43)) 
+
 
 Fig8b_Diff <- full_join(SKU %>% 
                          filter(Fig == "Fig8b") %>% 
@@ -1577,7 +1628,7 @@ Fig8b_Diff <- full_join(SKU %>%
   filter(!is.na(Difference)) %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Kin", color = "") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Kin", color = "") +
   scale_color_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
@@ -1586,10 +1637,14 @@ Fig8b_Diff <- full_join(SKU %>%
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         legend.key.height = unit(1, "line")) +
-  guides(fill = guide_legend(override.aes = list(color = 0)))
+  guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE))
 
-plot_grid(Fig8b_SOCSIM, Fig8b_SKU, align = "hv")
+Fig8b_nl <- plot_grid(Fig8b_SOCSIM + theme(legend.position = "none"), 
+                      Fig8b_SKU + theme(legend.position = "none"), align = "hv")
+legend_8b <- get_plot_component(Fig8b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+plot_grid(Fig8b_nl, legend_8b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig8b.jpg", width=17, height=9, dpi=200)
+
 Fig8b_Diff
 ggsave(file="Graphs/Fig8b_Diff.jpg", width=17, height=9, dpi=200)
 ```
