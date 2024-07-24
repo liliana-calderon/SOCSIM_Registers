@@ -1,7 +1,7 @@
 #----------------------------------------------------------------------------------------------------
 # Functions to get Reference Table and add birthyear and deathyear of ID's and refIDs
 # Obtained from Martin Kolk
-# Last (slightly) modified on the 14-02-2024
+# Last (slightly) modified on the 22-07-2024
 #----------------------------------------------------------------------------------------------------
 
 getRefTable <- function(df , ref_TypeI){
@@ -95,13 +95,10 @@ getRefTable <- function(df , ref_TypeI){
      arrange(ID, FoddAr) %>%
      group_by(ID) %>%
      mutate(i = data.table::rleid(partner)) %>% 
-     ungroup()
-
-    child_df <-
-      child_df %>%
-      select(ID, refID, refTypeI, refTypeII, refTypeIII = i, refTypeIIII) %>%
-      full_join(select(df, LopNr), by = c("ID" = "LopNr"))   %>%
-      mutate(refTypeI   = case_when(is.na(refID) ~ "no child", TRUE ~ refTypeI ),
+     ungroup() %>% 
+     select(ID, refID, refTypeI, refTypeII, refTypeIII = i, refTypeIIII) %>%
+     full_join(select(df, LopNr), by = c("ID" = "LopNr"))   %>%
+     mutate(refTypeI   = case_when(is.na(refID) ~ "no child", TRUE ~ refTypeI ),
              refTypeII  = case_when(is.na(refID) ~ "no child", TRUE ~ refTypeII ),
              refTypeIII = case_when(is.na(refID) ~ "no child", TRUE ~ as.character(refTypeIII)))
 
@@ -254,7 +251,7 @@ getRefTable <- function(df , ref_TypeI){
       inner_join(x = . , y = ., 
                  by = c("refID" = "ID"),
                  # To avoid the warning Detected an unexpected many-to-many relationship between `x` and `y`.
-                 # Because a refID can have more than one parent (and then multiple matches)
+                 # Because a refID (parent) can have more than one parent (and then multiple matches)
                  relationship = "many-to-many") %>%
       mutate(refID = refID.y, 
              refTypeI   = "grandparent", 
