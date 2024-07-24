@@ -6,7 +6,7 @@
 # that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 06-05-2024
+# Last modified on 23-07-2024
 
 # This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
 #------------------------------------------------------------------------------------------------------
@@ -23,62 +23,48 @@ library(reshape2)
 source("Functions/Functions_Kin_Count.R")
 
 #------------------------------------------------------------------------------------------------------
-## Load SOCSIM output, convert time and add relevant variables
+## Create and save reference table, N_Cohort and N_Cohort_sex from SOCSIM output ----
 
-# Load opop and omar from simulation with no heterogeneous fertility but parity-specific rates (0_par)
+## 0. Load opop from simulation with no heterogeneous fertility but parity-specific rates (0_par)
 load("opop.RData")
-load("omar.RData")
 
-#------------------------------------------------------------------------------------------------------
-## Function to create and save reference table, temp and N_Cohort from different opop ----
-
-reference_table_opop <- function(opop, sim_param, final_sim_year, year_min, year_max) {
-  
 ## 1. Format the data
   
 # Function to convert SOCSIM months to calendar years
-  asYr <- function(month, last_month, final_sim_year) {
-    return(final_sim_year - trunc((last_month - month)/12))
-  }
+asYr <- function(month, last_month, final_sim_year) {
+  return(final_sim_year - trunc((last_month - month)/12))}
 
 # Define parameters to convert SOCSIM months to calendar years
 last_month <- max(opop$dob)
+final_sim_year <- 2017
 
-# Add year of birth and year of death to the opop file
-opop <- opop %>% 
-  mutate(birth_year = asYr(dob, last_month, final_sim_year),
-         death_year = ifelse(dod == 0, 9999, asYr(dod, last_month, final_sim_year)))
-
-opop2 <- opop %>%
-  mutate(Kon = fem + 1, 
-         FodelselandGrp = 1) %>% 
-  # Reformat to Swedish register format
+# Add variables and reformat to Swedish register format
+opop2 <- opop %>% 
+  mutate(birthyear = asYr(dob, last_month, final_sim_year),
+         deathyear = ifelse(dod == 0, NA, asYr(dod, last_month, final_sim_year)), 
+         Kon = fem + 1, # Sex
+         FodelselandGrp = 1) %>% # Country of birth
   select(LopNr = pid, 
-         FoddAr = birth_year, 
+         FoddAr = birthyear, 
          Kon,
          FodelselandGrp,
          LopNrFar = pop,
-         LopNrMor = mom,
-         deathyear = death_year) %>%
-  # Add NA for the parents of the founder generation
-  mutate(LopNrFar = ifelse(LopNrFar == 0, NA, LopNrFar), 
-         LopNrMor = ifelse(LopNrMor == 0, NA, LopNrMor))
+         LopNrMor = mom, 
+         deathyear) 
 
+# Filter population
+year_min = 1900
+year_max = 2017
 
-# Filter population (-100 years to avoid missing parents or grandparents)
-popdatdeaths <- opop2 %>%  
-  filter(between(FoddAr, year_min -100, year_max))  
-
+popdat <- opop2 %>%
+  filter(between(FoddAr, year_min -100, year_max)) # (-100 years to avoid missing parents or grandparents)
 
 ## 2. Create kinship objects 
 
-popdat <- popdatdeaths %>% select(-deathyear)
-
-# get Ref Table (from Martin's functions)
+# Get Ref Table (from Martin's functions)
 refTableList <- getRefTable(df = popdat, ref_TypeI = "all")
 
 # Add years of birth and death (from Martin's functions)
-# According to Diego, this is not really needed, but still did it
 SimRefTableList <- lapply(refTableList, AddBirthsDeaths, df = opop2)
 
 reference_table_SweBorn <- 
@@ -87,52 +73,35 @@ reference_table_SweBorn <-
   inner_join(select(filter(popdat, FodelselandGrp == 1), LopNr, Kon, FodelselandGrp, FoddAr), 
              by = c("ID" = "LopNr")) %>% 
   filter(between(IDbirthYear, year_min, year_max)) %>% 
-  setDT() ## Add to allow the code below run
+  setDT()
  
 
 ## 3. Get other quantities
 
-# Get table with number of Swedish born parents per person
-temp <- reference_table_SweBorn %>% 
-  filter(refGroup == "parent" & !is.na(refID)) %>%
-  group_by(ID, IDbirthYear, FoddAr) %>%
-  summarise(n_swe_parents = n(), .groups = "drop") %>%
-  setDT()
+# Total Population 
+TotalPopulation <- popdat %>% setDT()
 
-TotalPopulation <- popdatdeaths %>% setDT()
-
-# Get tables with N per cohort
+# Tables with N per cohort
 N_Cohort <- list(TotalPopulation[, .(N_ever = .N), keyby = FoddAr], 
-                 reference_table_SweBorn[, .(N_17 = uniqueN(ID)), keyby = FoddAr], 
-                 temp[n_swe_parents == 2, .N, keyby = FoddAr]) %>%
+                 reference_table_SweBorn[, .(N_17 = uniqueN(ID)), keyby = FoddAr]) %>%
   reduce(left_join, by = "FoddAr") %>%
-  rename(N_sweparent = N) %>% 
   mutate(IDbirthYear = FoddAr)
 
 # Table with N_cohort by sex
-temp <- reference_table_SweBorn[!is.na(FoddAr), .(N_17 = uniqueN(ID)), keyby = .(FoddAr, Kon)]
-
-temp <- temp %>% 
+N_Cohort_sex <- reference_table_SweBorn[!is.na(FoddAr), .(N_17 = uniqueN(ID)), keyby = .(FoddAr, Kon)] %>% 
   rename(IDbirthYear = FoddAr)
 
-# 4. Export 
 
-# Create a sub-folder called "Output_" and the simulation parameters to save the files
+## 4. Export 
+
+# Indicate simulation parameters
+sim_param = ""
+
+# Create a sub-folder to save the output files 
 output_folder <- paste0("Output_", sim_param, "/")
 
 if (!dir.exists(output_folder)) { dir.create(output_folder)}
   
-  save(reference_table_SweBorn, file = paste0(output_folder, "reference_table_SweBorn.RData"))
-  save(temp, file = paste0(output_folder, "temp.RData"))
-  save(N_Cohort, file = paste0(output_folder, "N_Cohort.RData"))
-  
-}
-
-#------------------------------------------------------------------------------------------------------
-## Get the reference table and additional tables for the opop file ----
-
-reference_table_opop(opop = opop, 
-                     sim_param = "", 
-                     final_sim_year = 2022, 
-                     year_min = 1900, 
-                     year_max = 2022)
+save(reference_table_SweBorn, file = paste0(output_folder, "reference_table_SweBorn.RData"))
+save(N_Cohort, file = paste0(output_folder, "N_Cohort.RData"))
+save(N_Cohort_sex, file = paste0(output_folder, "N_Cohort_sex.RData"))
