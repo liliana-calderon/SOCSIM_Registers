@@ -2,14 +2,14 @@
 title: "Empirical and microsimulated kinship networks. Comparing and evaluating estimates on micro-level data on kin relations for the Swedish population"
 author: '...'
 date: "`r Sys.Date()`"
-# output:
-#   github_document:
-#     pandoc_args: --webtex
-#     toc: true
-#     toc_depth: 1
 output:
-  html_document: default
-  pdf_document: default
+  github_document:
+    pandoc_args: --webtex
+    toc: true
+    toc_depth: 1
+# output:
+#   html_document: default
+#   pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -1158,7 +1158,7 @@ Fig6a_Diff <- left_join(SKU %>%
                          select(-`not living`) %>% 
                          mutate(`registered deceased` = 2-(father + mother), 
                                 unregistered = 0) %>% 
-                         pivot_longer(cols = mother:unregistered, 
+                         pivot_longer(cols = father:unregistered, 
                                        names_to = "Type", values_to = "mean_kin_SOCSIM") %>% 
                           select(IDbirthYear, mean_kin_SOCSIM, Type)) %>%
   mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU) %>%
