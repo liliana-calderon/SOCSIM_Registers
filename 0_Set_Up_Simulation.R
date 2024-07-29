@@ -5,16 +5,16 @@
 # This code has three main steps: write rates, create the initial populations and run the simulation
 
 ## 1. Write the input fertility and mortality rates for a SOCSIM micro-simulation for Sweden,
-# using data from HFD (1891-2021) and HMD (1751-2021), with the HMDHFDplus package.
+# using data from HFD (1891-2017) and HMD (1751-2017), with the HMDHFDplus package.
 # and the Human Fertility Collection (HFC) for the period not covered in HFD (1751-1890)
 
 ## 2. Create an initial population file and empty marriage file for the simulations
 
-## 3. Run a SOCSIM demographic microsimulation using the 'rsocsim' package and data for Sweden (1751-2022)
+## 3. Run a SOCSIM demographic microsimulation using the 'rsocsim' package and data for Sweden (1751-2017)
 ## and read the output into R. 
 
 # Created on 13-02-2024
-# Last modified on 06-05-2024
+# Last modified on 26-07-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/0_Write_Input_Rates.R
@@ -192,7 +192,6 @@ write_socsim_rates_HMD(Country = "SWE",
 
 # Set size of initial population
 size_opop <-  50000
-# For 20000, Time difference of 1.524974 hours
 
 # Create data.frame with 14 columns and nrows = size_opop
 presim.opop <- setNames(data.frame(matrix(data = 0, ncol = 14, nrow = size_opop)), 
@@ -246,15 +245,15 @@ folder <- getwd()
 # Otherwise, the working directory must be specified after "folder <- "
 
 # Name of the supervisory file stored in the above folder:
-# Sup file for rates retrieved from HFC/HFD and HMD (1751-2022), 
-# with marry after childbirth, hetfert 0 and parity-specific rates for 1970-2022
-supfile <- "Sweden_0_par.sup" # 
+# Sup file for rates retrieved from HFC/HFD and HMD (1751-2017), 
+# with marry after childbirth, hetfert 0 and parity-specific rates for 1970-2017
+supfile <- "Sweden_0_par.sup" 
 
 # Random number generator seed:
-#seed <- as.character(sample(1:99999, 1, replace = F))
+seed <- as.character(sample(1:99999, 1, replace = F))
 
 # Save the seed number to use them later to read the data
-# save(seed, file = "seed.Rda")
+save(seed, file = "seed.Rda")
 load("seed.Rda")
 
 ## Run the simulation for the random seed. 
@@ -266,7 +265,7 @@ end <- Sys.time()
 
 print(end-start)
 
-# Time difference of 1.053164 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
+# Time difference of 2.2 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
@@ -274,7 +273,7 @@ print(end-start)
 load("seed.Rda")
 seed <- as.numeric(seed)
 
-## No heterogeneous fertility but parity specific rates for 1970-2022 (hetfert0_par)
+## No heterogeneous fertility but parity specific rates for 1970-2017 (hetfert0_par)
 # Read opop
 opop <- rsocsim::read_opop(folder = getwd(),
                            supfile = "Sweden_0_par.sup",
