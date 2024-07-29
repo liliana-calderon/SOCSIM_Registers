@@ -54,10 +54,9 @@ opop2 <- opop %>%
 
 # Filter population
 year_min = 1900
-year_max = 2017
 
 popdat <- opop2 %>%
-  filter(between(FoddAr, year_min -100, year_max)) # (-100 years to avoid missing parents or grandparents)
+  filter(between(FoddAr, year_min -100, final_sim_year)) # (-100 years to avoid missing parents or grandparents)
 
 ## 2. Create kinship objects 
 
@@ -72,7 +71,7 @@ reference_table_SweBorn <-
   mutate(refGroup = gsub("_df", "", refGroup)) %>%
   inner_join(select(filter(popdat, FodelselandGrp == 1), LopNr, Kon, FodelselandGrp, FoddAr), 
              by = c("ID" = "LopNr")) %>% 
-  filter(between(IDbirthYear, year_min, year_max)) %>% 
+  filter(between(IDbirthYear, year_min, final_sim_year)) %>% 
   setDT()
  
 
