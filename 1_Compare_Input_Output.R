@@ -9,7 +9,7 @@
 # c.f. script 0_Set_Up_Simulation.R
 
 # Created on 26-02-2024
-# Last modified on 16-07-2024
+# Last modified on 29-07-2024
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/2_Compare_Input_Output.R
@@ -60,7 +60,7 @@ ifelse(!dir.exists("Measures"), dir.create("Measures"), FALSE)
 
 # Retrieve age-specific fertility rates with hetfert 0
 asfr <- estimate_fertility_rates(opop = opop,
-                                 final_sim_year = 2022, #[Jan-Dec]
+                                 final_sim_year = 2017, #[Jan-Dec]
                                  year_min = 1750, # Closed [
                                  year_max = 2020, # Open )
                                  year_group = 5, 
@@ -71,7 +71,7 @@ save(asfr, file = "Measures/asfr.RData")
 
 # Retrieve age-specific mortality rates with hetfert 0
 asmr <- estimate_mortality_rates(opop = opop,
-                                 final_sim_year = 2022, #[Jan-Dec]
+                                 final_sim_year = 2017, #[Jan-Dec]
                                  year_min = 1750, # Closed
                                  year_max = 2020, # Open )
                                  year_group = 5,
@@ -192,7 +192,7 @@ bind_rows(HFCD0, SocsimF0) %>%
   ggplot(aes(x = age, y = ASFR, group = interaction(year, Source)))+
   geom_line(aes(colour = year, linetype = Source, alpha = Source), linewidth = 1.2)+
   scale_color_manual(values = c("#79B727", "#2779B7", "#B72779"))+ 
-  scale_linetype_manual(values = c("HFC/HFD" = "solid", "SOCSIM" = "dotted")) +
+  scale_linetype_manual(values = c("HFC/HFD" = "dotted", "SOCSIM" = "solid")) +
   scale_alpha_discrete(guide="none", range = c(1, 0.4))+
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_graphs()
@@ -264,11 +264,10 @@ bind_rows(HMD, SocsimM) %>%
   filter(mx != 0 & !is.infinite(mx) & !is.nan(mx)) %>% 
   ggplot(aes(x = age, y = mx, group = interaction(year, Source))) +
   facet_wrap(~Sex) +
-  geom_line(aes(colour = year, linetype = Source, alpha = Source), linewidth = 1.3)+
+  geom_line(aes(colour = year, linetype = Source), linewidth = 1.3)+
   scale_y_log10() +
   scale_color_manual(values = c("#79B727", "#2779B7", "#B72779"))+ 
-  scale_linetype_manual(values = c("HMD" = "solid", "SOCSIM" = "dotted")) +
-  scale_alpha_discrete(guide="none", range = c(1, 0.4))+
+  scale_linetype_manual(values = c("HMD" = "dotted", "SOCSIM" = "solid")) +
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   theme_graphs()
 ggsave(file="Graphs/HMD_SOCSIM_ASMR.jpeg", width=17, height=9, dpi=300)
@@ -296,20 +295,19 @@ bind_rows(HFCD0 %>% rename(Estimate = ASFR),
   filter(Sex == "Female") %>% 
   mutate(Year = year,
          age = factor(as.character(age), levels = age_levels), 
-         transp = ifelse(Source == "SOCSIM", "1", "0"), 
+         Source = ifelse(Source == "SOCSIM", "SOCSIM", "HFC/HFD-HMD"), 
          Rate = ifelse(Rate == "ASFR", "Age-Specific Fertility Rates", "Age-Specific Mortality Rates")) %>%
   filter(Year %in% yrs_plot) %>% 
   ggplot(aes(x = age, y = Estimate, group = interaction(Year, Source)))+
   facet_wrap(. ~ Rate, scales = "free") + 
-  geom_line(aes(colour = Year, alpha = transp), linewidth = 1.5)+ # SOCSIM solid, HFD HMD transparent
+  geom_line(aes(colour = Year, linetype = Source), linewidth = 1.5)+ # SOCSIM solid, HFD HMD transparent
   scale_color_manual(values = c("#79B727", "#2779B7", "#B72779"))+ 
-  scale_alpha_discrete(guide="none", range = c(0.5, 1))+
+  scale_linetype_manual(values = c("dotted", "solid"))+
   facetted_pos_scales(y = list("Age-Specific Fertility Rates" = scale_y_continuous(breaks = y_breaks_asfr),
                                "Age-Specific Mortality Rates" =  scale_y_continuous(breaks = y_breaks_asmr, trans = "log10")))+
   scale_x_discrete(guide = guide_axis(angle = 90)) +
   labs(x = "Age")+
   theme_graphs()
-
 ggsave(file="Graphs/Socsim_HFD_HMD1.jpeg", width=17, height=9, dpi=300)
 #----------------------------------------------------------------------------------------------------
 ## Summary measures: TFR and e0 ----
@@ -318,9 +316,9 @@ ggsave(file="Graphs/Socsim_HFD_HMD1.jpeg", width=17, height=9, dpi=300)
 
 ## Retrieve age-specific fertility rates, by 1 year age group and 1 calendar year
 asfr_1 <- estimate_fertility_rates(opop = opop,
-                                   final_sim_year = 2022 , #[Jan-Dec]
+                                   final_sim_year = 2017 , #[Jan-Dec]
                                    year_min = 1750, # Closed [
-                                   year_max = 2023, # Open )
+                                   year_max = 2018, # Open )
                                    year_group = 1, 
                                    age_min_fert = 10, # Closed [
                                    age_max_fert = 55, # Open )
@@ -406,9 +404,9 @@ bind_rows(DM_TFR, MD_TFR) %>%
 
 # Retrieve age-specific mortality rates, by 1 year age group and 1 calendar year
 asmr_1 <- estimate_mortality_rates(opop = opop,
-                                   final_sim_year = 2022, #[Jan-Dec]
+                                   final_sim_year = 2017, #[Jan-Dec]
                                    year_min = 1750, # Closed
-                                   year_max = 2023, # Open )
+                                   year_max = 2018, # Open )
                                    year_group = 1,
                                    age_max_mort = 110, # Open )
                                    age_group = 1) # [,)
@@ -539,7 +537,7 @@ Summary
 ggsave(file="Graphs/Socsim_HFD_HMD2.jpeg", width=17, height=9, dpi=300)
 
 #----------------------------------------------------------------------------------------------------
-## Compare the number of children by cohort in 2017, between the HFD, SOCSIM and the registers ----
+## Compare the number of children by cohort in 2017, between HFD, registers and SOCSIM ----
 
 ## I. Number of children by cohort from HFD
 # To get the number of children for all cohorts included in the paper, 
@@ -625,7 +623,6 @@ ggsave(file="Graphs/Children_HFD_Registers_Diff.jpg", width=18, height=9, dpi=20
 ## Load opop and omar generated in 0_Set_Up_Simulation.R from simulation with no heterogeneous fertility, 
 # but parity specific rates
 load("opop.RData")
-load("omar.RData")
 
 # Function to convert SOCSIM months to calendar years. 
 asYr <- function(month, last_month, final_sim_year) {
@@ -634,7 +631,7 @@ asYr <- function(month, last_month, final_sim_year) {
 
 
 last_month <- max(opop$dob)
-final_sim_year <- 2022
+final_sim_year <- 2017
 cohort_range <- 1915:2017
 year_count <- max(cohort_range)
 
@@ -671,7 +668,7 @@ full_join(SOCSIM_cc %>% select(Cohort, SOCSIM),
   pivot_longer(SOCSIM:Registers, names_to = "Source", values_to = "CFR") %>% 
   ggplot(aes(x = Cohort, y = CFR, colour = Source))+
   geom_line(linewidth =1.2) +
-  scale_color_manual(values = c("#007A75", "#002F5F"))+
+  scale_color_manual(values = c("#002F5F", "#007A75"))+
   labs(title = "Number of children by cohort in 2017, SOCSIM and Registers")+
   theme_bw() + theme_graphs2()
 ggsave(file="Graphs/Children_SOCSIM_Registers.jpg", width=18, height=9, dpi=200)
@@ -706,7 +703,7 @@ full_join(SOCSIM_cc_diag %>% select(Cohort, SOCSIM),
   pivot_longer(SOCSIM:Registers, names_to = "Source", values_to = "CFR") %>% 
   ggplot(aes(x = Cohort, y = CFR, colour = Source))+
   geom_line(linewidth =1.2) +
-  scale_color_manual(values = c("#007A75", "#002F5F"))+
+  scale_color_manual(values = c("#002F5F", "#007A75"))+
   labs(title = "Number of children by cohort in 2017, SOCSIM and Registers. (From ASFR diagonals)")+
   theme_bw() + theme_graphs2()
 ggsave(file="Graphs/Children_SOCSIM_Registers_D.jpg", width=18, height=9, dpi=200)
@@ -731,6 +728,7 @@ full_join(SOCSIM_cc_diag %>% select(Cohort, SOCSIM),
   ggplot(aes(x = Cohort, y = CFR, colour = Source))+
   geom_line(linewidth =1) +
   scale_color_manual(values = c("#CA650D", "#002F5F", "#007A75"))+
+  labs(title = "Number of children by cohort in 2017, HFD, Registers and SOCSIM (From ASFR diagonals)")+
   theme_bw() + theme_graphs2()
 ggsave(file="Graphs/Children_HFD_Registers_SOCSIM_Diff.jpg", width=18, height=9, dpi=200)
 
@@ -746,6 +744,3 @@ full_join(SOCSIM_cc_diag %>% select(Cohort, SOCSIM),
   scale_color_manual(values = c("#CA650D", "#007A75"))+
   theme_bw() + theme_graphs2()
 ggsave(file="Graphs/Children_HFD_SOCSIM_Registers_Diff.jpg", width=18, height=9, dpi=200)
-
-
-## Check Period ASFR for cohorts 1980, 1990, 2000 vs Cohort Fertility
