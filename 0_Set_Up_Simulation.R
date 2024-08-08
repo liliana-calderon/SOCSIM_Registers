@@ -265,7 +265,10 @@ end <- Sys.time()
 
 print(end-start)
 
-# Time difference of 2.2 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
+# Time difference of 2.178523 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
+# Time difference of 2.493197 days for  1 simulation, with initial opop of 50000 and hetfert 1, a0.2 b1, with parity-specific rates
+# Time difference of 1.147058 days for  1 simulation, with initial opop of 50000 and hetfert 1, a0.2 b1, with parity-specific rates
+
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
