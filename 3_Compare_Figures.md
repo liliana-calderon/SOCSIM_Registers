@@ -1,9 +1,8 @@
-Empirical and microsimulated kinship networks. Comparing and evaluating
-estimates on micro-level data on kin relations for the Swedish
-population
+Assessing the validity of register-based and microsimulated kinship
+networks for demographic research
 ================
 …
-2024-07-29
+2025-02-07
 
 #### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
@@ -60,3 +59,5 @@ population
 #### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
 
 <img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-15-2.png" style="display: block; margin: auto;" />
+
+<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-16-1.png" style="display: block; margin: auto;" />

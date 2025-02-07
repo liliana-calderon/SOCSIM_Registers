@@ -1,5 +1,5 @@
 ---
-title: "Empirical and microsimulated kinship networks. Comparing and evaluating estimates on micro-level data on kin relations for the Swedish population"
+title: "Assessing the validity of register-based and microsimulated kinship networks for demographic research"
 author: '...'
 date: "`r Sys.Date()`"
 output:
@@ -10,6 +10,7 @@ output:
 # output:
 #   html_document: default
 #   pdf_document: default
+
 ---
 
 ```{r setup, include=FALSE}
@@ -164,10 +165,10 @@ Fig1b_nl <- plot_grid(Fig1b_SOCSIM + theme(legend.position = "none"),
                       Fig1b_SKU + theme(legend.position = "none"), align = "hv")
 legend_1b <- get_plot_component(Fig1b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig1b_nl, legend_1b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig1b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig1b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig1b_Diff
-ggsave(file="Graphs/Fig1b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig1b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 #### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
@@ -290,10 +291,10 @@ Fig1a_nl <- plot_grid(Fig1a_SOCSIM + theme(legend.position = "none"),
                       Fig1a_SKU + theme(legend.position = "none"), align = "hv")
 legend_1a <- get_plot_component(Fig1a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig1a_nl, legend_1a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig1a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig1a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig1a_Diff
-ggsave(file="Graphs/Fig1a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig1a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -424,10 +425,10 @@ Fig2b_nl <- plot_grid(Fig2b_SOCSIM + theme(legend.position = "none"),
                       Fig2b_SKU + theme(legend.position = "none"), align = "hv")
 legend_2b <- get_plot_component(Fig2b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig2b_nl, legend_2b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig2b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig2b_Diff
-ggsave(file="Graphs/Fig2b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig2b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -507,10 +508,10 @@ Fig2a_nl <- plot_grid(Fig2a_SOCSIM + theme(legend.position = "none"),
                       Fig2a_SKU + theme(legend.position = "none"), align = "hv")
 legend_2a <- get_plot_component(Fig2a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig2a_nl, legend_2a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig2a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig2a_Diff
-ggsave(file="Graphs/Fig2a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig2a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 #### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
@@ -636,10 +637,10 @@ Fig3_nl <- plot_grid(Fig3_SOCSIM + theme(legend.position = "none"),
                       Fig3_SKU + theme(legend.position = "none"), align = "hv")
 legend_3 <- get_plot_component(Fig3_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig3_nl, legend_3, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig3.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig3.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig3_Diff
-ggsave(file="Graphs/Fig3_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig3_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -768,10 +769,10 @@ Fig4a_nl <- plot_grid(Fig4a_SOCSIM + theme(legend.position = "none"),
                       Fig4a_SKU + theme(legend.position = "none"), align = "hv")
 legend_4a <- get_plot_component(Fig4a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig4a_nl, legend_4a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig4a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig4a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig4a_Diff
-ggsave(file="Graphs/Fig4a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig4a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -846,10 +847,10 @@ Fig4b_nl <- plot_grid(Fig4b_SOCSIM + theme(legend.position = "none"),
 legend_4b <- get_plot_component(Fig4b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 
 plot_grid(Fig4b_nl, legend_4b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig4b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig4b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig4b_Diff
-ggsave(file="Graphs/Fig4b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig4b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -1005,10 +1006,10 @@ Fig5b_nl <- plot_grid(Fig5b_SOCSIM + theme(legend.position = "none"),
                       Fig5b_SKU + theme(legend.position = "none"), align = "hv")
 legend_5b <- get_plot_component(Fig5b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig5b_nl, legend_5b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig5b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig5b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig5b_Diff
-ggsave(file="Graphs/Fig5b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig5b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -1084,10 +1085,10 @@ Fig5a_nl <- plot_grid(Fig5a_SOCSIM + theme(legend.position = "none"),
                       Fig5a_SKU + theme(legend.position = "none"), align = "hv")
 legend_5a <- get_plot_component(Fig5a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig5a_nl, legend_5a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig5a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig5a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig5a_Diff
-ggsave(file="Graphs/Fig5a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig5a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -1181,10 +1182,10 @@ Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"),
                       Fig6a_SKU + theme(legend.position = "none"), align = "hv")
 legend_6a <- get_plot_component(Fig6a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig6a_nl, legend_6a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig6a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig6a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig6a_Diff
-ggsave(file="Graphs/Fig6a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig6a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 ```
 
 
@@ -1298,10 +1299,10 @@ Fig6b_nl <- plot_grid(Fig6b_SOCSIM + theme(legend.position = "none"),
                       Fig6b_SKU + theme(legend.position = "none"), align = "hv")
 legend_6b <- get_plot_component(Fig6b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig6b_nl, legend_6b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig6b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig6b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig6b_Diff
-ggsave(file="Graphs/Fig6b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig6b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 ```
 
@@ -1445,10 +1446,10 @@ Fig7_nl <- plot_grid(Fig7_SOCSIM + theme(legend.position = "none"),
                       Fig7_SKU + theme(legend.position = "none"), align = "hv")
 legend_7 <- get_plot_component(Fig7_SKU, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig7_nl, legend_7, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig7.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig7.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig7_Diff
-ggsave(file="Graphs/Fig7_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig7_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 ```
 
@@ -1534,10 +1535,10 @@ plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
           rel_heights = c(1.4,0.4), 
           rel_widths = c(0.5,0.5), 
           scale(c(0.7, 0.5)))
-ggsave(file="Graphs/Fig8a.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig8a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig8a_Diff
-ggsave(file="Graphs/Fig8a_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig8a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
                             
 ```
 
@@ -1626,8 +1627,52 @@ Fig8b_nl <- plot_grid(Fig8b_SOCSIM + theme(legend.position = "none"),
                       Fig8b_SKU + theme(legend.position = "none"), align = "hv")
 legend_8b <- get_plot_component(Fig8b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig8b_nl, legend_8b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig8b.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig8b.pdf", width=17, height=9, dpi=300, device = "pdf")
 
 Fig8b_Diff
-ggsave(file="Graphs/Fig8b_Diff.jpg", width=17, height=9, dpi=200)
+ggsave(file="Graphs/Fig8b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+```
+
+```{r}
+Fig_Diff_All <- full_join(SKU %>% 
+                          filter(Fig == "Fig8b") %>% 
+                          select(IDbirthYear, mean_kin_SKU = mean_kin, Type = type),
+                        totalkin_table %>% 
+                          pivot_wider(names_from = Type, values_from = mean_kin) %>%
+                          mutate_at(c(2:10), ~ replace_na(.,0)) %>% 
+                          mutate(alive = grandchild + child + sibchild + sibling + cousin + parent + parsib + grandparent, 
+                                 `registered deceased` = `not living` - alive) %>% 
+                          select(-c(`not living`, alive)) %>%
+                          pivot_longer(cols = c(2:10), 
+                                       names_to = "Type", values_to = "mean_kin_SOCSIM")) %>% 
+  mutate_at(c(2,4), ~ replace_na(.,0)) %>% 
+  mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU,
+         Type = case_when(Type == "registered deceased" ~ "Deceasead kin", 
+                          Type == "grandparent" ~ "Grandparents" ,
+                          Type == "parent" ~ "Parents", 
+                          Type == "parsib" ~ "Aunts and uncles", 
+                          Type == "sibling" ~ "Siblings", 
+                          Type == "cousin" ~ "Cousins", 
+                          Type == "child" ~ "Children", 
+                          Type == "sibchild" ~ "Nieces and nephews", 
+                          Type == "grandchild" ~ "Grandchildren", 
+                          TRUE ~ Type),
+         Type = factor(Type, levels = c("Deceasead kin", "Grandchildren", "Nieces and nephews", 
+                                        "Children", "Cousins", "Siblings", 
+                                        "Aunts and uncles", "Parents", "Grandparents"))) %>% 
+  filter(!is.na(Difference)) %>%
+  ggplot() +
+  geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference), color = "white") +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "Type of Kin", fill = "Difference") + 
+    scale_fill_gradient2(low = "#7A0005", mid = "#FFFFFF", high = "#007A75", midpoint = 0, limits = c(-1.4, 33), oob = scales::squish) +
+  scale_x_continuous(breaks = c(seq(1920, 2010, by = 10), 2017), 
+                     labels = paste(c(seq(1920, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1920, 2010, by = 10), 2017), ")")) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.major = element_blank(), 
+        panel.grid.minor = element_blank(),
+        legend.key.height = unit(1, "line")) +
+  guides(fill = guide_colourbar(barwidth = 10, barheight = 1))
+
+Fig_Diff_All
+ggsave(file="Graphs/Fig_Diff_All.pdf", dpi=300, device = "pdf")
 ```
