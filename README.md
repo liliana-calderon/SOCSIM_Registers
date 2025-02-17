@@ -1,28 +1,41 @@
-Code for reproducible results for the paper 
-“Assessing the validity of register-based and microsimulated kinship networks for demographic research”
+Code for reproducible results for the paper “Assessing the validity of
+register-based and microsimulated kinship networks for demographic
+research”
 ================
 
 - [Introduction](#introduction)
 - [Scripts for reproducible results](#scripts-for-reproducible-results)
+- [References](#references)
 
 # Introduction
 
-Genealogies are promising sources for addressing many questions in
-historical and kinship demography. So far, an incomplete understanding
-of the biases that affect their representativeness has hindered their
-full exploitation. Here, we conduct a series of experiments on synthetic
-populations aimed at understanding how different sources of bias in
-ascendant genealogies can affect the accuracy of demographic estimates.
-We use the SOCSIM demographic microsimulation program and data for
-Sweden from the [Human Fertility Collection
-(HFC)](https://www.fertilitydata.org/) (1751-1890), the [Human Fertility
-Database (HFD)](https://www.humanfertility.org/) (1891-2022), and the
-[Human Mortality Database (HMD)](https://www.mortality.org/)
-(1751-2022). We analyze three sources of bias: selection in direct
-lineages, incomplete reconstruction of family trees, and missing
-information on some subpopulations. We evaluate their effect by
-comparing common demographic measures estimated from
-‘perfectly-recorded’ and ‘bias-infused’ synthetic populations.
+Estimating kinship networks is data-demanding and mainly possible using
+empirical sources or demographic models. Empirical micro-level data,
+like population registers, provide a realistic picture but are scarce
+and limited by truncation and survivorship bias. Demographic models like
+microsimulation use aggregated data, but only minimally account for
+population heterogeneity, family similarity and non-marital fertility.
+We analyse the differences between approaches by examining the
+correspondence in size and structure of kinship networks derived from
+empirical and microsimulated data. We compare the number of kin from
+grandparents to grandchildren for the Swedish population (cohorts
+1915-2017), estimated based on contemporary Swedish population registers
+(Kolk et al. 2023) and the SOCSIM microsimulation programme. We use the
+SOCSIM demographic microsimulation program and data for Sweden from the
+[Human Fertility Collection (HFC)](https://www.fertilitydata.org/)
+(1751-1890), the [Human Fertility Database
+(HFD)](https://www.humanfertility.org/) (1891-2017), and the [Human
+Mortality Database (HMD)](https://www.mortality.org/) (1751-2017). Our
+results show that mean numbers and distributions of most kin are similar
+across both sources. The microsimulation produces slightly lower numbers
+of kin for cohorts unaffected by truncation in the registers, but better
+accounts for kin of early cohorts that are under-registered due to
+missing parent-child links, conditioning on survival or migration.
+Although a systematic comparison of empirical and microsimulated kinship
+networks is only possible for a few countries like Sweden, our
+assessment of the accuracy of synthetic kinship networks may serve as a
+reference for research using microsimulation to study kinship in other
+contexts.
 
 # Scripts for reproducible results
 
@@ -51,10 +64,28 @@ and `rsocsim`. Please, follow these steps:
     instructions on how to install `rsocsim`.  
 4.  Open the provided RStudio project.
 5.  Run the scripts sequentially in the order suggested by the numbers
-    of the files (0-6).
-6.  In scripts 0 and 2, please type your username and password for
+    of the files (0-3).
+6.  In scripts 0 and 1, please type your username and password for
     [HFD](https://www.humanfertility.org/) and
     [HMD](https://www.mortality.org/) in the corresponding space before
     running the code.  
 7.  To get exactly the same simulation results, you should use the same
-    randomly generated seeds mentioned in script 1.
+    randomly generated seed mentioned in script 0.
+
+# References
+
+<div id="refs" class="references csl-bib-body hanging-indent"
+entry-spacing="0">
+
+<div id="ref-kolk_swedish_2023" class="csl-entry">
+
+Kolk, Martin, Linus Andersson, Emma Pettersson, and Sven Drefahl. 2023.
+“The Swedish Kinship Universe: A Demographic Account of the Number of
+Children, Parents, Siblings, Grandchildren, Grandparents, Aunts/Uncles,
+Nieces/Nephews, and Cousins Using National Population Registers.”
+*Demography* 60 (5): 1359–85.
+<https://doi.org/10.1215/00703370-10955240>.
+
+</div>
+
+</div>
