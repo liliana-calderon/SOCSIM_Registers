@@ -251,8 +251,9 @@ supfile <- "Sweden_0_par.sup"
 
 # Random number generator seed:
 seed <- as.character(sample(1:99999, 1, replace = F))
+# Random seed used for this simulation seed <- "22867"
 
-# Save the seed number to use them later to read the data
+# Save the seed number to use them later to read the data 
 save(seed, file = "seed.Rda")
 load("seed.Rda")
 
@@ -266,9 +267,6 @@ end <- Sys.time()
 print(end-start)
 
 # Time difference of 2.178523 days for  1 simulation, with initial opop of 50000 and hetfert 0, with parity-specific rates
-# Time difference of 2.493197 days for  1 simulation, with initial opop of 50000 and hetfert 1, a0.2 b1, with parity-specific rates
-# Time difference of 1.147058 days for  1 simulation, with initial opop of 50000 and hetfert 1, a0.2 b1, with parity-specific rates
-
 #----------------------------------------------------------------------------------------------------
 ## Read the output .opop and .omar files ----
 
