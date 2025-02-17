@@ -1,6 +1,6 @@
 #------------------------------------------------------------------------------------------------------
-# SOCSIM - SOCSIM Registers - Data Format
-# U:/SOCSIM/SOCSIM_Registers/1_Data_Format.R
+# SOCSIM - SOCSIM Registers - Count Simulated kin
+# U:/SOCSIM/SOCSIM_Registers/2_Count_Simulated_Kin.R
 
 ## Get reference table and cohort size from socsim output 
 # that matches the structure of kin counts from the Swedish Kinship Universe
