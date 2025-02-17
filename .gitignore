@@ -48,3 +48,6 @@ z_Simulations/*
 
 # Figures saved for paper 
 Graphs/*
+
+# Previous Rmd script
+3_Compare_Figures.Rmd
