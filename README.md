@@ -1,62 +1,60 @@
-Empirical and microsimulated kinship networks. Comparing and evaluating
-estimates on micro-level data on kin relations for the Swedish
-population
+Code for reproducible results for the paper 
+“Assessing the validity of register-based and microsimulated kinship networks for demographic research”
 ================
-…
-2024-05-06
 
-#### Fig. 1b: Average number of living and dead grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
+- [Introduction](#introduction)
+- [Scripts for reproducible results](#scripts-for-reproducible-results)
 
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-2-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-2-2.png" style="display: block; margin: auto;" />
+# Introduction
 
-#### Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
+Genealogies are promising sources for addressing many questions in
+historical and kinship demography. So far, an incomplete understanding
+of the biases that affect their representativeness has hindered their
+full exploitation. Here, we conduct a series of experiments on synthetic
+populations aimed at understanding how different sources of bias in
+ascendant genealogies can affect the accuracy of demographic estimates.
+We use the SOCSIM demographic microsimulation program and data for
+Sweden from the [Human Fertility Collection
+(HFC)](https://www.fertilitydata.org/) (1751-1890), the [Human Fertility
+Database (HFD)](https://www.humanfertility.org/) (1891-2022), and the
+[Human Mortality Database (HMD)](https://www.mortality.org/)
+(1751-2022). We analyze three sources of bias: selection in direct
+lineages, incomplete reconstruction of family trees, and missing
+information on some subpopulations. We evaluate their effect by
+comparing common demographic measures estimated from
+‘perfectly-recorded’ and ‘bias-infused’ synthetic populations.
 
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-3-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-3-2.png" style="display: block; margin: auto;" />
+# Scripts for reproducible results
 
-#### Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
+**NB**: If you want to re-run the analysis from scratch (i.e., retrieve
+the data from [HFC](https://www.fertilitydata.org/),
+[HFD](https://www.humanfertility.org/), and
+[HMD](https://www.mortality.org/)), run the microsimulations and
+reproduce the results), you need R, some standard packages, `HMDHFDplus`
+and `rsocsim`. Please, follow these steps:
 
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-4-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-4-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-5-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-5-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-6-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-6-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-7-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-7-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-8-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-8-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-9-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-9-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 5a: Proportional distribution of the number of cousins by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-10-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-10-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-11-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-11-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 6b. Average number of parent siblings by birth cohort 1950–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-12-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-12-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-13-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-13-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 8a: Distribution of the total number of kin by birth cohort 1915–2017. SOCSIM outputs
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-14-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-14-2.png" style="display: block; margin: auto;" />
-
-#### Fig. 8b: Average number of all types of kin by birth cohort 1915–2017. Microsimulation - SOCSIM (left) vs Registers - Swedish Kinship Universe (right)
-
-<img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-15-1.png" style="display: block; margin: auto;" /><img src="3_Compare_Figures_files/figure-gfm/unnamed-chunk-15-2.png" style="display: block; margin: auto;" />
+1.  Download this repository to your computer.  
+2.  Register at [HFD](https://www.humanfertility.org/) and
+    [HMD](https://www.mortality.org/) and install `HMDHFDplus`.  
+    To write the input rate files and to compare the simulation results
+    with the original input data, we use data from
+    [HFC](https://www.fertilitydata.org/),
+    [HFD](https://www.humanfertility.org/), and
+    [HMD](https://www.mortality.org/). The last two are retrieved
+    through the `HMDHFDplus` package. To gain full access to the
+    databases, you need to become a registered user at both databases,
+    after accepting the user agreement on their websites:
+    <https://www.humanfertility.org/Account/Auth> and
+    <https://mortality.org/Account/Auth>.
+3.  Install `rsocsim`.  
+    Please go to <https://github.com/MPIDR/rsocsim> to find the
+    instructions on how to install `rsocsim`.  
+4.  Open the provided RStudio project.
+5.  Run the scripts sequentially in the order suggested by the numbers
+    of the files (0-6).
+6.  In scripts 0 and 2, please type your username and password for
+    [HFD](https://www.humanfertility.org/) and
+    [HMD](https://www.mortality.org/) in the corresponding space before
+    running the code.  
+7.  To get exactly the same simulation results, you should use the same
+    randomly generated seeds mentioned in script 1.
