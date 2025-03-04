@@ -29,6 +29,7 @@ library(ggtext)
 library(magick)
 library(RColorBrewer)
 library(readxl)
+library(viridis)
 
 ## Load reference table, N_Cohort and N_Cohort_sex
 load("Output_/reference_table_SweBorn.RData")
@@ -1999,23 +2000,23 @@ ggsave(file="Graphs/Fig8b.pdf", width=17, height=9, dpi=300, device = "pdf")
 Fig8b_Diff
 ggsave(file="Graphs/Fig8b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 #------------------------------------------------------------------------------------------------------
-## Fig. 1 Difference in the average number of all types of kin by birth cohort 1915–2017 ----
+## Fig +. Difference in the average number of all types of kin by birth cohort 1915–2017 ----
 
-# Plot difference SOCSIM microsimulation - Swedish registers (SKU) as a heat map
-Fig_Diff_All <- full_join(SKU %>% 
-                            filter(Fig == "Fig8b") %>% 
-                            select(IDbirthYear, mean_kin_SKU = mean_kin, Type = type),
-                          totalkin_table %>% 
-                            pivot_wider(names_from = Type, values_from = mean_kin) %>%
-                            mutate_at(c(2:10), ~ replace_na(.,0)) %>% 
-                            mutate(alive = grandchild + child + sibchild + sibling + cousin + parent + parsib + grandparent, 
-                                   `registered deceased` = `not living` - alive) %>% 
-                            select(-c(`not living`, alive)) %>%
-                            pivot_longer(cols = c(2:10), 
-                                         names_to = "Type", values_to = "mean_kin_SOCSIM")) %>% 
+# Prepare the data and add variable to distinguish alive and deceased kin
+Diff_All <- full_join(SKU %>% 
+                        filter(Fig == "Fig8b") %>% 
+                        select(IDbirthYear, mean_kin_SKU = mean_kin, Type = type),
+                      totalkin_table %>% 
+                        pivot_wider(names_from = Type, values_from = mean_kin) %>%
+                        mutate_at(c(2:10), ~ replace_na(.,0)) %>% 
+                        mutate(alive = grandchild + child + sibchild + sibling + cousin + parent + parsib + grandparent, 
+                               `registered deceased` = `not living` - alive) %>% 
+                        select(-c(`not living`, alive)) %>%
+                        pivot_longer(cols = c(2:10), 
+                                     names_to = "Type", values_to = "mean_kin_SOCSIM")) %>% 
   mutate_at(c(2,4), ~ replace_na(.,0)) %>% 
   mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU,
-         Type = case_when(Type == "registered deceased" ~ "Deceasead kin", 
+         Type = case_when(Type == "registered deceased" ~ "Deceased kin", 
                           Type == "grandparent" ~ "Grandparents" ,
                           Type == "parent" ~ "Parents", 
                           Type == "parsib" ~ "Aunts and uncles", 
@@ -2025,14 +2026,20 @@ Fig_Diff_All <- full_join(SKU %>%
                           Type == "sibchild" ~ "Nieces and nephews", 
                           Type == "grandchild" ~ "Grandchildren", 
                           TRUE ~ Type),
-         Type = factor(Type, levels = c("Deceasead kin", "Grandchildren", "Nieces and nephews", 
+         Type = factor(Type, levels = c("Deceased kin", "Grandchildren", "Nieces and nephews", 
                                         "Children", "Cousins", "Siblings", 
-                                        "Aunts and uncles", "Parents", "Grandparents"))) %>% 
-  filter(!is.na(Difference)) %>% 
+                                        "Aunts and uncles", "Parents", "Grandparents")),
+         Type2 = ifelse(Type == "Deceased kin", "Deceased", "Alive")) %>% 
+  filter(!is.na(Difference))
+
+# Plot difference in Kin Alive SOCSIM microsimulation - Swedish registers (SKU) as a heat map
+Fig_Dif_Alive <- 
+  Diff_All %>%
+  filter(Type2 == "Alive") %>%
   ggplot() +
   geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference)) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Type of Kin", fill = "Difference") + 
-  scale_fill_viridis_c(option = "G", direction = -1, oob = scales::squish) +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "", fill = "Difference") +
+  scale_fill_viridis_c(option = "D", direction = -1, oob = scales::squish) +
   scale_x_continuous(breaks = c(seq(1920, 2010, by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1920, 2010, by = 10), 2017), ")")) +
   theme_bw() + theme_graphs2() +
@@ -2041,10 +2048,34 @@ Fig_Diff_All <- full_join(SKU %>%
         panel.grid.major.y = element_blank(),
         legend.key.height = unit(1, "line"))
 
+# Plot difference in Kin Deceased SOCSIM microsimulation - Swedish registers (SKU) as a heat map
+Fig_Dif_Deceased <- 
+  Diff_All %>%
+  filter(Type2 == "Deceased") %>%
+  ggplot() +
+  geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference)) +
+  labs(x = "Birth Cohort \n(Age in 2017)", y = "", fill = "Difference") +
+  scale_fill_viridis_c(option = "F", direction = -1, oob = scales::squish) +
+  scale_x_continuous(breaks = c(seq(1920, 2010, by = 10), 2017), 
+                     labels = paste(c(seq(1920, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1920, 2010, by = 10), 2017), ")")) +
+  theme_bw() + theme_graphs2() +
+  theme(panel.grid.major.x = element_blank(), 
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_blank(),
+        legend.key.height = unit(1, "line"))
+
+# Save figure with difference SOCSIM - Swedish Registers only for living kin 
+Fig_Dif_Alive + theme(legend.position = "right")
+ggsave(file="Graphs/Fig_Diff_Alive.pdf", width=17, height=9, dpi=300, device = "pdf")
+
+# Combine the plots for living and deceased kin
+Fig_Diff_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"), 
+                          Fig_Dif_Deceased + theme(legend.position = "right"),
+                          ncol= 1, align = "v", rel_heights = c(8, 3.7))
+
+# Save figure with difference SOCSIM - Swedish Registers with living and deceased kin
 Fig_Diff_All
-ggsave(file="Graphs/Fig_Diff_All2.pdf", width=17, height=9, dpi=300, device = "pdf")
-
-
+ggsave(file="Graphs/Fig_Diff_All.pdf", width=17, height=9, dpi=300, device = "pdf")
 #------------------------------------------------------------------------------------------------------
 # Fig. 6a and 7: Average number of living, dead, and unregistered grandparents and parents by birth cohort ----
 
