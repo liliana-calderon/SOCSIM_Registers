@@ -11,7 +11,7 @@
 # created by Diego Alburez-Gutierrez (2021-05-24)
 
 # Created on 30-11-2023
-# Last modified on 04-03-2025
+# Last modified on 05-03-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
@@ -868,10 +868,9 @@ sibchild_table <- reference_table_SweBorn %>%
   filter(refGroup == "sibchild" & !is.na(refID) & IDbirthYear >= 1932) %>%
   mutate(isAlive = is.na(refIDdeathYear),
          Type = paste(refTypeIIII, refTypeIII, "side", sep = " "),
-         Type = factor(Type, levels = c("half brother side","full brother side","half sister side","full sister side"))) %>%
+         Type = factor(Type, levels = c("half brother side", "half sister side", "full brother side", "full sister side"))) %>%
   setDT() %>% 
   left_join(., select(N_Cohort, IDbirthYear, N_17), by = c("IDbirthYear"))
-
 
 sibchild_table  <- rbind(sibchild_table[, .(mean_kin = .N / N_17, Type = "not living"),keyby = .(IDbirthYear)],
                          sibchild_table[isAlive == TRUE, .(mean_kin = .N / N_17),keyby = .(IDbirthYear, Type)]) %>%
@@ -887,13 +886,13 @@ Fig3_SOCSIM <- ggplot() +
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
   labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces/Nephews in Microsimulation", fill = "") +
-  scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#2C7FB8", "#41B6C4", "#253494"),
                     limits = c(levels=c("not living", 
-                                        "half brother side", "full brother side",
-                                        "half sister side", "full sister side")),
+                                        "half brother side", "half sister side", 
+                                        "full brother side", "full sister side")),
                     labels = c("Deceased nieces \n and nephews", 
-                               "Half brother's side","Full brother's side",
-                               "Half sister's side","Full sister's side")) +
+                               "Half brother's side", "Half sister's side", 
+                               "Full brother's side", "Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -901,20 +900,21 @@ Fig3_SOCSIM <- ggplot() +
   guides(fill = guide_legend(override.aes = list(color = 0), nrow = 1, byrow = TRUE))
 
 # Plot from Swedish Kinship Universe
-Fig3_SKU <- ggplot() +
+Fig3_SKU <- 
+  ggplot() +
   geom_area(data = SKU %>%
               mutate(type = factor(type,
                                    levels = c("registered deceased",
-                                              "half brother side", "full brother side",
-                                              "half sister side", "full sister side"))) %>% 
+                                              "half brother side", "half sister side", 
+                                              "full brother side", "full sister side"))) %>% 
               filter(Fig == "Fig3" & type == "registered deceased"), 
             mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
             color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = SKU %>%
               mutate(type = factor(type,
                                    levels = c("registered deceased",
-                                              "half brother side", "full brother side",
-                                              "half sister side", "full sister side"))) %>% 
+                                              "half brother side", "half sister side", 
+                                              "full brother side", "full sister side"))) %>% 
               filter(Fig == "Fig3" & type != "registered deceased"), 
             mapping = aes(x = IDbirthYear, y = mean_kin, fill = type), 
             color = "#4D4D4D", lwd = 0.5) +
@@ -922,12 +922,13 @@ Fig3_SKU <- ggplot() +
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
   labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Nieces/Nephews in Registers", fill = "") +
-  scale_fill_manual(values = c( "#FFE6CC","#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_fill_manual(values = c( "#FFE6CC","#A1DAB4",  "#2C7FB8","#41B6C4", "#253494"),
                     limits = c("registered deceased",
-                               "half brother side", "full brother side",
-                               "half sister side", "full sister side"),
-                    labels = c("Deceased nieces \n and nephews", "Half brother's side", "Full brother's side", 
-                               "Half sister's side","Full sister's side")) +
+                               "half brother side", "half sister side", 
+                               "full brother side", "full sister side"),
+                    labels = c("Deceased nieces \n and nephews", 
+                               "Half brother's side", "Half sister's side",
+                               "Full brother's side", "Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -967,13 +968,13 @@ Fig3_Diff <- left_join(SKU %>%
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
   labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Nieces/Nephews", 
        color = "") +
-  scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#2C7FB8", "#41B6C4", "#253494"),
                      limits = c(levels=c("not living", 
-                                         "half brother side", "full brother side",
-                                         "half sister side", "full sister side")),
+                                        "half brother side", "half sister side", 
+                                        "full brother side", "full sister side")),
                      labels = c("Deceased nieces \n and nephews", 
-                                "Half brother's side","Full brother's side",
-                                "Half sister's side","Full sister's side")) +
+                               "Half brother's side", "Half sister's side", 
+                               "Full brother's side", "Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", 
                                     "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -2000,7 +2001,7 @@ ggsave(file="Graphs/Fig8b.pdf", width=17, height=9, dpi=300, device = "pdf")
 Fig8b_Diff
 ggsave(file="Graphs/Fig8b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
 #------------------------------------------------------------------------------------------------------
-## Fig +. Difference in the average number of all types of kin by birth cohort 1915–2017 ----
+## Fig. I. Difference in the average number of all types of kin by birth cohort 1915–2017 ----
 
 # Prepare the data and add variable to distinguish alive and deceased kin
 Diff_All <- full_join(SKU %>% 
@@ -2077,7 +2078,7 @@ Fig_Diff_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"),
 Fig_Diff_All
 ggsave(file="Graphs/Fig_Diff_All.pdf", width=17, height=9, dpi=300, device = "pdf")
 #------------------------------------------------------------------------------------------------------
-# Fig. 6a and 7: Average number of living, dead, and unregistered grandparents and parents by birth cohort ----
+## Fig. II: Average number of living, dead, and unregistered grandparents and parents by birth cohort ----
 
 # Plot difference SOCSIM microsimulation - Swedish registers (SKU) as a heat map
 
