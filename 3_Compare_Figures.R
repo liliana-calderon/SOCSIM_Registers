@@ -11,7 +11,7 @@
 # created by Diego Alburez-Gutierrez (2021-05-24)
 
 # Created on 30-11-2023
-# Last modified on 05-03-2025
+# Last modified on 20-03-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
@@ -1496,7 +1496,7 @@ Fig6a_SKU <- SKU %>%
             color = "#4D4D4D", lwd = 0.5) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
   labs(x = "Birth Cohort \n(Age in 2017)", y = "Average Number of Parents in Registers", fill = "") +
-  scale_fill_manual(values = c("#FED98E", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
+  scale_fill_manual(values = c("#FD6242", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -1530,7 +1530,7 @@ Fig6a_Diff <- left_join(SKU %>%
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
   labs(x = "Birth Cohort \n(Age in 2017)", y = "Difference between the Average Number of Parents", color = "") +
-  scale_color_manual(values = c("#FED98E", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
+  scale_color_manual(values = c("#FD6242", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                      limits = c("unregistered","registered deceased", "father", "mother"),
                      labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
@@ -1543,7 +1543,7 @@ Fig6a_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"), 
                       Fig6a_SKU + theme(legend.position = "none"), align = "hv")
-legend_6a <- get_plot_component(Fig6a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+legend_6a <- get_plot_component(Fig6a_SKU, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig6a_nl, legend_6a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig6a.pdf", width=17, height=9, dpi=300, device = "pdf")
 
@@ -1728,7 +1728,8 @@ SKU_7 <- SKU %>%
                                   "grandfather (father's side)",
                                   "grandmother (father's side)",
                                   "grandfather (mother's side)",
-                                  "grandmother (mother's side)")))
+                                  "grandmother (mother's side)")), 
+         mean_kin = replace_na(mean_kin, 0))
 
 Fig7_SKU  <- ggplot() +
   geom_area(data = SKU_7 %>% 
@@ -1744,7 +1745,7 @@ Fig7_SKU  <- ggplot() +
             mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
             color = "#4D4D4D", lwd = 0.7) +
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  scale_fill_manual(values = c("#FED98E", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_fill_manual(values = c("#FD6242", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                     limits = c("unregistered", 
                                "registered deceased", 
                                "grandfather (father's side)", 
@@ -1794,7 +1795,7 @@ Fig7_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  scale_color_manual(values = c("#FED98E", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
+  scale_color_manual(values = c("#FD6242", "#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"),
                      limits = c("unregistered", 
                                 "registered deceased", 
                                 "grandfather (father's side)", 
