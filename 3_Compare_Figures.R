@@ -11,7 +11,7 @@
 # created by Diego Alburez-Gutierrez (2021-05-24)
 
 # Created on 30-11-2023
-# Last modified on 20-03-2025
+# Last modified on 25-03-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
@@ -496,10 +496,12 @@ Fig2b_nl_W <- plot_grid(Fig2b_SOCSIM_W + theme(legend.position = "none"),
 legend_2b_W <- get_plot_component(Fig2b_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig2b_nl_W, legend_2b_W, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig2b_W.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2b_W.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers
 Fig2b_Diff_W
 ggsave(file="Graphs/Fig2b_Diff_W.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2b_Diff_W.svg", width=17, height=9, dpi=300, device = "svg")
 
 #------------------------------------------------------------------------------------------------------
 # Plot from SOCSIM output for men only
@@ -776,12 +778,14 @@ Fig2a_nl_W <- plot_grid(Fig2a_SOCSIM_W + theme(legend.position = "none"),
 legend_2a_W <- get_plot_component(Fig2a_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig2a_nl_W, legend_2a_W, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig2a_W.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2a_W.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers for women only
 Fig2a_Diff_W
 ggsave(file="Graphs/Fig2a_Diff_W.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2a_Diff_W.svg", width=17, height=9, dpi=300, device = "svg")
 #------------------------------------------------------------------------------------------------------
-# Plot from SOCSIM output for women only
+# Plot from SOCSIM output for men only
 
 Fig2a_SOCSIM_M <- ggplot(data = children_dist_Table_living %>% filter(Kon == "1")) +
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
@@ -1342,10 +1346,12 @@ Fig5b_nl <- plot_grid(Fig5b_SOCSIM + theme(legend.position = "none"),
 legend_5b <- get_plot_component(Fig5b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig5b_nl, legend_5b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig5b.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig5b.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers
 Fig5b_Diff
 ggsave(file="Graphs/Fig5b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig5b_Diff.svg", width=17, height=9, dpi=300, device = "svg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 5a: Proportional distribution of the number of cousins by birth cohort ----
 
@@ -1546,10 +1552,12 @@ Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"),
 legend_6a <- get_plot_component(Fig6a_SKU, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig6a_nl, legend_6a, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig6a.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6a.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers
 Fig6a_Diff
 ggsave(file="Graphs/Fig6a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6a_Diff.svg", width=17, height=9, dpi=300, device = "svg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 6b. Average number of parent siblings by birth cohort 1950–2017 ----
 
@@ -1668,10 +1676,12 @@ Fig6b_nl <- plot_grid(Fig6b_SOCSIM + theme(legend.position = "none"),
 legend_6b <- get_plot_component(Fig6b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig6b_nl, legend_6b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig6b.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6b.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers
 Fig6b_Diff
 ggsave(file="Graphs/Fig6b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6b_Diff.svg", width=17, height=9, dpi=300, device = "svg")
 
 #------------------------------------------------------------------------------------------------------
 ## Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort ----
@@ -1997,6 +2007,7 @@ Fig8b_nl <- plot_grid(Fig8b_SOCSIM + theme(legend.position = "none"),
 legend_8b <- get_plot_component(Fig8b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
 plot_grid(Fig8b_nl, legend_8b, ncol = 1, rel_heights = c(1, .1))
 ggsave(file="Graphs/Fig8b.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig8b.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Save figure with difference SOCSIM - Swedish Registers
 Fig8b_Diff
@@ -2069,6 +2080,7 @@ Fig_Dif_Deceased <-
 # Save figure with difference SOCSIM - Swedish Registers only for living kin 
 Fig_Dif_Alive + theme(legend.position = "right")
 ggsave(file="Graphs/Fig_Diff_Alive.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig_Diff_Alive.svg", width=17, height=9, dpi=300, device = "svg")
 
 # Combine the plots for living and deceased kin
 Fig_Diff_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"), 
@@ -2078,6 +2090,7 @@ Fig_Diff_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"),
 # Save figure with difference SOCSIM - Swedish Registers with living and deceased kin
 Fig_Diff_All
 ggsave(file="Graphs/Fig_Diff_All.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig_Diff_All.svg", width=17, height=9, dpi=300, device = "svg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. II: Average number of living, dead, and unregistered grandparents and parents by birth cohort ----
 
