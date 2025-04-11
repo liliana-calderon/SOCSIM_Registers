@@ -1,7 +1,10 @@
 #----------------------------------------------------------------------------------------------------
 # Functions to get Reference Table and add birthyear and deathyear of ID's and refIDs
-# Obtained from Martin Kolk
-# Last (slightly) modified on the 22-07-2024
+
+# This code is a slightly modified version of the R-code written 
+# for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson
+
+# Last modified on the 11-04-2025
 #----------------------------------------------------------------------------------------------------
 
 getRefTable <- function(df , ref_TypeI){
@@ -86,13 +89,9 @@ getRefTable <- function(df , ref_TypeI){
              partner     = case_when(ID == LopNrMor ~ LopNrFar, ID == LopNrFar ~ LopNrMor)) %>%
       select(ID, refID, refTypeI, refTypeII, FoddAr, partner, refTypeIIII)
 
-    # Original code changed to tidyverse language because of an error
-    # child_df <- child_df[order(ID, FoddAr), i := rleid(partner), by = .(ID)]
-    # Error in `[.data.frame`(child_df, order(ID, FoddAr), `:=`(i, rleid(partner)),  : 
-    # unused argument (by = .(ID))
-    
    child_df <- child_df %>%
-     arrange(ID, FoddAr) %>%
+     # Original code changed to tidyverse language because of an error
+     arrange(ID, FoddAr) %>% 
      group_by(ID) %>%
      mutate(i = data.table::rleid(partner)) %>% 
      ungroup() %>% 

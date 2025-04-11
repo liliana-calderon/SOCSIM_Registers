@@ -2,13 +2,11 @@
 # SOCSIM - SOCSIM Registers - Count Simulated kin
 # U:/SOCSIM/SOCSIM_Registers/2_Count_Simulated_Kin.R
 
-## Get reference table and cohort size from socsim output 
+## Get reference table and cohort size from SOCSIM output 
 # that matches the structure of kin counts from the Swedish Kinship Universe
 
 # Created on 21-11-2023
-# Last modified on 23-07-2024
-
-# This code is an adapted version of the 2_socsim_kin_structures.R created by Diego Alburez-Gutierrez
+# Last modified on 11-04-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 # Prevent scientific notation
@@ -19,7 +17,9 @@ library(data.table)
 library(tidyverse)
 library(reshape2)
 
-# Load the functions getRefTable and AddBirthsDeaths (from kin_count_sweden)
+# Load the functions getRefTable and AddBirthsDeaths
+# These are a slightly modified version of the R-code written 
+# for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson
 source("Functions/Functions_Kin_Count.R")
 
 #------------------------------------------------------------------------------------------------------
@@ -60,10 +60,10 @@ popdat <- opop2 %>%
 
 ## 2. Create kinship objects 
 
-# Get Ref Table (from Martin's functions)
+# Get Reference Table using the getRefTable() function
 refTableList <- getRefTable(df = popdat, ref_TypeI = "all")
 
-# Add years of birth and death (from Martin's functions)
+# Add years of birth and death 
 SimRefTableList <- lapply(refTableList, AddBirthsDeaths, df = opop2)
 
 reference_table_SweBorn <- 

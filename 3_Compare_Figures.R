@@ -2,16 +2,15 @@
 # SOCSIM - SOCSIM Registers - Compare figures from SOCSIM microsimulation and Swedish Registers
 # U:/SOCSIM/SOCSIM_Registers/3_Compare_Figures.R
 
-# Replication and comparison of all plots from the Swedish Kinship Universe using SOCSIM outputs 
-# formatted in 2_Count_Simulated_Kin.R as reference tables and cohort size 
-# to match the structure of kin counts used in the Swedish Kinship Universe
+# Replication of figures from the Swedish Kinship Universe (Kolk et al., 2023) using SOCSIM outputs 
+# (formatted in 2_Count_Simulated_Kin.R as reference tables and cohort size)
+# and reproduction of the original figures based on the agregated data provided by Kolk et al., 2023
 
-# This code is a modified and extended version of the 3_socsim_plots_improved.Rmd 
-# Attempting to replicate Martin's plot with SOCSIM data
-# created by Diego Alburez-Gutierrez (2021-05-24)
+# This code is a modified and extended version of the the R-code written 
+# for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson 
 
 # Created on 30-11-2023
-# Last modified on 25-03-2025
+# Last modified on 11-04-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
@@ -1870,7 +1869,8 @@ boxplotTable_kin <- violinTable_kin[,.(n = n, q=cumsum(freq/N_17)),keyby = .(IDb
   select(IDbirthYear,lim, n)  %>%
   dcast(.,IDbirthYear ~ lim, value.var = "n")
 
-annotate_living <-left_join(select(boxplotTable_kin_living, IDbirthYear, qmiddle), violinTable_kin_living, by = c("IDbirthYear"="IDbirthYear", "qmiddle"="n" ))
+annotate_living <-left_join(select(boxplotTable_kin_living, IDbirthYear, qmiddle), 
+                            violinTable_kin_living, by = c("IDbirthYear"="IDbirthYear", "qmiddle"="n" ))
 
 # Plot from SOCSIM output
 Fig8a_SOCSIM <- ggplot() +
