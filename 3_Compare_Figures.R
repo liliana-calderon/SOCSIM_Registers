@@ -118,14 +118,30 @@ Fig1b_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig1b_nl <- plot_grid(Fig1b_SOCSIM + theme(legend.position = "none"), 
-                      Fig1b_SKU + theme(legend.position = "none"), align = "hv")
-legend_1b <- get_plot_component(Fig1b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig1b_nl, legend_1b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig1b.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig1b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.05, label_y = 0.6,
+                      align = "hv")
 
-# Save figure with difference SOCSIM vs Swedish Registers
-Fig1b_Diff
-ggsave(file="Graphs/Fig1b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_1b <- get_plot_component(Fig1b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig1b_Est <- plot_grid(Fig1b_nl, legend_1b, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig1b <- plot_grid(Fig1b_Est, Fig1b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.04, label_y = 0.62,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig1b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig1b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig1b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 1a: Proportional distribution of the number of living grandchildren in 2017 by sex and birth cohort ----
 
@@ -287,14 +303,30 @@ Fig1a_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig1a_nl <- plot_grid(Fig1a_SOCSIM + theme(legend.position = "none"), 
-                      Fig1a_SKU + theme(legend.position = "none"), align = "hv")
-legend_1a <- get_plot_component(Fig1a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig1a_nl, legend_1a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig1a.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig1a_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.05, label_y = 0.6,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig1a_Diff
-ggsave(file="Graphs/Fig1a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_1a <- get_plot_component(Fig1a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig1a_Est <- plot_grid(Fig1a_nl, legend_1a, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig1a <- plot_grid(Fig1a_Est, Fig1a_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.04, label_y = 0.64,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig1a.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig1a.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig1a.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 2b: Average number of living and dead children in 2017 by sex and birth cohort ----
 
@@ -399,14 +431,30 @@ Fig2b_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2b_nl <- plot_grid(Fig2b_SOCSIM + theme(legend.position = "none"), 
-                      Fig2b_SKU + theme(legend.position = "none"), align = "hv")
-legend_2b <- get_plot_component(Fig2b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2b_nl, legend_2b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2b.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig2b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.05, label_y = 0.6,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig2b_Diff
-ggsave(file="Graphs/Fig2b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_2b <- get_plot_component(Fig2b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig2b_Est <- plot_grid(Fig2b_nl, legend_2b, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig2b <- plot_grid(Fig2b_Est, Fig2b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.04, label_y = 0.62,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 
 #------------------------------------------------------------------------------------------------------
 # Plot from SOCSIM output for women only 
@@ -491,17 +539,30 @@ Fig2b_Diff_W <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2b_nl_W <- plot_grid(Fig2b_SOCSIM_W + theme(legend.position = "none"), 
-                      Fig2b_SKU_W + theme(legend.position = "none"), align = "hv")
+                      Fig2b_SKU_W + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.13, label_y = 0.97,
+                      align = "hv")
+
+# Extract the legend from SOCSIM plot
 legend_2b_W <- get_plot_component(Fig2b_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2b_nl_W, legend_2b_W, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2b_W.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig2b_W.svg", width=17, height=9, dpi=300, device = "svg")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig2b_Diff_W
-ggsave(file="Graphs/Fig2b_Diff_W.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig2b_Diff_W.svg", width=17, height=9, dpi=300, device = "svg")
+# Stack figure and legend from estimates comparison
+Fig2b_Est_W <- plot_grid(Fig2b_nl_W, legend_2b_W, 
+                         ncol = 1, rel_heights = c(1, .1))
 
+# Combine comparison panel and difference plot
+Fig2b_W <- plot_grid(Fig2b_Est_W, Fig2b_Diff_W,
+                     ncol = 1, rel_heights = c(1, 1),
+                     labels = c("", "c"),
+                     label_x = 0.07, label_y = 0.97,
+                     label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2b_W.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2b_W.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2b_W.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 # Plot from SOCSIM output for men only
 
@@ -584,16 +645,33 @@ Fig2b_Diff_M <- left_join(SKU %>%
         strip.placement = "outside")+
   guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-# Save figure with comparison SOCSIM vs Swedish Registers for men only
+# Save figure with comparison SOCSIM vs Swedish Registers
 Fig2b_nl_M <- plot_grid(Fig2b_SOCSIM_M + theme(legend.position = "none"), 
-                        Fig2b_SKU_M + theme(legend.position = "none"), align = "hv")
-legend_2b_M <- get_plot_component(Fig2b_SOCSIM_M, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2b_nl_M, legend_2b_M, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2b_M.pdf", width=17, height=9, dpi=300, device = "pdf")
+                        Fig2b_SKU_M + theme(legend.position = "none"), 
+                        labels = c("a", "b"), 
+                        label_size = 30,
+                        label_x = 0.13, label_y = 0.97,
+                        align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers for men only
-Fig2b_Diff_M
-ggsave(file="Graphs/Fig2b_Diff_M.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_2b_M <- get_plot_component(Fig2b_SOCSIM_M, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig2b_Est_M <- plot_grid(Fig2b_nl_M, legend_2b_M, 
+                         ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig2b_M <- plot_grid(Fig2b_Est_M, Fig2b_Diff_M,
+                     ncol = 1, rel_heights = c(1, 1),
+                     labels = c("", "c"),
+                     label_x = 0.07, label_y = 0.97,
+                     label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2b_M.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2b_M.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2b_M.jpeg", width=17, height=19, dpi=300, device = "jpeg")
+
 #------------------------------------------------------------------------------------------------------
 ## Fig. 2a: Proportional distribution of the number of living children in 2017 by sex and birth cohort ----
 
@@ -693,14 +771,30 @@ Fig2a_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2a_nl <- plot_grid(Fig2a_SOCSIM + theme(legend.position = "none"), 
-                      Fig2a_SKU + theme(legend.position = "none"), align = "hv")
-legend_2a <- get_plot_component(Fig2a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2a_nl, legend_2a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2a.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig2a_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.05, label_y = 0.6,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig2a_Diff
-ggsave(file="Graphs/Fig2a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_2a <- get_plot_component(Fig2a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig2a_Est <- plot_grid(Fig2a_nl, legend_2a, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig2a <- plot_grid(Fig2a_Est, Fig2a_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.04, label_y = 0.62,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2a.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2a.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2a.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 # Plot from SOCSIM output for women only
 
@@ -771,18 +865,32 @@ Fig2a_Diff_W <- left_join(SKU %>%
         strip.placement = "outside")+
   guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-# Save figure with comparison SOCSIM vs Swedish Registers for women only
+# Save figure with comparison SOCSIM vs Swedish Registers
 Fig2a_nl_W <- plot_grid(Fig2a_SOCSIM_W + theme(legend.position = "none"), 
-                      Fig2a_SKU_W + theme(legend.position = "none"), align = "hv")
-legend_2a_W <- get_plot_component(Fig2a_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2a_nl_W, legend_2a_W, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2a_W.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig2a_W.svg", width=17, height=9, dpi=300, device = "svg")
+                        Fig2a_SKU_W + theme(legend.position = "none"), 
+                        labels = c("a", "b"), 
+                        label_size = 30,
+                        label_x = 0.13, label_y = 0.97,
+                        align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers for women only
-Fig2a_Diff_W
-ggsave(file="Graphs/Fig2a_Diff_W.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig2a_Diff_W.svg", width=17, height=9, dpi=300, device = "svg")
+# Extract the legend from SOCSIM plot
+legend_2a_W <- get_plot_component(Fig2a_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig2a_Est_W <- plot_grid(Fig2a_nl_W, legend_2a_W, 
+                         ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig2a_W <- plot_grid(Fig2a_Est_W, Fig2a_Diff_W,
+                     ncol = 1, rel_heights = c(1, 1),
+                     labels = c("", "c"),
+                     label_x = 0.07, label_y = 0.97,
+                     label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2a_W.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2a_W.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2a_W.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 # Plot from SOCSIM output for men only
 
@@ -853,16 +961,32 @@ Fig2a_Diff_M <- left_join(SKU %>%
         strip.placement = "outside")+
   guides(color = guide_legend(reverse = TRUE, nrow = 1, byrow = TRUE))
 
-# Save figure with comparison SOCSIM vs Swedish Registers for men only
+# Save figure with comparison SOCSIM vs Swedish Registers
 Fig2a_nl_M <- plot_grid(Fig2a_SOCSIM_M + theme(legend.position = "none"), 
-                        Fig2a_SKU_M + theme(legend.position = "none"), align = "hv")
-legend_2a_M <- get_plot_component(Fig2a_SOCSIM_M, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig2a_nl_M, legend_2a_M, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig2a_M.pdf", width=17, height=9, dpi=300, device = "pdf")
+                        Fig2a_SKU_M + theme(legend.position = "none"), 
+                        labels = c("a", "b"), 
+                        label_size = 30,
+                        label_x = 0.13, label_y = 0.97,
+                        align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers for men only
-Fig2a_Diff_M
-ggsave(file="Graphs/Fig2a_Diff_M.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_2a_M <- get_plot_component(Fig2a_SOCSIM_M, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig2a_Est_M <- plot_grid(Fig2a_nl_M, legend_2a_M, 
+                         ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig2a_M <- plot_grid(Fig2a_Est_M, Fig2a_Diff_M,
+                     ncol = 1, rel_heights = c(1, 1),
+                     labels = c("", "c"),
+                     label_x = 0.07, label_y = 0.97,
+                     label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig2a_M.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig2a_M.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig2a_M.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 3: Average number of nieces and nephews by birth cohort and through full or half-sister/brother ----
 
@@ -988,14 +1112,30 @@ Fig3_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig3_nl <- plot_grid(Fig3_SOCSIM + theme(legend.position = "none"), 
-                     Fig3_SKU + theme(legend.position = "none"), align = "hv")
-legend_3 <- get_plot_component(Fig3_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig3_nl, legend_3, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig3.pdf", width=17, height=9, dpi=300, device = "pdf")
+                     Fig3_SKU + theme(legend.position = "none"), 
+                     labels = c("a", "b"), 
+                     label_size = 30,
+                     label_x = 0.13, label_y = 0.97,
+                     align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig3_Diff
-ggsave(file="Graphs/Fig3_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_3 <- get_plot_component(Fig3_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig3_Est <- plot_grid(Fig3_nl, legend_3, 
+                      ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig3 <- plot_grid(Fig3_Est, Fig3_Diff,
+                  ncol = 1, rel_heights = c(1, 1),
+                  labels = c("", "c"),
+                  label_x = 0.07, label_y = 0.97,
+                  label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig3.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig3.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig3.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 4a: Average number of siblings by birth cohort and whether full or half-sibling by birth cohort ----
 
@@ -1103,14 +1243,30 @@ Fig4a_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig4a_nl <- plot_grid(Fig4a_SOCSIM + theme(legend.position = "none"), 
-                      Fig4a_SKU + theme(legend.position = "none"), align = "hv")
-legend_4a <- get_plot_component(Fig4a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig4a_nl, legend_4a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig4a.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig4a_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.14, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig4a_Diff
-ggsave(file="Graphs/Fig4a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_4a <- get_plot_component(Fig4a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig4a_Est <- plot_grid(Fig4a_nl, legend_4a, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig4a <- plot_grid(Fig4a_Est, Fig4a_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.07, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig4a.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig4a.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig4a.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 4b: Proportional distribution of the number of siblings (half- or full) by birth cohort ----
 
@@ -1204,14 +1360,30 @@ Fig4b_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig4b_nl <- plot_grid(Fig4b_SOCSIM + theme(legend.position = "none"), 
-                      Fig4b_SKU + theme(legend.position = "none"), align = "hv")
-legend_4b <- get_plot_component(Fig4b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig4b_nl, legend_4b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig4b.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig4b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.14, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig4b_Diff
-ggsave(file="Graphs/Fig4b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_4b <- get_plot_component(Fig4b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig4b_Est <- plot_grid(Fig4b_nl, legend_4b, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig4b <- plot_grid(Fig4b_Est, Fig4b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.07, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig4b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig4b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig4b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 5b: Average number of cousins by birth cohort and by type of aunt or uncle ----
 
@@ -1341,16 +1513,30 @@ Fig5b_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig5b_nl <- plot_grid(Fig5b_SOCSIM + theme(legend.position = "none"), 
-                      Fig5b_SKU + theme(legend.position = "none"), align = "hv")
-legend_5b <- get_plot_component(Fig5b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig5b_nl, legend_5b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig5b.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig5b.svg", width=17, height=9, dpi=300, device = "svg")
+                      Fig5b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.1, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig5b_Diff
-ggsave(file="Graphs/Fig5b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig5b_Diff.svg", width=17, height=9, dpi=300, device = "svg")
+# Extract the legend from SOCSIM plot
+legend_5b <- get_plot_component(Fig5b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig5b_Est <- plot_grid(Fig5b_nl, legend_5b, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig5b <- plot_grid(Fig5b_Est, Fig5b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.06, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig5b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig5b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig5b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 5a: Proportional distribution of the number of cousins by birth cohort ----
 
@@ -1447,14 +1633,30 @@ Fig5a_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig5a_nl <- plot_grid(Fig5a_SOCSIM + theme(legend.position = "none"), 
-                      Fig5a_SKU + theme(legend.position = "none"), align = "hv")
-legend_5a <- get_plot_component(Fig5a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig5a_nl, legend_5a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig5a.pdf", width=17, height=9, dpi=300, device = "pdf")
+                      Fig5a_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.14, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig5a_Diff
-ggsave(file="Graphs/Fig5a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_5a <- get_plot_component(Fig5a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig5a_Est <- plot_grid(Fig5a_nl, legend_5a, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig5a <- plot_grid(Fig5a_Est, Fig5a_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.07, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig5a.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig5a.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig5a.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 6a. Average number of living, dead, and unregistered parents, by birth cohort 1932–2017 ----
 
@@ -1547,16 +1749,30 @@ Fig6a_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"), 
-                      Fig6a_SKU + theme(legend.position = "none"), align = "hv")
-legend_6a <- get_plot_component(Fig6a_SKU, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig6a_nl, legend_6a, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig6a.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig6a.svg", width=17, height=9, dpi=300, device = "svg")
+                      Fig6a_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.14, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig6a_Diff
-ggsave(file="Graphs/Fig6a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig6a_Diff.svg", width=17, height=9, dpi=300, device = "svg")
+# Extract the legend from SOCSIM plot
+legend_6a <- get_plot_component(Fig6a_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig6a_Est <- plot_grid(Fig6a_nl, legend_6a, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig6a <- plot_grid(Fig6a_Est, Fig6a_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.07, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig6a.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6a.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig6a.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 6b. Average number of parent siblings by birth cohort 1950–2017 ----
 
@@ -1671,17 +1887,30 @@ Fig6b_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig6b_nl <- plot_grid(Fig6b_SOCSIM + theme(legend.position = "none"), 
-                      Fig6b_SKU + theme(legend.position = "none"), align = "hv")
+                      Fig6b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.1, label_y = 0.97,
+                      align = "hv")
+
+# Extract the legend from SOCSIM plot
 legend_6b <- get_plot_component(Fig6b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig6b_nl, legend_6b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig6b.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig6b.svg", width=17, height=9, dpi=300, device = "svg")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig6b_Diff
-ggsave(file="Graphs/Fig6b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig6b_Diff.svg", width=17, height=9, dpi=300, device = "svg")
+# Stack figure and legend from estimates comparison
+Fig6b_Est <- plot_grid(Fig6b_nl, legend_6b, 
+                       ncol = 1, rel_heights = c(1, .1))
 
+# Combine comparison panel and difference plot
+Fig6b <- plot_grid(Fig6b_Est, Fig6b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.06, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig6b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig6b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig6b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 7: Average number of living, dead, and unregistered grandparents, by birth cohort ----
 
@@ -1822,14 +2051,30 @@ Fig7_Diff <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig7_nl <- plot_grid(Fig7_SOCSIM + theme(legend.position = "none"), 
-                     Fig7_SKU + theme(legend.position = "none"), align = "hv")
-legend_7 <- get_plot_component(Fig7_SKU, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig7_nl, legend_7, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig7.pdf", width=17, height=9, dpi=300, device = "pdf")
+                     Fig7_SKU + theme(legend.position = "none"), 
+                     labels = c("a", "b"), 
+                     label_size = 30,
+                     label_x = 0.1, label_y = 0.97,
+                     align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig7_Diff
-ggsave(file="Graphs/Fig7_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_7 <- get_plot_component(Fig7_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig7_Est <- plot_grid(Fig7_nl, legend_7, 
+                      ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig7 <- plot_grid(Fig7_Est, Fig7_Diff,
+                  ncol = 1, rel_heights = c(1, 1),
+                  labels = c("", "c"),
+                  label_x = 0.06, label_y = 0.97,
+                  label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig7.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig7.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig7.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 
 #------------------------------------------------------------------------------------------------------
 ## Fig. 8a: Distribution of the total number of kin by birth cohort 1915–2017 ----
@@ -1910,15 +2155,17 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
 Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
 
 # Save figure with comparison SOCSIM vs Swedish Registers
-plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
-          rel_heights = c(1.4,0.4), 
+Fig8a <- plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
+          rel_heights = c(0.8,1.6), 
           rel_widths = c(0.5,0.5), 
-          scale(c(0.7, 0.5)))
-ggsave(file="Graphs/Fig8a.pdf", width=17, height=9, dpi=300, device = "pdf")
+          scale = c(0.73, 0.9),
+          labels = c("a", "b"), 
+          label_size = 30,
+          label_x = 0.05, label_y = 0.99)
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig8a_Diff
-ggsave(file="Graphs/Fig8a_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig8a.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig8a.svg", width=17, height=9, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig8a.jpeg", width=17, height=9, dpi=300, device = "jpeg")
 #------------------------------------------------------------------------------------------------------
 ## Fig. 8b: Average number of all types of kin by birth cohort 1915–2017 ----
 
@@ -1971,7 +2218,7 @@ Fig8b_SKU <- SKU %>%
   guides(fill = guide_legend(override.aes = list(color = 0), nrow = 2, byrow = TRUE)) +
   expand_limits(y = c(0, 43)) 
 
-# Plot difference SOCSIM microsimulation - Swedish registers (SKU)
+# Plot difference SOCSIM microsimulation - Swedish registers (SKU), with all kin alive and deceased
 Fig8b_Diff <- full_join(SKU %>% 
                           filter(Fig == "Fig8b") %>% 
                           select(IDbirthYear, mean_kin_SKU = mean_kin, Type = type),
@@ -2003,17 +2250,34 @@ Fig8b_Diff <- full_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig8b_nl <- plot_grid(Fig8b_SOCSIM + theme(legend.position = "none"), 
-                      Fig8b_SKU + theme(legend.position = "none"), align = "hv")
-legend_8b <- get_plot_component(Fig8b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
-plot_grid(Fig8b_nl, legend_8b, ncol = 1, rel_heights = c(1, .1))
-ggsave(file="Graphs/Fig8b.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig8b.svg", width=17, height=9, dpi=300, device = "svg")
+                      Fig8b_SKU + theme(legend.position = "none"), 
+                      labels = c("a", "b"), 
+                      label_size = 30,
+                      label_x = 0.14, label_y = 0.97,
+                      align = "hv")
 
-# Save figure with difference SOCSIM - Swedish Registers
-Fig8b_Diff
-ggsave(file="Graphs/Fig8b_Diff.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Extract the legend from SOCSIM plot
+legend_8b <- get_plot_component(Fig8b_SOCSIM, 'guide-box-bottom', return_all = TRUE)
+
+# Stack figure and legend from estimates comparison
+Fig8b_Est <- plot_grid(Fig8b_nl, legend_8b, 
+                       ncol = 1, rel_heights = c(1, .1))
+
+# Combine comparison panel and difference plot
+Fig8b <- plot_grid(Fig8b_Est, Fig8b_Diff,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.07, label_y = 0.97,
+                   label_size = 30)
+
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig8b.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig8b.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig8b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
+
 #------------------------------------------------------------------------------------------------------
-## Fig. I. Difference in the average number of all types of kin by birth cohort 1915–2017 ----
+## Fig. 8b_heat. Difference in the average number of all types of kin by birth cohort 1915–2017  ----
+## Plotted as a heat map, inluding only alive kin
 
 # Prepare the data and add variable to distinguish alive and deceased kin
 Diff_All <- full_join(SKU %>% 
@@ -2077,103 +2341,26 @@ Fig_Dif_Deceased <-
         panel.grid.major.y = element_blank(),
         legend.key.height = unit(1, "line"))
 
-# Save figure with difference SOCSIM - Swedish Registers only for living kin 
-Fig_Dif_Alive + theme(legend.position = "right")
-ggsave(file="Graphs/Fig_Diff_Alive.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig_Diff_Alive.svg", width=17, height=9, dpi=300, device = "svg")
-
 # Combine the plots for living and deceased kin
-Fig_Diff_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"), 
+Fig_Dif_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"), 
                           Fig_Dif_Deceased + theme(legend.position = "right"),
                           ncol= 1, align = "v", rel_heights = c(8, 3.7))
 
 # Save figure with difference SOCSIM - Swedish Registers with living and deceased kin
-Fig_Diff_All
-ggsave(file="Graphs/Fig_Diff_All.pdf", width=17, height=9, dpi=300, device = "pdf")
-ggsave(file="Graphs/Fig_Diff_All.svg", width=17, height=9, dpi=300, device = "svg")
-#------------------------------------------------------------------------------------------------------
-## Fig. II: Average number of living, dead, and unregistered grandparents and parents by birth cohort ----
+Fig_Dif_All
+ggsave(file="Graphs/Fig_Dif_All.pdf", width=17, height=9, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig_Dif_All.svg", width=17, height=9, dpi=300, device = "svg")
 
-# Plot difference SOCSIM microsimulation - Swedish registers (SKU) as a heat map
 
-Fig_Diff_Ancestor <-   bind_rows(left_join(SKU %>% 
-                                             # We need estimate the number of unregistered parents which is not included in the table
-                                             filter(Fig == "Fig6a") %>% 
-                                             pivot_wider(names_from = Type, values_from = mean_kin) %>% 
-                                             mutate(unregistered = 2-(father + mother + `registered deceased`)) %>%
-                                             pivot_longer(cols = father:unregistered, 
-                                                          names_to = "Type", values_to = "mean_kin_SKU") %>% 
-                                             select(IDbirthYear, Type, mean_kin_SKU), 
-                                           # We need to add a value of 0 for unregistered parents and 
-                                           # estimate the deceased, because for plotting they have all the value of 2
-                                           parent_table %>%
-                                             pivot_wider(names_from = Type, values_from = mean_kin) %>% 
-                                             select(-`not living`) %>% 
-                                             mutate(`registered deceased` = 2-(father + mother), 
-                                                    unregistered = 0) %>% 
-                                             pivot_longer(cols = father:unregistered, 
-                                                          names_to = "Type", values_to = "mean_kin_SOCSIM") %>% 
-                                             select(IDbirthYear, Type, mean_kin_SOCSIM) %>% 
-                                             mutate(Type2 = "Parents")),
-                                 left_join(SKU %>% 
-                                             filter(Fig == "Fig7") %>% 
-                                             select(IDbirthYear, mean_kin, type) %>% 
-                                             pivot_wider(names_from = type, values_from = mean_kin) %>%
-                                             mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
-                                             # The registered deceased from the table include both the living and the deceased
-                                             # So, we need to estimate the actual number of deceased
-                                             mutate(alive = `grandfather (father's side)` + `grandmother (father's side)` + 
-                                                      `grandfather (mother's side)` + `grandmother (mother's side)`,
-                                                    `not living` = `registered deceased`,
-                                                    `registered deceased` = `not living` - alive,
-                                                    unregistered = 4-(alive + `registered deceased`)) %>%
-                                             select(-c(alive,`not living`)) %>%
-                                             pivot_longer(cols = c(2:7), 
-                                                          names_to = "Type", values_to = "mean_kin_SKU"), 
-                                           grandparent_table %>% 
-                                             pivot_wider(names_from = Type, values_from = mean_kin) %>% 
-                                           mutate_at(c(2:6), ~ replace_na(.,0)) %>% 
-                                           select(-`not living`) %>%
-                                           # We need to add a value of 0 for unregistered grandparents and 
-                                           # estimated the deceased, because for plotting not living have all the value of 4
-                                           mutate(alive = `grandfather (father's side)` + `grandmother (father's side)` + 
-                                                    `grandfather (mother's side)` + `grandmother (mother's side)`,
-                                                  `registered deceased` = 4 - alive, 
-                                                  unregistered = 0) %>%
-                                           select(-alive) %>% 
-                                           pivot_longer(cols = c(2:7), 
-                                                        names_to = "Type", values_to = "mean_kin_SOCSIM")) %>% 
-                                   mutate(Type2 = "Grandparents")) %>% 
-  mutate(Difference = mean_kin_SOCSIM - mean_kin_SKU,
-         Type = case_when(Type == "unregistered" ~ "Unregistered" ,
-                          Type == "registered deceased" ~ "Deceased", 
-                          Type == "mother" ~ "Mother" ,
-                          Type == "father" ~ "Father", 
-                          Type == "grandfather (father's side)" ~ "Paternal grandfather", 
-                          Type == "grandmother (father's side)" ~ "Paternal grandmother",
-                          Type == "grandfather (mother's side)" ~ "Maternal grandfather",
-                          Type == "grandmother (mother's side)" ~ "Maternal grandmother",
-                          TRUE ~ Type), 
-         Type = factor(Type, levels = c("Deceased", "Paternal grandfather", "Maternal grandfather", "Father",
-                                        "Paternal grandmother", "Maternal grandmother", "Mother" , "Unregistered")), 
-         Type2 = factor(Type2, levels = c("Parents", "Grandparents"))) %>% 
-  filter(!is.na(Difference)) %>% 
-  ggplot()+
-  facet_wrap(. ~ Type2, scales = "free") +
-  geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference)) +
-  labs(x = "Birth Cohort \n(Age in 2017)", y = "Type of Kin", fill = "Difference") + 
-  scale_fill_gradient2(low = "#E9E0B7",
-                       mid = "#DEF5E5",
-                       high = "#3C3162",
-                       midpoint = 0,
-                       limits = c(-4,4)) +
-  scale_x_continuous(breaks = c(seq(1930, 2010, by = 10), 2017), 
-                       labels = paste(c(seq(1930, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1930, 2010, by = 10), 2017), ")")) +
-  theme_bw() + theme_graphs2() +
-  theme(panel.grid.major.x = element_blank(), 
-          panel.grid.minor.x = element_blank(),
-          panel.grid.major.y = element_blank(),
-          legend.key.height = unit(1, "line")) 
+# Combined figure with comparison and difference SOCSIM - Swedish Registers for all kin
+# Combine comparison panel and difference plot (as heat map)
+Fig8b_heat <- plot_grid(Fig8b_Est, Fig_Dif_Alive,
+                   ncol = 1, rel_heights = c(1, 1),
+                   labels = c("", "c"),
+                   label_x = 0.13, label_y = 1,
+                   label_size = 30)
 
-Fig_Diff_Ancestor
-ggsave(file="Graphs/Fig_Diff_Ancestors.pdf", width=17, height=9, dpi=300, device = "pdf")
+# Save combined figure with comparison and difference SOCSIM - Swedish Registers
+ggsave(file="Graphs/Fig8b_heat.pdf", width=17, height=19, dpi=300, device = "pdf")
+ggsave(file="Graphs/Fig8b_heat.svg", width=17, height=19, dpi=300, device = "svg")
+ggsave(file="Graphs/Fig8b_heat.jpeg", width=17, height=19, dpi=300, device = "jpeg")
