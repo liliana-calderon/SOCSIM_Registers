@@ -10,7 +10,7 @@
 # for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson 
 
 # Created on 30-11-2023
-# Last modified on 11-04-2025
+# Last modified on 02-07-2025
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
