@@ -22,12 +22,12 @@ theme_graphs <- function() {
         panel.grid.major.x = element_line(colour = "#C9C9C9", linetype = "dotted"),
         panel.grid.major.y = element_line(colour = "#C9C9C9", linetype = "dotted"),
         panel.grid.minor = element_blank(),
-        strip.text = element_text(family="serif", face="bold", size=26),
+        strip.text = element_text(family="serif", face="plain", size=26),
         strip.background = element_rect(fill="#FFFFFF", colour="#000000", linewidth = 0.5),
         axis.title.x = element_text(family="serif", size = 22, colour = "#000000", 
-                                    hjust=0.5, face = "bold", margin = margin(10, 0, 0, 0)), 
+                                    hjust=0.5, face = "plain", margin = margin(10, 0, 0, 0)), 
         axis.title.y = element_text(family="serif", size = 22, colour = "#000000", 
-                                    face = "bold", margin = margin(0, 10, 0, 0)), 
+                                    face = "plain", margin = margin(0, 10, 0, 0)), 
         axis.text = element_text(family="serif", size = 20, colour = "#000000"),
         axis.line.y = element_line(colour = "#000000"),
         axis.line.x = element_line(colour = "#000000"),
@@ -44,7 +44,8 @@ theme_graphs <- function() {
 ## Creation of a theme for the comparison graphs
 
 theme_graphs2 <- function() {
-  theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
+  theme(plot.title = element_text(family="serif", size = 30, face = "plain", hjust = 0.5),
+        panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor.x = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.minor = element_blank(), 
@@ -55,10 +56,10 @@ theme_graphs2 <- function() {
         legend.key = element_blank(),
         #legend.key = element_rect(fill = NA, color = NA), 
         strip.background = element_rect(color = "#000000", fill = "#FFFFFF"),
-        strip.text = element_text(family="serif", face="bold", size=26),
+        strip.text = element_text(family="serif", face = "plain", size=22),
         axis.title.x = element_text(family="serif", size = 20, colour = "#000000", 
-                                    hjust=0.5, face = "bold", margin = margin(10, 0, 0, 0)), 
-        axis.title.y = element_text(family="serif", size = 20, colour = "#000000", face = "bold"), 
+                                    hjust=0.5, face = "plain", margin = margin(10, 0, 0, 0)), 
+        axis.title.y = element_text(family="serif", size = 20, colour = "#000000", face = "plain"), 
         axis.text = element_text(family="serif", size = 16, colour = "#000000"),
         legend.text = element_text(family="serif", size = 18, colour = "#000000")) }
 
