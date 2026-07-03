@@ -9,7 +9,7 @@
 # c.f. script 0_Set_Up_Simulation.R
 
 # Created on 26-02-2024
-# Last modified on 29-07-2024
+# Last modified on 03-07-2026
 
 ## Based on code prepared for the biases in genealogies paper
 # U:/SOCSIM/SOCSIM_Genealogies/2_Compare_Input_Output.R
