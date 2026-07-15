@@ -10,12 +10,12 @@
 # for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson 
 
 # Created on 30-11-2023
-# Last modified on 02-07-2026
+# Last modified on 15-07-2026
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
 # Prevent scientific notation
-options(scipen=999999)
+options(scipen=9999)
 
 ## Load packages 
 library(tidyverse)
@@ -267,7 +267,7 @@ Fig1a_SKU <- ggplot(data = SKU %>%
         axis.line = element_line(),
         panel.background = element_rect(fill = NA),
         legend.key = element_blank()) +
-    guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
+  guides(fill = guide_legend(reverse = TRUE, nrow = 2, byrow = TRUE))
 
 # Plot difference SOCSIM microsimulation - Swedish registers (SKU)
 Fig1a_Diff <- left_join(SKU %>% 
@@ -472,7 +472,8 @@ Fig2b_SOCSIM_W <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per woman in microsimulation", fill = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per woman in microsimulation", fill = " ",
+       title = "(a) Microsimulation") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() + 
   theme(legend.key = element_blank(),
@@ -494,7 +495,8 @@ Fig2b_SKU_W <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFE6CC"), 
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per woman in registers", fill = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per woman in registers", fill = " ",
+       title = "(b) Registers") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
   theme_bw() + theme_graphs2() +
@@ -508,22 +510,22 @@ Fig2b_SKU_W <- ggplot() +
 
 # Plot difference SOCSIM microsimulation - Swedish registers (SKU)  for women only
 Fig2b_Diff_W <- left_join(SKU %>% 
-                          filter(Fig == "Fig2b") %>% 
-                          select(IDbirthYear, Kon, mean_children, type) %>% 
-                          pivot_wider(names_from = type, values_from = mean_children) %>% 
-                          mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
-                          mutate(`not living` = `registered deceased` - `1` - `2` - `>2`) %>%
-                          select(-`registered deceased`) %>% 
-                          pivot_longer(cols = c(3:6), 
-                                       names_to = "Type", values_to = "mean_children_SKU"),
-                        child_table %>% 
-                          pivot_wider(names_from = Type, values_from = mean_children) %>% 
-                          rename(all = `not living`) %>% 
-                          mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
-                          mutate(`not living` = all - `1` - `2` - `>2`) %>%
-                          select(-all) %>% 
-                          pivot_longer(cols = c(3:6), 
-                                       names_to = "Type", values_to = "mean_children_SOCSIM")) %>% 
+                            filter(Fig == "Fig2b") %>% 
+                            select(IDbirthYear, Kon, mean_children, type) %>% 
+                            pivot_wider(names_from = type, values_from = mean_children) %>% 
+                            mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
+                            mutate(`not living` = `registered deceased` - `1` - `2` - `>2`) %>%
+                            select(-`registered deceased`) %>% 
+                            pivot_longer(cols = c(3:6), 
+                                         names_to = "Type", values_to = "mean_children_SKU"),
+                          child_table %>% 
+                            pivot_wider(names_from = Type, values_from = mean_children) %>% 
+                            rename(all = `not living`) %>% 
+                            mutate_at(c(3:6), ~ replace_na(.,0)) %>% 
+                            mutate(`not living` = all - `1` - `2` - `>2`) %>%
+                            select(-all) %>% 
+                            pivot_longer(cols = c(3:6), 
+                                         names_to = "Type", values_to = "mean_children_SOCSIM")) %>% 
   mutate(Difference = mean_children_SOCSIM - mean_children_SKU, 
          Type = factor(Type, levels = c("not living", ">2", "2", "1"))) %>%
   filter(!is.na(Difference) & Kon == "2") %>% 
@@ -533,7 +535,8 @@ Fig2b_Diff_W <- left_join(SKU %>%
   scale_color_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                      limits = c("1", "2", ">2","not living"), 
                      labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the number of children per woman", color = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the number of children per woman", color = " ",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(-0.4,0.4, by = 0.2), limits = c(-0.4, 0.4)) +
   theme_bw() + theme_graphs2() +
@@ -543,13 +546,8 @@ Fig2b_Diff_W <- left_join(SKU %>%
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2b_nl_W <- plot_grid(Fig2b_SOCSIM_W + theme(legend.position = "none"), 
-                      Fig2b_SKU_W + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
-                      align = "hv")
+                        Fig2b_SKU_W + theme(legend.position = "none"), 
+                        align = "hv")
 
 # Extract the legend from SOCSIM plot
 legend_2b_W <- get_plot_component(Fig2b_SOCSIM_W, 'guide-box-bottom', return_all = TRUE)
@@ -560,12 +558,7 @@ Fig2b_Est_W <- plot_grid(Fig2b_nl_W, legend_2b_W,
 
 # Combine comparison panel and difference plot
 Fig2b_W <- plot_grid(Fig2b_Est_W, Fig2b_Diff_W,
-                     ncol = 1, rel_heights = c(1, 1),
-                     labels = c("", "(c) Difference (microsimulation minus registers)"),
-                     label_x = 0.05, label_y = 1,
-                     label_size = 30, 
-                     label_fontfamily = "serif",                       
-                     label_fontface = "plain")
+                     ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig2b_W.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -584,7 +577,8 @@ Fig2b_SOCSIM_M <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                     limits = c("1", "2", ">2","not living"), 
                     labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per Man in microsimulation", fill = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per man in microsimulation", fill = " ",
+       title = "(a) Microsimulation") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() + 
   theme(legend.key = element_blank(),
@@ -606,7 +600,8 @@ Fig2b_SKU_M <- ggplot() +
   scale_fill_manual(values = c("#7FCDBB","#41B6C4", "#225EA8", "#FFE6CC"), 
                     limits = c("1", "2", ">2", "registered deceased"), 
                     labels = c("One childbearing partner","Two childbearing partners", "Three or more childbearing partners", "Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per Man in registers", fill = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Number of children per man in registers", fill = " ",
+       title = "(b) Registers") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(0,2.5, by = 0.5)) +
   theme_bw() + theme_graphs2() +
@@ -645,7 +640,8 @@ Fig2b_Diff_M <- left_join(SKU %>%
   scale_color_manual(values = c("#7FCDBB","#41B6C4", "#225EA8","#FFE6CC"), 
                      limits = c("1", "2", ">2","not living"), 
                      labels = c("One childbearing partner","Two childbearing partners","Three or more childbearing partners","Deceased children")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the number of children per woman", color = " ") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the number of children per woman", color = " ",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   scale_y_continuous(breaks = seq(-0.75,0.5, by = 0.25), limits = c(-0.75, 0.5)) +
   theme_bw() + theme_graphs2() +
@@ -656,11 +652,6 @@ Fig2b_Diff_M <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2b_nl_M <- plot_grid(Fig2b_SOCSIM_M + theme(legend.position = "none"), 
                         Fig2b_SKU_M + theme(legend.position = "none"), 
-                        labels = c("(a) Microsimulation", "(b) Registers"), 
-                        label_size = 30,
-                        label_fontfamily = "serif", 
-                        label_fontface = "plain",
-                        label_x = 0.15, label_y = 1,
                         align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -672,12 +663,7 @@ Fig2b_Est_M <- plot_grid(Fig2b_nl_M, legend_2b_M,
 
 # Combine comparison panel and difference plot
 Fig2b_M <- plot_grid(Fig2b_Est_M, Fig2b_Diff_M,
-                     ncol = 1, rel_heights = c(1, 1),
-                     labels = c("", "(c) Difference (microsimulation minus registers)"),
-                     label_x = 0.05, label_y = 1,
-                     label_size = 30, 
-                     label_fontfamily = "serif",                        
-                     label_fontface = "plain")
+                     ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig2b_M.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -813,7 +799,8 @@ Fig2a_SOCSIM_W <- ggplot(data = children_dist_Table_living %>% filter(Kon == "2"
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "",
+       title = "(a) Microsimulation")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -828,14 +815,15 @@ Fig2a_SOCSIM_W <- ggplot(data = children_dist_Table_living %>% filter(Kon == "2"
 
 # Plot from Swedish Kinship Universe for women only
 Fig2a_SKU_W <- ggplot(data = SKU %>% 
-                      filter(Fig == "Fig2a" & Kon == "2") %>%  
-                      mutate(n_children = factor(n_children, 
-                                                 levels = c("4 or more children", "3 children", 
-                                                            "2 children", "1 child", "No children" )))) +
+                        filter(Fig == "Fig2a" & Kon == "2") %>%  
+                        mutate(n_children = factor(n_children, 
+                                                   levels = c("4 or more children", "3 children", 
+                                                              "2 children", "1 child", "No children" )))) +
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "",
+       title = "(b) Registers")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -850,11 +838,11 @@ Fig2a_SKU_W <- ggplot(data = SKU %>%
 
 # Plot difference SOCSIM microsimulation - Swedish registers (SKU) for women only
 Fig2a_Diff_W <- left_join(SKU %>% 
-                          filter(Fig == "Fig2a" & Kon == "2") %>% 
-                          select(IDbirthYear, Kon, n_children, proportion_SKU = proportion), 
-                        children_dist_Table_living %>% 
-                          filter(IDbirthYear <= 2017 & Kon == "2") %>% 
-                          select(IDbirthYear, Kon, n_children, proportion_SOCSIM = proportion)) %>% 
+                            filter(Fig == "Fig2a" & Kon == "2") %>% 
+                            select(IDbirthYear, Kon, n_children, proportion_SKU = proportion), 
+                          children_dist_Table_living %>% 
+                            filter(IDbirthYear <= 2017 & Kon == "2") %>% 
+                            select(IDbirthYear, Kon, n_children, proportion_SOCSIM = proportion)) %>% 
   mutate(Difference = proportion_SOCSIM - proportion_SKU, 
          n_children = factor(n_children, 
                              levels = c("4 or more children", "3 children", 
@@ -863,7 +851,8 @@ Fig2a_Diff_W <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_children), linewidth =1) +
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "",
+       title = "(c) Difference (microsimulation minus registers)")+
   scale_color_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                      limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                      labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -879,11 +868,6 @@ Fig2a_Diff_W <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2a_nl_W <- plot_grid(Fig2a_SOCSIM_W + theme(legend.position = "none"), 
                         Fig2a_SKU_W + theme(legend.position = "none"), 
-                        labels = c("(a) Microsimulation", "(b) Registers"), 
-                        label_size = 30,
-                        label_fontfamily = "serif", 
-                        label_fontface = "plain",
-                        label_x = 0.15, label_y = 1,
                         align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -895,12 +879,7 @@ Fig2a_Est_W <- plot_grid(Fig2a_nl_W, legend_2a_W,
 
 # Combine comparison panel and difference plot
 Fig2a_W <- plot_grid(Fig2a_Est_W, Fig2a_Diff_W,
-                     ncol = 1, rel_heights = c(1, 1),
-                     labels = c("", "(c) Difference (microsimulation minus registers)"),
-                     label_x = 0.05, label_y = 1,
-                     label_size = 30, 
-                     label_fontfamily = "serif",                        
-                     label_fontface = "plain")
+                     ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig2a_W.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -913,7 +892,8 @@ Fig2a_SOCSIM_M <- ggplot(data = children_dist_Table_living %>% filter(Kon == "1"
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "",
+       title = "(a) Microsimulation")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -935,7 +915,8 @@ Fig2a_SKU_M <- ggplot(data = SKU %>%
   geom_area(mapping = aes(x = IDbirthYear, y = proportion, fill = n_children), color = "#4D4D4D", lwd = 0.7) +
   geom_area(data=data.frame(x = c(2017-40,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "",
+       title = "(b) Registers")+
   scale_fill_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                     limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                     labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -963,7 +944,8 @@ Fig2a_Diff_M <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_children), linewidth =1) +
   geom_vline(xintercept = c(2017-40), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "",
+       title = "(c) Difference (microsimulation minus registers)")+
   scale_color_manual(values = c("#253494", "#2C7FB8", "#41B6C4", "#A1DAB4", "#FFE6CC"),
                      limits = c("4 or more children", "3 children", "2 children", "1 child", "No children"), 
                      labels = c("4 or more children", "3 children", "2 children", "1 child", "No children")) +  
@@ -979,11 +961,6 @@ Fig2a_Diff_M <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig2a_nl_M <- plot_grid(Fig2a_SOCSIM_M + theme(legend.position = "none"), 
                         Fig2a_SKU_M + theme(legend.position = "none"), 
-                        labels = c("(a) Microsimulation", "(b) Registers"), 
-                        label_size = 30,
-                        label_fontfamily = "serif", 
-                        label_fontface = "plain",
-                        label_x = 0.15, label_y = 1,
                         align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -995,12 +972,7 @@ Fig2a_Est_M <- plot_grid(Fig2a_nl_M, legend_2a_M,
 
 # Combine comparison panel and difference plot
 Fig2a_M <- plot_grid(Fig2a_Est_M, Fig2a_Diff_M,
-                     ncol = 1, rel_heights = c(1, 1),
-                     labels = c("", "(c) Difference (microsimulation minus registers)"),
-                     label_x = 0.05, label_y = 1,
-                     label_size = 30, 
-                     label_fontfamily = "serif",                        
-                     label_fontface = "plain")
+                     ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig2a_M.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1031,7 +1003,8 @@ Fig3_SOCSIM <- ggplot() +
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of nieces/nephews in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of nieces/nephews in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#2C7FB8", "#41B6C4", "#253494"),
                     limits = c(levels=c("not living", 
                                         "half brother side", "half sister side", 
@@ -1067,7 +1040,8 @@ Fig3_SKU <-
   geom_area(data=data.frame(x = c(1930,1940), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-46,2017), y = c(4.5,4.5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of nieces/nephews in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of nieces/nephews in registers", fill = "",
+       title = "(b) Registers") +
   scale_fill_manual(values = c( "#FFE6CC","#A1DAB4",  "#2C7FB8","#41B6C4", "#253494"),
                     limits = c("registered deceased",
                                "half brother side", "half sister side", 
@@ -1112,15 +1086,15 @@ Fig3_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1940, 2017-46), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of nieces/nephews", 
-       color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of nieces/nephews", color = "", 
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#2C7FB8", "#41B6C4", "#253494"),
                      limits = c(levels=c("not living", 
-                                        "half brother side", "half sister side", 
-                                        "full brother side", "full sister side")),
+                                         "half brother side", "half sister side", 
+                                         "full brother side", "full sister side")),
                      labels = c("Deceased nieces \n and nephews", 
-                               "Half brother's side", "Half sister's side", 
-                               "Full brother's side", "Full sister's side")) +
+                                "Half brother's side", "Half sister's side", 
+                                "Full brother's side", "Full sister's side")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", 
                                     "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
@@ -1132,11 +1106,6 @@ Fig3_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig3_nl <- plot_grid(Fig3_SOCSIM + theme(legend.position = "none"), 
                      Fig3_SKU + theme(legend.position = "none"), 
-                     labels = c("(a) Microsimulation", "(b) Registers"), 
-                     label_size = 30,
-                     label_fontfamily = "serif", 
-                     label_fontface = "plain",
-                     label_x = 0.15, label_y = 1,
                      align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1148,12 +1117,7 @@ Fig3_Est <- plot_grid(Fig3_nl, legend_3,
 
 # Combine comparison panel and difference plot
 Fig3 <- plot_grid(Fig3_Est, Fig3_Diff,
-                  ncol = 1, rel_heights = c(1, 1),
-                  labels = c("", "(c) Difference (microsimulation minus registers)"),
-                  label_x = 0.05, label_y = 1,
-                  label_size = 30, 
-                  label_fontfamily = "serif",                        
-                  label_fontface = "plain")
+                  ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig3.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1185,7 +1149,8 @@ Fig4a_SOCSIM <- ggplot() +
                     limits = c("full", "half.mother", "half.father", "not living"), 
                     labels = c("Full siblings", "Half siblings on mother's side", "Half siblings on father's side", 
                                "Deceased siblings")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of siblings in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of siblings in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1219,8 +1184,9 @@ Fig4a_SKU <- ggplot() +
   scale_fill_manual(values = c("#225EA8", "#A1DAB4", "#41B6C4", "#FFE6CC"), 
                     limits = c("full", "half.mother", "half.father", "not living"), 
                     labels = c("Full siblings", "Half siblings on mother's side", "Half siblings on father's side", 
-                                "Deceased siblings")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of siblings in registers", fill = "") +
+                               "Deceased siblings")) +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of siblings in registers", fill = "",
+       title = "(b) Registers") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1259,7 +1225,8 @@ Fig4a_Diff <- left_join(SKU %>%
                      limits = c("full", "half.mother", "half.father", "not living"), 
                      labels = c("Full siblings", "Half siblings on mother's side", "Half siblings on father's side", 
                                 "Deceased siblings")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of siblings", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of siblings", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1268,11 +1235,6 @@ Fig4a_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig4a_nl <- plot_grid(Fig4a_SOCSIM + theme(legend.position = "none"), 
                       Fig4a_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1284,12 +1246,7 @@ Fig4a_Est <- plot_grid(Fig4a_nl, legend_4a,
 
 # Combine comparison panel and difference plot
 Fig4a <- plot_grid(Fig4a_Est, Fig4a_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig4a.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1326,7 +1283,8 @@ Fig4b_SOCSIM <- ggplot(data = sibling_dist_Table_living) +
   geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "",
+       title = "(a) Microsimulation")+
   scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
                     limits = c("6 or more siblings", "5 siblings", "4 siblings", 
@@ -1349,7 +1307,8 @@ Fig4b_SKU <- ggplot(data = SKU %>%
   geom_area(data=data.frame(x = c(1930,1940), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_area(data=data.frame(x = c(2017-13,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.25) + 
   geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "",
+       title = "(b) Registers")+
   scale_fill_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
                     limits = c("6 or more siblings", "5 siblings", "4 siblings", 
@@ -1373,7 +1332,8 @@ Fig4b_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_siblings), linewidth =1)+
   geom_vline(xintercept = c(1940, 2017-13), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "",
+       title = "(c) Difference (microsimulation minus registers)")+
   scale_color_manual(values = c("#081D58", "#225EA8","#1D91C0", 
                                 "#41B6C4","#7FCDBB","#C7E9B4", "#F6EAD2"),
                      limits = c("6 or more siblings", "5 siblings", "4 siblings", 
@@ -1389,11 +1349,6 @@ Fig4b_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig4b_nl <- plot_grid(Fig4b_SOCSIM + theme(legend.position = "none"), 
                       Fig4b_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1405,12 +1360,7 @@ Fig4b_Est <- plot_grid(Fig4b_nl, legend_4b,
 
 # Combine comparison panel and difference plot
 Fig4b <- plot_grid(Fig4b_Est, Fig4b_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig4b.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1465,7 +1415,8 @@ Fig5b_SOCSIM <- ggplot() +
                                                                                                                       "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of cousins in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of cousins in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1498,7 +1449,8 @@ Fig5b_SKU <- ggplot() +
                                                                                                                       "mother.brother", "mother.sister"),
                     labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of cousins in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of cousins in registers", fill = "",
+       title = "(b) Registers") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1537,7 +1489,8 @@ Fig5b_Diff <- left_join(SKU %>%
                                 "mother.brother", "mother.sister"),
                      labels = c("Deceased cousins", "Paternal uncle's side","Paternal aunt's side", 
                                 "Maternal uncle's side","Maternal aunt's side")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of cousins", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of cousins", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9)) +
@@ -1546,11 +1499,6 @@ Fig5b_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig5b_nl <- plot_grid(Fig5b_SOCSIM + theme(legend.position = "none"), 
                       Fig5b_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1562,12 +1510,7 @@ Fig5b_Est <- plot_grid(Fig5b_nl, legend_5b,
 
 # Combine comparison panel and difference plot
 Fig5b <- plot_grid(Fig5b_Est, Fig5b_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig5b.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1607,7 +1550,8 @@ Fig5a_SOCSIM <- ggplot(data = cousin_dist_Table_living) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in microsimulation", fill = "",
+       title = "(a) Microsimulation")+
   scale_fill_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
                                "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
                     limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
@@ -1630,7 +1574,8 @@ Fig5a_SKU <- ggplot(data = SKU %>%
   geom_area(data=data.frame(x = c(1950,1977), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_area(data=data.frame(x = c(2017-19,2017), y = c(1,1)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Proportion in registers", fill = "",
+       title = "(b) Registers")+
   scale_fill_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
                                "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
                     limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
@@ -1654,7 +1599,8 @@ Fig5a_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = n_cousins), linewidth =1)+
   geom_vline(xintercept = c(1977, 2017-19), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between proportions", color = "",
+       title = "(c) Difference (microsimulation minus registers)")+
   scale_color_manual(values = c("#253494","#225EA8", "#1D91C0","#41B6C4",  
                                 "#7FCDBB", "#C7E9B4","#EDF8B1", "#FFE6CC"), 
                      limits = c("11 or more cousins", "6 - 10 cousins", "5 cousins",
@@ -1670,11 +1616,6 @@ Fig5a_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig5a_nl <- plot_grid(Fig5a_SOCSIM + theme(legend.position = "none"), 
                       Fig5a_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1686,12 +1627,7 @@ Fig5a_Est <- plot_grid(Fig5a_nl, legend_5a,
 
 # Combine comparison panel and difference plot
 Fig5a <- plot_grid(Fig5a_Est, Fig5a_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig5a.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1718,7 +1654,8 @@ Fig6a_SOCSIM <- ggplot() +
   geom_area(data = parent_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = parent_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of parents in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of parents in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("", "not living", "father", "mother"),
                     labels = c("", "Registered deceased parents", "Fathers", "Mothers")) +
@@ -1742,7 +1679,8 @@ Fig6a_SKU <- SKU %>%
   geom_area(mapping = aes(x = IDbirthYear, y =  mean_kin, fill = Type), 
             color = "#4D4D4D", lwd = 0.5) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of parents in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of parents in registers", fill = "",
+       title = "(b) Registers") +
   scale_fill_manual(values = c("#FD6242", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                     limits = c("unregistered","registered deceased", "father", "mother"),
                     labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
@@ -1776,7 +1714,8 @@ Fig6a_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1940), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of parents", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of parents", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_color_manual(values = c("#FD6242", "#FFE6CC", "#2C7FB8", "#A1DAB4"),
                      limits = c("unregistered","registered deceased", "father", "mother"),
                      labels = c("Unregistered parents", "Registered deceased parents", "Fathers", "Mothers")) +
@@ -1790,11 +1729,6 @@ Fig6a_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig6a_nl <- plot_grid(Fig6a_SOCSIM + theme(legend.position = "none"), 
                       Fig6a_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1806,12 +1740,7 @@ Fig6a_Est <- plot_grid(Fig6a_nl, legend_6a,
 
 # Combine comparison panel and difference plot
 Fig6a <- plot_grid(Fig6a_Est, Fig6a_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig6a.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1853,7 +1782,8 @@ Fig6b_SOCSIM <- ggplot() +
   geom_area(data = parsib_tableAlt3[Type4 != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type4), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(5,5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of aunts and uncles in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of aunts and uncles in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("not living", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
@@ -1881,7 +1811,8 @@ Fig6b_SKU <- ggplot() +
             color = "#4D4D4D", lwd = 0.7) +
   geom_area(data=data.frame(x = c(1950,1977), y = c(5,5)), aes(x=x,y=y), fill = "#FFFFFF", alpha = 0.2) + 
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of aunts and uncles in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of aunts and uncles in registers", fill = "",
+       title = "(b) Registers") +
   scale_fill_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                     limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                     labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
@@ -1919,7 +1850,8 @@ Fig6b_Diff <- left_join(SKU %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
   geom_vline(xintercept = c(1977), color = "#000000", lty = 2) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of aunts and uncles", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of aunts and uncles", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_color_manual(values = c("#FFE6CC", "#A1DAB4", "#41B6C4", "#2C7FB8", "#253494"), 
                      limits = c("registered deceased", "father brother", "father sister", "mother brother", "mother sister"),
                      labels = c("Deceased parental siblings", "Paternal uncle", "Paternal aunt", "Maternal uncle", "Maternal aunt")) +
@@ -1932,11 +1864,6 @@ Fig6b_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig6b_nl <- plot_grid(Fig6b_SOCSIM + theme(legend.position = "none"), 
                       Fig6b_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -1948,12 +1875,7 @@ Fig6b_Est <- plot_grid(Fig6b_nl, legend_6b,
 
 # Combine comparison panel and difference plot
 Fig6b <- plot_grid(Fig6b_Est, Fig6b_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig6b.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -1992,7 +1914,8 @@ Fig7_SOCSIM <- ggplot() +
                                "grandfather (mother's side)",
                                "grandmother (mother's side)"), 
                     labels = c("", "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of grandparents in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of grandparents in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -2040,7 +1963,8 @@ Fig7_SKU  <- ggplot() +
                                "grandmother (mother's side)"), 
                     labels = c("Unregistered grandparents", 
                                "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of grandparents in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of grandparents in registers", fill = "",
+       title = "(b) Registers") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -2090,7 +2014,8 @@ Fig7_Diff <- left_join(SKU %>%
                                 "grandmother (mother's side)"), 
                      labels = c("Unregistered grandparents", 
                                 "Registered deceased grandparents", "Paternal grandfather", "Paternal grandmother", "Maternal grandfather", "Maternal grandmother")) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of grandparents", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of grandparents", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -2100,11 +2025,6 @@ Fig7_Diff <- left_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig7_nl <- plot_grid(Fig7_SOCSIM + theme(legend.position = "none"), 
                      Fig7_SKU + theme(legend.position = "none"), 
-                     labels = c("(a) Microsimulation", "(b) Registers"), 
-                     label_size = 30,
-                     label_fontfamily = "serif", 
-                     label_fontface = "plain",
-                     label_x = 0.15, label_y = 1,
                      align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -2116,12 +2036,7 @@ Fig7_Est <- plot_grid(Fig7_nl, legend_7,
 
 # Combine comparison panel and difference plot
 Fig7 <- plot_grid(Fig7_Est, Fig7_Diff,
-                  ncol = 1, rel_heights = c(1, 1),
-                  labels = c("", "(c) Difference (microsimulation minus registers)"),
-                  label_x = 0.05, label_y = 1,
-                  label_size = 30, 
-                  label_fontfamily = "serif",                        
-                  label_fontface = "plain")
+                  ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig7.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -2176,11 +2091,12 @@ Fig8a_SOCSIM <- ggplot() +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
                width = 1.5, show.legend = FALSE, color = "maroon")+
   scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
-  labs(x = "Birth cohort \n(age in 2017)", y = "Total Number of Living Kin in microsimulation") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Total number of living kin in microsimulation", 
+       title = "(a) Microsimulation") +
   scale_y_continuous(breaks = seq(0,80, by = 10), limits = c(0,70)) + 
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
                      labels = paste(seq(1920, 2010, by=10), "\n", "(",2018 -seq(1920, 2010, by=10),")"),
-                     sec.axis = dup_axis(name = "Percentage With Median Number of Kin by Cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
+                     sec.axis = dup_axis(name = "Percentage with median number of kin by cohort", labels = round( 100* annotate_living$freq / annotate_living$N_17, 2))) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
@@ -2195,7 +2111,8 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
   mutate(Difference = mean_kin_SOCSIM_per - mean_kin_SKU_per) %>% 
   ggplot()+
   geom_line(aes(x = Cohort, y = Difference), linewidth =1)+
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference in the Percentage With the Median Number of Kin")+
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference in the percentage with the median number of kin", 
+       title = "(c) Difference (microsimulation minus registers)")+
   theme_bw() + theme_graphs2() +
   theme(panel.grid.major.y = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
         panel.grid.major.x = element_blank(),
@@ -2204,18 +2121,14 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
         legend.position = "none") 
 
 # Import violin plots from the Swedish Kinship Universe as png
-Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
+Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png') + ggtitle("(b) Registers")
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig8a <- plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
-          rel_heights = c(0.8,1.6), 
-          rel_widths = c(0.5,0.5), 
-          scale = c(0.73, 0.9),
-          labels = c("(a) Microsimulation", "(b) Registers"), 
-          label_size = 30,
-          label_fontfamily = "serif", 
-          label_fontface = "plain",
-          label_x = 0.05, label_y = 1)
+                   rel_heights = c(0.8,1.6), 
+                   rel_widths = c(0.5,0.5), 
+                   scale = c(0.73, 0.9),
+                   label_x = 0.05, label_y = 1)
 
 ggsave(file="Graphs/Fig8a.pdf", width=17, height=9, dpi=300, device = "pdf")
 ggsave(file="Graphs/Fig8a.svg", width=17, height=9, dpi=300, device = "svg")
@@ -2241,7 +2154,8 @@ totalkin_table  <- rbind(totalkin_table[, .(mean_kin = .N / N_17, Type = "not li
 Fig8b_SOCSIM <- ggplot() +
   geom_area(data = totalkin_table[Type == "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
   geom_area(data = totalkin_table[Type != "not living"], mapping = aes(x = IDbirthYear, y = mean_kin, fill = Type), color = "#4D4D4D", lwd = 0.5) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of kin in microsimulation", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of kin in microsimulation", fill = "",
+       title = "(a) Microsimulation") +
   scale_fill_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("not living", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
                     labels = c("Deceasead kin", "Grandchildren", "children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
@@ -2260,10 +2174,11 @@ Fig8b_SKU <- SKU %>%
   ggplot() +
   geom_area(mapping = aes(x = IDbirthYear, y =  mean_kin, fill = type), 
             color = "#4D4D4D", lwd = 0.5) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of kin in registers", fill = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Average number of kin in registers", fill = "",
+       title = "(b) Registers") +
   scale_fill_manual(values =c("#FFE6CC", "#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
-                    labels = c("Deceasead kin", "Grandchildren", "children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
+                    labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -2291,10 +2206,11 @@ Fig8b_Diff <- full_join(SKU %>%
   filter(!is.na(Difference)) %>%
   ggplot()+
   geom_line(aes(x = IDbirthYear, y = Difference, color = Type), linewidth =1) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of kin", color = "") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Difference between the average number of kin", color = "",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_color_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                      limits = c("registered deceased", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
-                     labels = c("Deceasead kin", "Grandchildren", "children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
+                     labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
@@ -2305,11 +2221,6 @@ Fig8b_Diff <- full_join(SKU %>%
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig8b_nl <- plot_grid(Fig8b_SOCSIM + theme(legend.position = "none"), 
                       Fig8b_SKU + theme(legend.position = "none"), 
-                      labels = c("(a) Microsimulation", "(b) Registers"), 
-                      label_size = 30,
-                      label_fontfamily = "serif", 
-                      label_fontface = "plain",
-                      label_x = 0.15, label_y = 1,
                       align = "hv")
 
 # Extract the legend from SOCSIM plot
@@ -2321,12 +2232,7 @@ Fig8b_Est <- plot_grid(Fig8b_nl, legend_8b,
 
 # Combine comparison panel and difference plot
 Fig8b <- plot_grid(Fig8b_Est, Fig8b_Diff,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                   ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig8b.pdf", width=17, height=19, dpi=300, device = "pdf")
@@ -2357,7 +2263,7 @@ Diff_All <- full_join(SKU %>%
                           Type == "parsib" ~ "Aunts and uncles", 
                           Type == "sibling" ~ "Siblings", 
                           Type == "cousin" ~ "Cousins", 
-                          Type == "child" ~ "children", 
+                          Type == "child" ~ "Children", 
                           Type == "sibchild" ~ "Nieces and nephews", 
                           Type == "grandchild" ~ "Grandchildren", 
                           TRUE ~ Type),
@@ -2373,7 +2279,8 @@ Fig_Dif_Alive <-
   filter(Type2 == "Alive") %>%
   ggplot() +
   geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference)) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "", fill = "Difference") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "", fill = "Difference",
+       title = "(c) Difference (microsimulation minus registers)") +
   scale_fill_viridis_c(option = "D", direction = -1, oob = scales::squish) +
   scale_x_continuous(breaks = c(seq(1920, 2010, by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1920, 2010, by = 10), 2017), ")")) +
@@ -2389,7 +2296,8 @@ Fig_Dif_Deceased <-
   filter(Type2 == "Deceased") %>%
   ggplot() +
   geom_tile(aes(x = IDbirthYear, y = Type, fill = Difference)) +
-  labs(x = "Birth cohort \n(age in 2017)", y = "", fill = "Difference") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "", fill = "Difference", 
+       title = ) +
   scale_fill_viridis_c(option = "F", direction = -1, oob = scales::squish) +
   scale_x_continuous(breaks = c(seq(1920, 2010, by = 10), 2017), 
                      labels = paste(c(seq(1920, 2010, by = 10), 2017), "\n", "(", 2017 - c(seq(1920, 2010, by = 10), 2017), ")")) +
@@ -2401,8 +2309,8 @@ Fig_Dif_Deceased <-
 
 # Combine the plots for living and deceased kin
 Fig_Dif_All <- plot_grid(Fig_Dif_Alive + theme(legend.position = "right"), 
-                          Fig_Dif_Deceased + theme(legend.position = "right"),
-                          ncol= 1, align = "v", rel_heights = c(8, 3.7))
+                         Fig_Dif_Deceased + theme(legend.position = "right"),
+                         ncol= 1, align = "v", rel_heights = c(8, 3.7))
 
 # Save figure with difference SOCSIM - Swedish Registers with living and deceased kin
 Fig_Dif_All
@@ -2413,12 +2321,7 @@ ggsave(file="Graphs/Fig_Dif_All.svg", width=17, height=9, dpi=300, device = "svg
 # Combined figure with comparison and difference SOCSIM - Swedish Registers for all kin
 # Combine comparison panel and difference plot (as heat map)
 Fig8b_heat <- plot_grid(Fig8b_Est, Fig_Dif_Alive,
-                   ncol = 1, rel_heights = c(1, 1),
-                   labels = c("", "(c) Difference (microsimulation minus registers)"),
-                   label_x = 0.05, label_y = 1,
-                   label_size = 30, 
-                   label_fontfamily = "serif",                        
-                   label_fontface = "plain")
+                        ncol = 1, rel_heights = c(1, 1))
 
 # Save combined figure with comparison and difference SOCSIM - Swedish Registers
 ggsave(file="Graphs/Fig8b_heat.pdf", width=17, height=19, dpi=300, device = "pdf")
