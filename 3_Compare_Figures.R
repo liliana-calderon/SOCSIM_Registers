@@ -2091,8 +2091,7 @@ Fig8a_SOCSIM <- ggplot() +
   geom_boxplot(data = boxplotTable_kin_living, mapping = aes(x = IDbirthYear,ymin = qmin, lower = qlower, middle = qmiddle, upper = qupper, ymax = qmax, fill = as.factor(IDbirthYear)),stat = "identity", 
                width = 1.5, show.legend = FALSE, color = "maroon")+
   scale_fill_manual(values = c("#FFFFFF", "#FFE6CC", "#EDF8B1", "#C7E9B4", "#7FCDBB", "#41B6C4", "#1D91C0", "#225EA8", "#253494", "#081D58"))+ 
-  labs(x = "Birth cohort \n(age in 2017)", y = "Total number of living kin in microsimulation", 
-       title = "(a) Microsimulation") +
+  labs(x = "Birth cohort \n(age in 2017)", y = "Total number of living kin in microsimulation") +
   scale_y_continuous(breaks = seq(0,80, by = 10), limits = c(0,70)) + 
   scale_x_continuous(breaks   = seq(1920, 2010, by=10), 
                      labels = paste(seq(1920, 2010, by=10), "\n", "(",2018 -seq(1920, 2010, by=10),")"),
@@ -2121,13 +2120,17 @@ Fig8a_Diff <- data.frame(Cohort = seq(1920, 2010, 10),
         legend.position = "none") 
 
 # Import violin plots from the Swedish Kinship Universe as png
-Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png') + ggtitle("(b) Registers")
+Fig8a_SKU <- ggdraw() + draw_image('Fig8a_SKU.png')
 
 # Save figure with comparison SOCSIM vs Swedish Registers
 Fig8a <- plot_grid(Fig8a_SOCSIM, Fig8a_SKU,
                    rel_heights = c(0.8,1.6), 
                    rel_widths = c(0.5,0.5), 
                    scale = c(0.73, 0.9),
+                   labels = c("(a) Microsimulation", "(b) Registers"), 
+                   label_size = 30,
+                   label_fontfamily = "serif",
+                   label_fontface = "plain",
                    label_x = 0.05, label_y = 1)
 
 ggsave(file="Graphs/Fig8a.pdf", width=17, height=9, dpi=300, device = "pdf")
