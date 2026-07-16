@@ -10,7 +10,7 @@
 # for "The Swedish Kinship Universe" (Kolk et al., 2023) by Emma Pettersson 
 
 # Created on 30-11-2023
-# Last modified on 15-07-2026
+# Last modified on 16-07-2026
 #------------------------------------------------------------------------------------------------------
 ## General settings and functions -----
 
@@ -2161,7 +2161,7 @@ Fig8b_SOCSIM <- ggplot() +
        title = "(a) Microsimulation") +
   scale_fill_manual(values =c("#FFE6CC","#081D58","#253494","#225EA8","#1D91C0","#41B6C4","#7FCDBB","#C7E9B4","#EDF8B1"),
                     limits = c("not living", "grandchild", "child", "sibchild", "sibling", "cousin", "parent", "parsib", "grandparent"),
-                    labels = c("Deceasead kin", "Grandchildren", "children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
+                    labels = c("Deceasead kin", "Grandchildren", "Children", "Nieces and nephews", "Siblings", "Cousins", "Parents", "Aunts and uncles", "Grandparents")) +
   scale_x_continuous(breaks   = c(seq(1920, 2010,by = 10), 2017), labels = paste(c(seq(1920, 2010,by = 10), 2017), "\n", "(",2017 - c(seq(1920, 2010,by = 10), 2017),")")) +
   theme_bw() + theme_graphs2() +
   theme(panel.grid.minor = element_line(colour = "#999999", linewidth = 0.3, linetype = 9),
@@ -2244,7 +2244,7 @@ ggsave(file="Graphs/Fig8b.jpeg", width=17, height=19, dpi=300, device = "jpeg")
 
 #------------------------------------------------------------------------------------------------------
 ## Fig. 8b_heat. Difference in the average number of all types of kin by birth cohort 1915–2017  ----
-## Plotted as a heat map, inluding only alive kin
+## Plotted as a heat map, including only alive kin
 
 # Prepare the data and add variable to distinguish alive and deceased kin
 Diff_All <- full_join(SKU %>% 
@@ -2271,7 +2271,7 @@ Diff_All <- full_join(SKU %>%
                           Type == "grandchild" ~ "Grandchildren", 
                           TRUE ~ Type),
          Type = factor(Type, levels = c("Deceased kin", "Grandchildren", "Nieces and nephews", 
-                                        "children", "Cousins", "Siblings", 
+                                        "Children", "Cousins", "Siblings", 
                                         "Aunts and uncles", "Parents", "Grandparents")),
          Type2 = ifelse(Type == "Deceased kin", "Deceased", "Alive")) %>% 
   filter(!is.na(Difference))
