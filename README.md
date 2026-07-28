@@ -23,7 +23,7 @@ al. 2023) .We use the SOCSIM demographic microsimulation program and
 data for Sweden from the [Human Fertility Collection
 (HFC)](https://www.fertilitydata.org/) (1751-1890), the [Human Fertility
 Database (HFD)](https://www.humanfertility.org/) (1891-2017), and the
-[Human Mortality Da ctabase (HMD)](https://www.mortality.org/)
+[Human Mortality Database (HMD)](https://www.mortality.org/)
 (1751-2017). Our results show that mean numbers and distributions of
 most kin are similar between the sources. The microsimulation produces
 slightly lower numbers of kin for cohorts unaffected by register
