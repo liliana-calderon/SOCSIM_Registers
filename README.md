@@ -1,5 +1,5 @@
-Code for reproducible results for the paper “Assessing the validity of
-microsimulated kinship networks using Swedish population registers”
+Code for reproducible results for the paper “Assessing the Agreement
+between Microsimulated and Register-based Kin Counts in Sweden”
 ================
 
 - [Introduction](#introduction)
@@ -8,28 +8,23 @@ microsimulated kinship networks using Swedish population registers”
 
 # Introduction
 
-Estimating kinship networks is data-demanding and mainly possible using
-empirical sources or demographic models. Empirical data, like population
-registers, provide a realistic picture but are scarce and limited by
-truncation and survivorship bias. Demographic models like
-microsimulation use aggregated data, but minimally account for
-population heterogeneity, family similarity and multipartner fertility.
-This study assesses the validity of kinship networks derived from
-microsimulation using Swedish population registers. We estimated the
-number of kin from grandparents to grandchildren for the Swedish
-population (cohorts 1915–2017) based on a SOCSIM microsimulation output
-and compared the results with the Swedish register counts from (Kolk et
-al. 2023) .We use the SOCSIM demographic microsimulation program and
+Estimating kinship networks is a data-intensive undertaking, usually
+conducted using empirical sources or demographic models. Although
+empirical data, such as population registers, provide observed
+individual-level information, they are limited by availability,
+truncation, and survivorship bias. Demographic models, including
+microsimulation, require less detailed data, but they often minimally
+account for population heterogeneity, family similarity, and
+multi-partner fertility. This study examines the agreement of kin counts
+(from grandparents to grandchildren) between SOCSIM microsimulation
+outputs and Swedish population registers for cohorts born between 1915
+and 2017. We use the SOCSIM demographic microsimulation programme and
 data for Sweden from the [Human Fertility Collection
 (HFC)](https://www.fertilitydata.org/) (1751-1890), the [Human Fertility
 Database (HFD)](https://www.humanfertility.org/) (1891-2017), and the
-[Human Mortality Database (HMD)](https://www.mortality.org/)
-(1751-2017). Our results show that mean numbers and distributions of
-most kin are similar between the sources. The microsimulation produces
-slightly lower numbers of kin for cohorts unaffected by register
-truncation, but better accounts for kin from earlier cohorts that are
-under-registered due to missing parent-child links, conditioning on
-survival or migration.
+[Human Mortality Database (HMD)](https://www.mortality.org/) (1751-2017)
+and compared the results with the Swedish register counts from (Kolk et
+al. 2023).
 
 # Scripts for reproducible results
 
@@ -68,8 +63,7 @@ and `rsocsim`. Please, follow these steps:
 
 # References
 
-<div id="refs" class="references csl-bib-body hanging-indent"
-entry-spacing="0">
+<div id="refs" class="references csl-bib-body hanging-indent">
 
 <div id="ref-kolk_swedish_2023" class="csl-entry">
 
